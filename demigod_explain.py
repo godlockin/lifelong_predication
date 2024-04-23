@@ -12,7 +12,14 @@ class DemigodExplain:
     def explain(self):
         result = f'''
         {self.name}
-        {self.type if self.type else ""}
+        '''
+
+        if self.type:
+            result += f'''
+        {self.type}
+            '''
+
+        result += f'''
         {self.explanation}
         '''
 

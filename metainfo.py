@@ -87,7 +87,8 @@ class MetaInfo:
         # 八字
         self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.birthday_normal)
         # 各个干支
-        (self.nian_gan, self.nian_zhi), (self.yue_gan, self.yue_zhi), (self.ri_gan, self.ri_zhi), (self.shi_gan, self.shi_zhi) = self.split_gan_zhi()
+        (self.nian_gan, self.nian_zhi), (self.yue_gan, self.yue_zhi), (self.ri_gan, self.ri_zhi), (
+        self.shi_gan, self.shi_zhi) = self.split_gan_zhi()
         self.all_gan = [self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan]
         self.all_zhi = [self.nian_zhi, self.yue_zhi, self.ri_zhi, self.shi_zhi]
 

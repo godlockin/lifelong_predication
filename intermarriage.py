@@ -239,7 +239,9 @@ class Intermarriage:
 
         marry_date_meta = MetaInfo(birthday=self.marry_date)
         check_date = marry_date_meta.ri_zhu
-        result = f"预期婚期为：{marry_date_meta.birthday_normal_str}，农历：{marry_date_meta.birthday_lunar_str}"
+        result = f"""
+        预期婚期为：{marry_date_meta.birthday_normal_str}，农历：{marry_date_meta.birthday_lunar_str}
+        """
         if check_date in messed_up_date:
             result += f"""
             古詩有：陰差陽錯歌
