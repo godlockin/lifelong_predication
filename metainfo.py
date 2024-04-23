@@ -108,7 +108,7 @@ class MetaInfo:
     def __str__(self):
         shi_chen_idx = get_shi_chen_idx(self.birthday_normal.hour)
         shi_chen = ZHI[shi_chen_idx]
-        return f'''
+        msg = f'''
         生日：{self.birthday_normal_str}
         农历：{self.birthday_lunar_str}({self.birthday_lunar.strftime('%Y-%m-%d')} {shi_chen}时)
         八字：{self.ba_zi}
@@ -119,6 +119,8 @@ class MetaInfo:
         {self.nian_zhi}（{self.nian_zhi_element}）    {self.yue_zhi}（{self.yue_zhi_element}）    {self.ri_zhi}（{self.ri_zhi_element}）    {self.shi_zhi}（{self.shi_zhi_element}）
         '''
 
+        return msg
+
     def split_gan_zhi(self):
         return [[gan, zhi] for gan, zhi in self.ba_zi.split(',')]
 
@@ -127,12 +129,3 @@ class MetaInfo:
             [get_heavenly_stem_element(item) for item in (self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan)],
             [get_earthly_branch_element(item) for item in (self.nian_zhi, self.yue_zhi, self.ri_zhi, self.shi_zhi)]
         ]
-
-
-if __name__ == "__main__":
-    birthday = datetime(1989, 10, 16, 13, 30, 00)
-    meta = MetaInfo(
-        birthday=birthday,
-        is_male=True
-    )
-    print(meta)

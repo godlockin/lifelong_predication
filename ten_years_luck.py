@@ -74,11 +74,3 @@ class TenYearsLuck(MetaInfo):
                 'demigods': self.ten_years_luck_demigods[idx],
             }
         return ten_years_luck_details
-
-if __name__ == "__main__":
-    birthday = datetime(1989, 10, 16, 13, 30, 00)
-    ten_years_luck = TenYearsLuck(birthday=birthday,
-                                  is_male=True,
-                                  meta_info_display=True
-                                  )
-    print(ten_years_luck)
