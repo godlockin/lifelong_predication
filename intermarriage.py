@@ -21,6 +21,7 @@ class Intermarriage:
         self.relationships = self.calc_relationship()
         self.element_supporting = self.calc_element_supporting()
 
+        self.marry_date_comment = ''
         self.marry_date = kwargs.get('marry_date', constants.BASE_DATE)
         if constants.BASE_DATE != self.marry_date:
             self.ru_zhui = kwargs.get('ru_zhui', False)

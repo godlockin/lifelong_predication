@@ -42,7 +42,8 @@ class LifePrediction(MetaInfo):
                 man_birthday=man_birthday,
                 woman_birthday=woman_birthday,
                 marry_date=kwargs.get('marry_date', constants.BASE_DATE),
-                explain_append=kwargs.get('explain_append', False)
+                ru_zhui=kwargs.get('ru_zhui', False),
+                explain_append=kwargs.get('explain_append', False),
             )
         else:
             self.potential_couple = PotentialCouple(**kwargs)
