@@ -1,7 +1,6 @@
 from constants import *
 
 
-
 class DemigodExplain:
     def __init__(self, demigods, lord_gods):
         self.demigods = demigods
@@ -75,6 +74,7 @@ class DemigodExplain:
             '孤鸾': GuLuan(demigods, lord_gods),
             '十恶大败': ShiEDaBai(demigods, lord_gods),
             '阴阳差错': YinChaYangCuo(demigods, lord_gods),
+            '金神': JinShen(demigods, lord_gods),
         }
 
         return (
@@ -800,7 +800,6 @@ class TongZi(DemigodExplain):
         self.explanation = "童子命的人婚姻不利，晚婚，或无婚恋，痴迷爱情的倒不多，因为根本就不会谈恋爱，一谈就吹，或者有人追、自己会谈也不行，一谈就出意外，即使硬撮合的也会因故而分手，多次离婚，更有一结婚或一破身就生病。"
 
 
-
 class GuLuan(DemigodExplain):
     def __init__(self, demigods, lord_gods):
         super().__init__(demigods, lord_gods)
@@ -809,14 +808,12 @@ class GuLuan(DemigodExplain):
         self.explanation = "命犯孤鸾煞，主婚姻不顺。孤鸾犯日本无儿，一见官星得子奇，运遇旺乡名姐妹，临风惆怅绿楼时。"
 
 
-
 class ShiEDaBai(DemigodExplain):
     def __init__(self, demigods, lord_gods):
         super().__init__(demigods, lord_gods)
         self.name = "十恶大败"
         self.type = "大凶神"
         self.explanation = "十恶，就是大凶；大败，就是临阵怯敌，大败而归。"
-
 
 
 class YinChaYangCuo(DemigodExplain):
@@ -832,3 +829,19 @@ class YinChaYangCuo(DemigodExplain):
         五是不能跟首个有性关系的恋人结婚；或存在有同母异父或同父异母的兄弟姐妹之兆。
         """
 
+
+class JinShen(DemigodExplain):
+    def __init__(self, demigods, lord_gods):
+        super().__init__(demigods, lord_gods)
+        self.name = "金神"
+        self.type = "破败之神"
+        self.explanation = """
+        如果要破除命理金神煞，就要用火制，如果八字里有七煞或羊刃，就是金神为真贵人、反吉！
+        金神命格：要月令通金气（申酉戌丑巳月），命中成火局武贵。
+        生于亥卯未月而运行丙丁巳午火乡，则成富格。
+        身弱要羊刃帮扶，身强要七杀、伤官，巳午月，岁运见丙丁火必发福，亥子破火必死。
+        暗金地煞：也称为暗金的杀，有三分别为：
+            “呻吟煞，子午卯酉月见巳，主杖责刑狱”
+            “白衣煞，辰戌丑未月见丑，主妨害丧服哭泣之事”
+            “破碎煞，寅申巳亥月见酉，主支离流血之灾”。
+        """

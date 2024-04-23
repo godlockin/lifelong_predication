@@ -958,13 +958,13 @@ class BiJian(LordGodExplain):
             position_explain += f"比肩在年柱，少年时期{'被同辈、同学坑' if self.lord_gods.self_strong else '多得同辈照顾'}\n"
 
         if self.name in [self.lord_gods.yue_gan_lord_gods] + [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
-            position_explain += f"比肩在月柱，青年时期{'被同辈、朋友坑，有财务冲突' if self.lord_gods.self_strong else '有同事、朋友照应'}"
+            position_explain += f"比肩在月柱，青年时期{'被同辈、朋友坑，有财务冲突' if self.lord_gods.self_strong else '有同事、朋友照应'}\n"
 
         if self.name in [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
-            position_explain += f"比肩在日柱，壮年时期{'与合伙人多有龃龉' if self.lord_gods.self_strong else '有伙伴合作愉快'}"
+            position_explain += f"比肩在日柱，壮年时期{'与合伙人多有龃龉' if self.lord_gods.self_strong else '有伙伴合作愉快'}\n"
 
         if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
-            position_explain += f"比肩在时柱，晚年{'和朋友、兄弟有矛盾' if self.lord_gods.self_strong else '有朋友、兄弟照应'}"
+            position_explain += f"比肩在时柱，晚年{'和朋友、兄弟有矛盾' if self.lord_gods.self_strong else '有朋友、兄弟照应'}\n"
 
         return position_explain
 
@@ -1012,7 +1012,7 @@ class PianCai(LordGodExplain):
     def calc_self_strong_explain(self):
         result = ""
         if not self.lord_gods.self_strong:
-            result += "日元身弱偏财为忌神，总想着不劳而获，但是偏财不是经常有，就会贪图享受、懒惰"
+            result += "日元身弱偏财为忌神，总想着不劳而获，但是偏财不是经常有，就会贪图享受、懒惰\n"
         return result
 
     def calc_position_explain(self):
