@@ -588,7 +588,7 @@ class ZhengCai(LordGodExplain):
         return result
 
     def calc_male_explain(self):
-        result = "正财是男人的妻子"
+        result = "正财是男人的妻子\n"
         if self.lord_gods_count > 3:
             result += "男人正财多，多妻之像，或者不重视结发之妻。\n"
         return result

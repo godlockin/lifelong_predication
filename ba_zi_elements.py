@@ -36,8 +36,8 @@ class BaZiElements(MetaInfo):
             self.supporting_elements_sequence = self.elements_relationships[:3]
             self.opposing_elements_sequence = self.elements_relationships[3:]
         else:
-            self.supporting_elements_sequence = self.elements_relationships[3:]
-            self.opposing_elements_sequence = self.elements_relationships[:3]
+            self.supporting_elements_sequence = self.elements_relationships[:2]
+            self.opposing_elements_sequence = self.elements_relationships[2:]
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"

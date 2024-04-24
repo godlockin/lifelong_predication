@@ -345,10 +345,12 @@ class PotentialCouple(LordGods):
         """
         配偶宫所居十神为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好；配偶宫所居十神为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好。
         """
-        if any(item in ri_zhi_lord_gods_core for item in ['正官', '正印', '食神', '正财']):
-            result += "配偶宫所居十神为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好"
+        positive = set(ri_zhi_lord_gods_core).intersection({'正官', '正印', '食神', '正财'})
+        negative = set(ri_zhi_lord_gods_core).intersection({'七杀', '枭印', '伤官', '劫财'})
+        if positive:
+            result += f"配偶宫所居十神（{list(positive)[0]}）为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好"
         elif any(item in ri_zhi_lord_gods_core for item in ['七杀', '枭印', '伤官', '劫财']):
-            result += "配偶宫所居十神为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好"
+            result += f"配偶宫所居十神（{list(negative)[0]}）为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好"
 
         return result
 

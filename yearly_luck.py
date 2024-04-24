@@ -25,11 +25,7 @@ class YearlyLuck(LordGods):
             for item in self.yearly_luck:
                 year, gan_zhi, (gan, gan_god), (zhi, zhi_god), demigods = item
                 if opposing_element == GAN_DETAILS[gan]['element']:
-                    gan += "**"
                     gan_zhi += "**"
-                if opposing_element == ZHI_DETAILS[zhi]['element']:
-                    zhi += "*"
-                    gan_zhi += "*"
 
                 yearly_luck_items.append((year, gan_zhi, (gan, gan_god), (zhi, zhi_god), demigods))
 
