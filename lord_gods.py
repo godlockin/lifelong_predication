@@ -62,8 +62,9 @@ class LordGods(BaZiElements):
             if double_append:
                 msg += double_append
 
-            self.demigod_explain = LordGodExplain(self)
-            msg += self.demigod_explain.calc_all_lord_gods_explain()
+            self.lord_god_explain = LordGodExplain(self)
+            self.lord_god_explain.init_explanation()
+            msg += self.lord_god_explain.calc_all_lord_gods_explain()
         return msg
 
     def handle_zhi_lord_gods(self, ri_gan_idx):

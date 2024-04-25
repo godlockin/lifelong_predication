@@ -1,15 +1,19 @@
 from demigod import CommonDemigod
-from metainfo import MetaInfo
+from lord_god_explain import LordGodExplain
+from lord_gods import LordGods
 from utils import *
 
 
-class TenYearsLuck(MetaInfo):
+class TenYearsLuck(LordGods):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.meta_info_display = kwargs.get('meta_info_display', False)
+        self.explain_append = kwargs.get('explain_append', False)
 
         self.ten_years_luck_gan_zhi = self.build_ten_years_luck_gan_zhi()
         ri_gan_idx = GAN.index(self.ri_gan) + 1
+        ri_zhi_cang_gan = self.nian_zhi_lord_gods[0][0]
+        ri_zhi_cang_gan_idx = GAN.index(ri_zhi_cang_gan) + 1
         tian_gan_sheng_wang_si_jue_idx = TIAN_GAN_SHENG_SI_JUE_WANG.index(self.ri_gan) + 1
 
         self.ri_zhi_n_nian_zhi = [self.nian_zhi, self.ri_zhi]
@@ -19,20 +23,48 @@ class TenYearsLuck(MetaInfo):
             self.ten_years_luck_sheng_si_list,
             self.ten_years_luck_lord_gods,
             self.ten_years_luck_demigods,
-        ) = self.build_ten_years_luck_sheng_si(ri_gan_idx, tian_gan_sheng_wang_si_jue_idx)
+        ) = self.build_ten_years_luck_attributes(ri_gan_idx, ri_zhi_cang_gan_idx, tian_gan_sheng_wang_si_jue_idx)
 
         self.ten_years_luck_details = self.build_ten_years_luck_details()
+        self.lord_god_explain = LordGodExplain(self)
+        self.lord_god_explain.init_explanation()
 
     def __str__(self):
-        msg = f"{super().__str__() if self.meta_info_display else ''}"
-
-        ten_years_luck_list = sorted(self.ten_years_luck_details.values(), key=lambda x: x['idx'])
-        ten_years_luck_display = "\n        ".join([f"{item['year_num']}年  {item['sheng_si']}  {item['lord_gods']}  {item['demigods']}" for item in ten_years_luck_list])
-        msg += f'''
-        大运    大运循环  大运十神  大运神煞
-        {ten_years_luck_display}
+        result = f"{super().__str__() if self.meta_info_display else ''}"
+        result += f'''
+        大运：
+        年份        大运循环        大运十神        大运神煞        {'大运状态' if self.explain_append else ''}
         '''
-        return msg
+        ten_years_luck_list = sorted(self.ten_years_luck_details.items(), key=lambda x: x[1]['idx'])
+        lord_gods_set = set()
+        ten_years_luck_out_list = []
+        for (k, v) in ten_years_luck_list:
+            tmp_lord_gods = v['lord_gods']
+            lord_gods_set = lord_gods_set.union(set(tmp_lord_gods))
+            msg = (f"{v['year_num']}年（{k}）  "
+                   f"{v['sheng_si']}  "
+                   f"{v['lord_gods']}  "
+                   f"{v['demigods']} ")
+            if self.explain_append:
+                if v.get('is_finance', False):
+                    msg += "（财）"
+                msg += f"*{v['gan_support'][0]}|{v['zhi_support'][0]}"
+            msg += "\n"
+            ten_years_luck_out_list.append(msg)
+
+        result += f"{'        '.join(ten_years_luck_out_list)}"
+
+        if self.explain_append:
+            lord_gods_explain_list = []
+            for lord_god in lord_gods_set:
+                lord_gods_explain = self.lord_god_explain.single_explain_mapping[lord_god]
+                lord_gods_explain_list.append(f"{lord_god}：{lord_gods_explain.imagery}")
+            msg = '\n        '.join(lord_gods_explain_list)
+            result += f'''
+        十神意象：
+        {msg}
+            '''
+        return result
 
     def build_ten_years_luck_gan_zhi(self):
         start = JIA_ZI_NAME.index(self.yue_zhu) if self.yue_zhu in JIA_ZI_NAME else -1
@@ -45,14 +77,18 @@ class TenYearsLuck(MetaInfo):
         start = start + 1 if is_shun else start - 1
         return [JIA_ZI_NAME[(start + (i if is_shun else -i)) % len(JIA_ZI_NAME)] for i in range(8)]
 
-    def build_ten_years_luck_sheng_si(self, ri_gan_idx, tian_gan_sheng_wang_si_jue_idx):
+    def build_ten_years_luck_attributes(self, ri_gan_idx, ri_zhi_cang_gan_idx, tian_gan_sheng_wang_si_jue_idx):
         ten_years_luck_list, ten_years_luck_lord_gods_list, ten_years_luck_demigods = [], [], []
         for item in self.ten_years_luck_gan_zhi:
             sheng_si_idx = SHENG_SI_JUE_WANG_MAPPING[tian_gan_sheng_wang_si_jue_idx].index(item[1:])
             ten_years_luck_list.append(SHENG_SI_JUE_WANG_MAPPING[0][sheng_si_idx])
 
             lord_gods_idx = LORD_GODS_MATRIX[0].index(item[:1])
-            ten_years_luck_lord_gods_list.append(LORD_GODS_MATRIX[ri_gan_idx][lord_gods_idx])
+            lord_gods_pair = [
+                LORD_GODS_MATRIX[ri_gan_idx][lord_gods_idx],
+                LORD_GODS_MATRIX[ri_zhi_cang_gan_idx][lord_gods_idx]
+            ]
+            ten_years_luck_lord_gods_list.append(lord_gods_pair)
 
             common_demigod = CommonDemigod(
                 gan_zhi=item,
@@ -65,12 +101,18 @@ class TenYearsLuck(MetaInfo):
 
     def build_ten_years_luck_details(self):
         ten_years_luck_details = {}
+        opposing_element = WU_XING_XIANG_KE[self.ri_gan_element]
         for idx, item in enumerate(self.ten_years_luck_gan_zhi):
+            gan_element = GAN_DETAILS[item[0]]['element']
+            zhi_element = ZHI_DETAILS[item[1]]['element']
             ten_years_luck_details[item] = {
                 'idx': idx,
                 'year_num': self.lunar_year + idx * 10,
                 'sheng_si': self.ten_years_luck_sheng_si_list[idx],
                 'lord_gods': self.ten_years_luck_lord_gods[idx],
                 'demigods': self.ten_years_luck_demigods[idx],
+                'gan_support': self.elements_relationships_mapping[gan_element],
+                'zhi_support': self.elements_relationships_mapping[zhi_element],
+                'is_finance': opposing_element == gan_element,
             }
         return ten_years_luck_details

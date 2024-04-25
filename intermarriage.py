@@ -42,13 +42,15 @@ class Intermarriage:
         if self.explain_append:
             result += f'{self.lv_cai_he_hun_explain}'
 
-        relationship_str = "\n".join(self.relationships) if self.relationships else ""
+        relationship_str = "\n        ".join(self.relationships) if self.relationships else ""
         if relationship_str:
-            result += f'{relationship_str}'
+            result += f'''
+        {relationship_str}
+        '''
 
         if self.marry_date_comment:
             result += f'''
-            {self.marry_date_comment}
+        {self.marry_date_comment}
             '''
 
         return result
@@ -233,15 +235,20 @@ class Intermarriage:
         首先陰差陽錯日不能選
         :return:
         """
-        messed_up_date = ["辛卯", "壬辰", "癸已", "丙午", "丁未", "戊申", "辛酉", "壬戌", "癸亥", "丙子", "丁醜", "戊寅"]
+        messed_up_date = ["辛卯", "壬辰", "癸已", "丙午", "丁未", "戊申", "辛酉", "壬戌", "癸亥", "丙子", "丁醜",
+                          "戊寅"]
 
-        result = f"古代對結婚的月份很有講究，"
+        result = f""
+        comment = "古代對結婚的月份很有講究，"
         if self.ru_zhui:
             idx_zhi = self.man_demigod.nian_zhi
-            result += "由于是入赘，将使用男方的生辰进行校验。"
+            comment += "由于是入赘，将使用男方的生辰进行校验。"
         else:
             idx_zhi = self.woman_demigod.nian_zhi
-            result += "将使用女方的生辰进行校验。"
+            comment += "将使用女方的生辰进行校验。"
+        result += f'''
+        {comment}
+        '''
 
         """
         古代對結婚的月份很有講究，下面是婚嫁的利月和妨月
@@ -307,36 +314,41 @@ class Intermarriage:
 
         marry_date_meta = MetaInfo(birthday=self.marry_date)
         check_date = marry_date_meta.ri_zhu
-        if constants.BASE_DATE != self.marry_date:
-            idx_month = marry_date_meta.lunar_month
-            result += f"""
-            预期婚期为：{marry_date_meta.birthday_normal_str}，农历：{marry_date_meta.birthday_lunar_str}
-            """
-            result += f"年支为：{idx_zhi}，婚期预计为农历 {idx_month} 月\n"
-            if check_date in messed_up_date:
-                result += f"""
-                古詩有：陰差陽錯歌
-            　　陰並陽錯是如何？ 辛卯壬辰癸已多。
-            　　丙午丁未戊申是，辛酉壬戌癸亥過。
-            　　丙子丁醜戊寅日，十二宮中細細歌。
-               所以 {check_date} 日不宜結婚，容易出現婚姻問題。
-                """
 
-        result += f"结婚月份福祸参考：\n"
         check = {}
         for key, value in conditions.items():
             if idx_zhi in key:
                 check = {v: k for k, v in value.items()}
-                result += f"{check}\n"
                 break
+
         if constants.BASE_DATE != self.marry_date:
             idx_month = marry_date_meta.lunar_month
             msg = ''
             for key, value in check.items():
-                if idx_month in key:
-                    msg = value
+                if idx_month in value:
+                    msg = key
                     break
-            result += msg if msg else ''
+
+            idx_month = marry_date_meta.lunar_month
+            result += f"""
+        预期婚期为：{marry_date_meta.birthday_normal.strftime('%Y-%m-%d')}，农历：{marry_date_meta.birthday_lunar_str}
+        年支为：{idx_zhi}，婚期预计为农历 {idx_month} 月「{msg}」
+        """
+            if check_date in messed_up_date:
+                result += f"""
+       古詩有：陰差陽錯歌
+    　　陰並陽錯是如何？ 辛卯壬辰癸已多。
+    　　丙午丁未戊申是，辛酉壬戌癸亥過。
+    　　丙子丁醜戊寅日，十二宮中細細歌。
+       所以 {check_date} 日不宜結婚，容易出現婚姻問題。
+                """
+
+        result += f"""
+       结婚月份福祸参考：
+        """
+        check_list = sorted(check.items(), key=lambda x: x[1])
+        check_list_str = [f"{item[1][0]}/{item[1][1]}月：{item[0]}\n" for item in check_list]
+        result += "        ".join(check_list_str)
         return result
 
     def calc_element_supporting(self):

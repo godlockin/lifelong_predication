@@ -51,15 +51,15 @@ class Demigod(BaZiElements):
 
         if self.explain_append and self.all_demigod:
             msg += f'''
-            神煞解析：
-            年柱：
-            {self.get_demigod_explain(self.nian_zhu_demigod_explain)}
-            月柱：
-            {self.get_demigod_explain(self.yue_zhu_demigod_explain)}
-            日柱：
-            {self.get_demigod_explain(self.ri_zhu_demigod_explain)}
-            时柱：
-            {self.get_demigod_explain(self.shi_zhu_demigod_explain)}
+        神煞解析：
+        年柱：
+        {self.get_demigod_explain(self.nian_zhu_demigod_explain)}
+        月柱：
+        {self.get_demigod_explain(self.yue_zhu_demigod_explain)}
+        日柱：
+        {self.get_demigod_explain(self.ri_zhu_demigod_explain)}
+        时柱：
+        {self.get_demigod_explain(self.shi_zhu_demigod_explain)}
             '''
 
         return msg

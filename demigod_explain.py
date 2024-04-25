@@ -181,15 +181,21 @@ class YiMa(DemigodExplain):
         可能会有{yi_ma_count}辆车，或者{yi_ma_count}次出远门的经历。
         '''
         if self.name in self.demigods.ri_zhu_demigod:
-            result += f"日柱上有驿马，可能会有一辆登记在{'太太' if self.demigods.is_male else '先生'}名下的车。\n"
+            result += f"""
+        日柱上有驿马，可能会有一辆登记在{'太太' if self.demigods.is_male else '先生'}名下的车。\n
+        """
 
         if '文昌贵人' in self.demigods.all_demigod and self.demigods.all_demigod.index(
                 '文昌贵人') > self.demigods.all_demigod.index(self.name):
-            result += f"文昌贵人在驿马之后，说明这辆车的档次挺高的。\n"
+            result += f"""
+        文昌贵人在驿马之后，说明这辆车的档次挺高的。\n
+        """
 
         if '劫煞' in self.demigods.all_demigod and self.demigods.all_demigod.index(
                 '劫煞') > self.demigods.all_demigod.index(self.name):
-            result += f"劫煞在驿马之后，说明这辆车可能会被偷。\n"
+            result += f"""
+        劫煞在驿马之后，说明这辆车可能会被偷。\n
+        """
         return result
 
 
@@ -820,7 +826,7 @@ class ShiEDaBai(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "十恶大败"
         self.type = "大凶神"
-        self.explanation = "十恶，就是大凶；大败，就是临阵怯敌，大败而归。"
+        self.explanation = "十恶，就是大凶；大败，就是临阵怯敌，大败而归。没有”俸禄“，做不了公职人员，容易被裁员/提前退休。花钱如流水，难以聚财。"
 
 
 class YinChaYangCuo(DemigodExplain):

@@ -36,6 +36,7 @@ class PotentialCouple(LordGods):
     def __str__(self):
         couple_name = "太太" if self.is_male else "先生"
         msg = f'''
+        合婚：
         命主日支：{self.ri_zhi} 被称为夫妻宫，代表了{couple_name}的情况。
         {self.gan_zhi_appearance}
         '''
@@ -44,42 +45,40 @@ class PotentialCouple(LordGods):
         if self.guan_position:
 
             msg += f'''
-            从干支上来看，{couple_name}的年龄和距离可能为：
+        从干支上来看，{couple_name}的年龄和距离可能为：
             '''
             if not self.explain_append:
                 for item in self.guan_position:
                     msg += f'''
-            {self.position_relationship_mapping[POSITION_COLUMN_NAMES[item[1]]]}
+        {self.position_relationship_mapping[POSITION_COLUMN_NAMES[item[1]]]}
                     '''
             else:
                 for i, item in enumerate(self.guan_position):
                     msg += f'''
-            {'正' if '正' in item[0] else '次'}缘{i + 1}：{self.position_relationship_mapping[POSITION_COLUMN_NAMES[item[1]]]}
+        {'正' if '正' in item[0] else '次'}缘{i + 1}：{self.position_relationship_mapping[POSITION_COLUMN_NAMES[item[1]]]}
                     '''
 
         if self.finance_position:
             msg += f'''
-            从财运上来看，{couple_name}的财务状况可能为：
+        从财运上来看，{couple_name}的财务状况可能为：
             '''
             if not self.explain_append:
                 for idx, item in enumerate(self.finance_position):
                     msg += f'''
-            {item[0]}
-            {self.finance_columns[idx]}
+        {item[0]}
+        {self.finance_columns[idx]}
                     '''
             else:
                 for idx, item in enumerate(self.finance_position):
                     msg += f'''
-            {idx + 1}缘：{item[0]}
-            {self.finance_columns[idx]}
+        {idx + 1}缘：{item[0]}
+        {self.finance_columns[idx]}
                     '''
 
         msg += f'''
         从宫位上来看：
         {self.palace}
         '''
-
-
 
         return msg
 
@@ -194,20 +193,20 @@ class PotentialCouple(LordGods):
 
         if primary_couple_element in self.supporting_elements_sequence:
             result += f"""
-            正宫的样貌{positive_conditions[primary_couple_element]}
+        正宫的样貌{positive_conditions[primary_couple_element]}
             """
         else:
             result += f"""
-            正宫的样貌{negative_conditions[primary_couple_element]}
+        正宫的样貌{negative_conditions[primary_couple_element]}
             """
 
         if secondary_couple_element in self.supporting_elements_sequence:
             result += f"""
-            次宫的样貌{positive_conditions[secondary_couple_element]}
+        次宫的样貌{positive_conditions[secondary_couple_element]}
             """
         else:
             result += f"""
-            次宫的样貌{negative_conditions[secondary_couple_element]}
+        次宫的样貌{negative_conditions[secondary_couple_element]}
             """
 
         return result
@@ -348,9 +347,13 @@ class PotentialCouple(LordGods):
         positive = set(ri_zhi_lord_gods_core).intersection({'正官', '正印', '食神', '正财'})
         negative = set(ri_zhi_lord_gods_core).intersection({'七杀', '枭印', '伤官', '劫财'})
         if positive:
-            result += f"配偶宫所居十神（{list(positive)[0]}）为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好"
+            result += f"""
+        配偶宫所居十神（{list(positive)[0]}）为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好
+            """
         elif any(item in ri_zhi_lord_gods_core for item in ['七杀', '枭印', '伤官', '劫财']):
-            result += f"配偶宫所居十神（{list(negative)[0]}）为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好"
+            result += f"""
+        配偶宫所居十神（{list(negative)[0]}）为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好
+        """
 
         return result
 
