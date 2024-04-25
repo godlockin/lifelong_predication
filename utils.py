@@ -218,7 +218,7 @@ def month_days(y, m):
 
 
 # 传回农历 y年的生肖地支
-def get_dizhi_of_year(year):
+def get_zhi_of_year(year):
     return ZHI[(year - 4) % 12]
 
 

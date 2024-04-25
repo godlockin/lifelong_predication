@@ -31,7 +31,7 @@ class LifeStagesLuck(BaZiElements):
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
-        人生阶段运势：
+        ## 人生阶段运势：
         少年：
         年干（1-9岁）：{self.kid_age}
         年支（10-18岁）：{self.teenage}

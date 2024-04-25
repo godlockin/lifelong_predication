@@ -98,6 +98,7 @@ class LordGodExplain:
 
     def calc_all_lord_gods_explain(self):
         all_explain = f"""
+        ### 十神解析
         十神也讲究平衡，无论吉神与恶神，多了都不好；一位为真，两位为争，三位为病，四五六都不好，七个反而变好了。
         """
 
@@ -1007,7 +1008,7 @@ class BiJian(LordGodExplain):
         if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
             position_explain.append(f"比肩在时柱，晚年{'和朋友、兄弟有矛盾' if self.lord_gods.self_strong else '有朋友、兄弟照应'}")
 
-        return position_explain
+        return "\n".join(position_explain)
 
 
 class PianCai(LordGodExplain):
@@ -1074,7 +1075,7 @@ class PianCai(LordGodExplain):
         if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
             position_explain.append("偏财在时柱，代表晚年会比较有钱，子女的条件也会不错。")
 
-        return position_explain
+        return "\n".join(position_explain)
 
     def calc_male_explain(self):
         result = "偏财是男人的小妾"

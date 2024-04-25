@@ -42,7 +42,7 @@ class Demigod(BaZiElements):
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
-        神煞：
+        ## 神煞：
         年柱：{",".join(self.nian_zhu_demigod)}
         月柱：{",".join(self.yue_zhu_demigod)}
         日柱：{",".join(self.ri_zhu_demigod)}
@@ -51,7 +51,7 @@ class Demigod(BaZiElements):
 
         if self.explain_append and self.all_demigod:
             msg += f'''
-        神煞解析：
+        ### 神煞解析：
         年柱：
         {self.get_demigod_explain(self.nian_zhu_demigod_explain)}
         月柱：

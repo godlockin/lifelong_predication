@@ -36,7 +36,7 @@ class PotentialCouple(LordGods):
     def __str__(self):
         couple_name = "太太" if self.is_male else "先生"
         msg = f'''
-        合婚：
+        ## 未来伴侣：
         命主日支：{self.ri_zhi} 被称为夫妻宫，代表了{couple_name}的情况。
         {self.gan_zhi_appearance}
         '''

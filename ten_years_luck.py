@@ -32,7 +32,7 @@ class TenYearsLuck(LordGods):
     def __str__(self):
         result = f"{super().__str__() if self.meta_info_display else ''}"
         result += f'''
-        大运：
+        ## 大运：
         年份        大运循环        大运十神        大运神煞        {'大运状态' if self.explain_append else ''}
         '''
         ten_years_luck_list = sorted(self.ten_years_luck_details.items(), key=lambda x: x[1]['idx'])
@@ -61,7 +61,7 @@ class TenYearsLuck(LordGods):
                 lord_gods_explain_list.append(f"{lord_god}：{lord_gods_explain.imagery}")
             msg = '\n        '.join(lord_gods_explain_list)
             result += f'''
-        十神意象：
+        ### 十神意象：
         {msg}
             '''
         return result

@@ -80,9 +80,9 @@ class MetaInfo:
         # 生肖
         self.zodiac = get_zodiac_of_year(self.lunar_year)
         # 生肖地支
-        self.zodiac_dizhi = get_dizhi_of_year(self.lunar_year)
+        self.zodiac_zhi = get_zhi_of_year(self.lunar_year)
         # 生肖五行
-        self.zodiac_element = get_earthly_branch_element(self.zodiac_dizhi)
+        self.zodiac_element = get_earthly_branch_element(self.zodiac_zhi)
 
         # 八字
         self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.birthday_normal)
@@ -110,10 +110,11 @@ class MetaInfo:
         shi_chen_idx = get_shi_chen_idx(self.birthday_normal.hour)
         shi_chen = ZHI[shi_chen_idx]
         msg = f'''
+        ## 基础信息
         生日：{self.birthday_normal_str}
         农历：{self.birthday_lunar_str}({self.birthday_lunar.strftime('%Y-%m-%d')} {shi_chen}时)
         八字：{self.ba_zi}
-        生肖：{self.zodiac}（{self.zodiac_dizhi}:{self.zodiac_element}）
+        生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
         年干  月干  日干（{"男" if self.is_male else "女"}主）  时干
         {self.nian_gan}（{self.nian_gan_element}）    {self.yue_gan}（{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_element}）    {self.shi_gan}（{self.shi_gan_element}）
         年支  月令  日支  时支

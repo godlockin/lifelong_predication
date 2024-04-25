@@ -26,7 +26,7 @@ class YearlyLuck(TenYearsLuck):
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += """
-        流年：
+        ## 流年：
         """
 
         if self.explain_append:
@@ -68,7 +68,7 @@ class YearlyLuck(TenYearsLuck):
                 lord_gods_explain_list.append(f"{lord_god}：{lord_gods_explain.imagery}")
             tmp = '\n        '.join(lord_gods_explain_list)
             msg += f'''
-        十神意象：
+        ### 十神意象：
         {tmp}
             '''
 

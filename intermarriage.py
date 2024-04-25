@@ -5,13 +5,15 @@ from utils import *
 
 class Intermarriage:
     def __init__(self, **kwargs):
+        self.man_birthday = kwargs.get('man_birthday', constants.BASE_DATE)
         self.man_demigod = MarriageGods(
-            birthday=kwargs.get('man_birthday', constants.BASE_DATE),
+            birthday=self.man_birthday,
             is_male=True
         )
 
+        self.woman_birthday = kwargs.get('woman_birthday', constants.BASE_DATE)
         self.woman_demigod = MarriageGods(
-            birthday=kwargs.get('woman_birthday', constants.BASE_DATE),
+            birthday=self.woman_birthday,
             is_male=False
         )
         self.explain_append = kwargs.get('explain_append', False)
@@ -29,7 +31,11 @@ class Intermarriage:
             self.lv_cai_he_hun_explain = self.calc_lv_cai_he_hun_explain()
 
     def __str__(self):
+        if any(item == constants.BASE_DATE for item in [self.man_birthday, self.woman_birthday]):
+            return ""
+
         result = f'''
+        ## 合婚：
         男方：{self.man_demigod}
         女方：{self.woman_demigod}
         追求关系：{self.pursue}

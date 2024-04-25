@@ -40,7 +40,7 @@ class FamilySupport(BaZiElements):
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
-        家庭支持：
+        ## 家庭支持：
         祖先宫：
         年干（父亲及家族）：{self.father_family}
         年支（母亲及家族）：{self.mother_family}

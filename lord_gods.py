@@ -43,7 +43,7 @@ class LordGods(BaZiElements):
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
-        十神：
+        ## 十神：
         年干：{self.nian_gan_lord_gods}
         年支：{self.nian_zhi_lord_gods}
         
