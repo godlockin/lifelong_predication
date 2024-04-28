@@ -33,13 +33,13 @@ class LifePrediction(MetaInfo):
         self.enabled_labels = self.calc_enabled_labels(**kwargs)
 
         if kwargs.get('is_male', True):
-            man_birthday = self.birthday_normal
+            man_birthday = self.input_datetime
             woman_birthday = kwargs.get('couple_birthday', constants.BASE_DATE)
             self.primary_birthday = man_birthday
             self.couple_birthday = woman_birthday
         else:
             man_birthday = kwargs.get('couple_birthday', constants.BASE_DATE)
-            woman_birthday = self.birthday_normal
+            woman_birthday = self.input_datetime
             self.primary_birthday = woman_birthday
             self.couple_birthday = man_birthday
 

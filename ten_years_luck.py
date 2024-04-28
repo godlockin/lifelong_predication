@@ -101,7 +101,7 @@ class TenYearsLuck(LordGods):
 
     def build_ten_years_luck_details(self):
         ten_years_luck_details = {}
-        opposing_element = WU_XING_XIANG_KE[self.ri_gan_element]
+        opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
         for idx, item in enumerate(self.ten_years_luck_gan_zhi):
             gan_element = GAN_DETAILS[item[0]]['element']
             zhi_element = ZHI_DETAILS[item[1]]['element']

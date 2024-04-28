@@ -4,11 +4,11 @@ from utils import *
 class MetaInfo:
     def __init__(self, **kwargs):
 
-        self.birthday_normal = parse_birthday_info(kwargs)
+        self.input_datetime = parse_input_datetime_info(kwargs)
         # 默认为男性
         self.is_male = kwargs.get('is_male', True)
-        self.birthday_normal_str = self.birthday_normal.strftime('%Y-%m-%d %H:%M:%S')
-        self.offset = (self.birthday_normal - constants.BASE_DATE).days
+        self.input_datetime_str = self.input_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        self.offset = (self.input_datetime - constants.BASE_DATE).days
 
         # yearCyl农历年与1864的相差数
         self.year_cyl = 1864
@@ -85,7 +85,7 @@ class MetaInfo:
         self.zodiac_element = get_earthly_branch_element(self.zodiac_zhi)
 
         # 八字
-        self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.birthday_normal)
+        self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.input_datetime)
         # 各个干支
         (self.nian_gan, self.nian_zhi), (self.yue_gan, self.yue_zhi), (self.ri_gan, self.ri_zhi), (
         self.shi_gan, self.shi_zhi) = self.split_gan_zhi()
@@ -103,16 +103,16 @@ class MetaInfo:
         ] = self.element_matrix
 
         # 农历生日
-        self.birthday_lunar = datetime(self.lunar_year, self.lunar_month, self.lunar_day)
-        self.birthday_lunar_str = f"{get_year_chinese_name(self.lunar_year)}年，{'闰' if self.leap else ''}{CHINESE_MONTH_NAME[self.lunar_month - 1]}月{get_day_chinese_name(self.lunar_day)}日"
+        self.lunar_of_input_datetime = datetime(self.lunar_year, self.lunar_month, self.lunar_day)
+        self.lunar_of_input_datetime_str = f"{get_year_chinese_name(self.lunar_year)}年，{'闰' if self.leap else ''}{CHINESE_MONTH_NAME[self.lunar_month - 1]}月{get_day_chinese_name(self.lunar_day)}日"
 
     def __str__(self):
-        shi_chen_idx = get_shi_chen_idx(self.birthday_normal.hour)
+        shi_chen_idx = get_shi_chen_idx(self.input_datetime.hour)
         shi_chen = ZHI[shi_chen_idx]
         msg = f'''
         ## 基础信息
-        生日：{self.birthday_normal_str}
-        农历：{self.birthday_lunar_str}({self.birthday_lunar.strftime('%Y-%m-%d')} {shi_chen}时)
+        生日：{self.input_datetime_str}
+        农历：{self.lunar_of_input_datetime_str}({self.lunar_of_input_datetime.strftime('%Y-%m-%d')} {shi_chen}时)
         八字：{self.ba_zi}
         生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
         年干  月干  日干（{"男" if self.is_male else "女"}主）  时干

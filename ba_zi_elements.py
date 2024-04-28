@@ -12,7 +12,7 @@ class BaZiElements(MetaInfo):
         self.explain_append = kwargs.get('explain_append', False)
 
         self.primary_element = get_heavenly_stem_element(self.ri_gan)
-        self.support_element = SWAPPED_WU_XING_XIANG_SHENG[self.primary_element]
+        self.support_element = SWAPPED_ELEMENTS_SUPPORTING[self.primary_element]
         self.self_strong = self.calc_element_strength()
 
         self.elements_relationships = self.calc_element_relationship()
@@ -23,6 +23,11 @@ class BaZiElements(MetaInfo):
             element: (ELEMENTS_RELATIONS[i], elements_weight_rounded[element])
             for i, element in enumerate(self.elements_relationships)
         }
+
+        self.all_elements = [self.nian_gan_element, self.nian_zhi_element,
+                             self.yue_gan_element, self.yue_zhi_element,
+                             self.ri_zhi_element,
+                             self.shi_gan_element, self.shi_zhi_element, ]
 
         self.elements_matrix = [
             [
@@ -75,9 +80,9 @@ class BaZiElements(MetaInfo):
         for row in range(len(self.element_matrix)):
             for col in range(len(self.element_matrix[row])):
                 if self.element_matrix[row][col] in [self.primary_element, self.support_element]:
-                    positive_weight += GAN_ZHI_WU_XING_WEIGHT[row][col]
+                    positive_weight += GAN_ZHI_POSITION_WEIGHT[row][col]
                 else:
-                    negative_weight -= GAN_ZHI_WU_XING_WEIGHT[row][col]
+                    negative_weight -= GAN_ZHI_POSITION_WEIGHT[row][col]
 
         if positive_weight > 50:
             return True
@@ -99,17 +104,17 @@ class BaZiElements(MetaInfo):
         """
         elements_sequence = []
         if self.self_strong:
-            elements_sequence.append(WU_XING_XIANG_SHENG[self.primary_element])
-            elements_sequence.append(WU_XING_XIANG_KE[self.primary_element])
-            elements_sequence.append(SWAPPED_WU_XING_XIANG_KE[self.primary_element])
-            elements_sequence.append(SWAPPED_WU_XING_XIANG_SHENG[self.primary_element])
+            elements_sequence.append(ELEMENTS_SUPPORTING[self.primary_element])
+            elements_sequence.append(ELEMENTS_OPPOSING[self.primary_element])
+            elements_sequence.append(SWAPPED_ELEMENTS_OPPOSING[self.primary_element])
+            elements_sequence.append(SWAPPED_ELEMENTS_SUPPORTING[self.primary_element])
             elements_sequence.append(self.primary_element)
         else:
             elements_sequence.append(self.primary_element)
-            elements_sequence.append(SWAPPED_WU_XING_XIANG_SHENG[self.primary_element])
-            elements_sequence.append(WU_XING_XIANG_SHENG[self.primary_element])
-            elements_sequence.append(SWAPPED_WU_XING_XIANG_KE[self.primary_element])
-            elements_sequence.append(WU_XING_XIANG_KE[self.primary_element])
+            elements_sequence.append(SWAPPED_ELEMENTS_SUPPORTING[self.primary_element])
+            elements_sequence.append(ELEMENTS_SUPPORTING[self.primary_element])
+            elements_sequence.append(SWAPPED_ELEMENTS_OPPOSING[self.primary_element])
+            elements_sequence.append(ELEMENTS_OPPOSING[self.primary_element])
 
         return elements_sequence
 

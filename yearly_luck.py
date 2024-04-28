@@ -19,7 +19,7 @@ class YearlyLuck(TenYearsLuck):
 
         self.lord_god_explain = LordGodExplain(self)
         self.lord_god_explain.init_explanation()
-        self.opposing_element = WU_XING_XIANG_KE[self.ri_gan_element]
+        self.opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
 
         self.yearly_luck_items = self.build_yearly_luck_items()
 

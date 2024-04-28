@@ -17,7 +17,7 @@ from utils import *
 if __name__ == "__main__":
 
     life = LifePrediction(
-        birthday=datetime(1996, 1, 3, 5, 20, 0, 0),
+        base_datetime=datetime(1996, 1, 3, 5, 20, 0, 0),
         meta_info_display=True,
         explain_append=True,
         couple_birthday=datetime(1996, 1, 3, 5, 20, 0, 0),

@@ -157,6 +157,10 @@ class LordGodExplain:
         {tmp}
             """
 
+        if main_lord_god_count == single_explain_mapping['七杀'].lord_gods_count:
+            result += f"""
+        正印和七杀数量一致，说明所有七杀都被印克制，意味着官印相生，这时命主的学习能力比较强，学什么都很快，也很容易达成成就。
+            """
         return result
 
     def calc_shi_shen(self, single_explain_mapping):
@@ -242,7 +246,7 @@ class LordGodExplain:
         if shi_shen_count == 0:
             result += f"""
         命里有偏印没有食神，自己会和偏印所在宫的人不和：{pian_yin_list}
-        """
+            """
 
         return result
 
@@ -304,7 +308,7 @@ class ZhengYin(LordGodExplain):
         self.short_name = "印"
         self.type = "吉神（天使）"
         self.character = "聪明智慧，记性好，喜欢学习，心地善良，责任心强，少病少灾"
-        self.imagery = "房子，文书，教育，权利，超我，完美的道德标准"
+        self.imagery = "房子，文书，教育，口碑，权利，超我，完美的道德标准"
         self.career = "教师，艺术家，出版商，秘书，护士，宗教家，星象家，棋手"
         self.representatives = "长辈，贵人，师长"
         self.representatives_for_male = "自己的母亲"
@@ -318,7 +322,7 @@ class ZhengYin(LordGodExplain):
         正印是完美的道德标准，是一种超我，是一种权利，是一种责任心。
         """
 
-        position_explain = self.calc_position_explain()
+        position_explain, supporting_list, opposing_list = self.calc_position_explain()
         if position_explain:
             result += position_explain
 
@@ -334,19 +338,25 @@ class ZhengYin(LordGodExplain):
 
     def calc_position_explain(self):
         position_explain = []
+        supporting_list = []
+        opposing_list = []
         if self.name == self.lord_gods.nian_gan_lord_gods:
-            position_explain.append("父亲家族比较注重知识文化")
+            position_explain.append("父亲家族比较注重知识文化。")
+            self.append_opinion(self.lord_gods.nian_gan_element, '年干', supporting_list, opposing_list)
 
         nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
         if self.name in nian_zhi_lord_gods:
-            position_explain.append("母亲家族比较注重知识文化")
+            position_explain.append("母亲家族比较注重知识文化。")
+            self.append_opinion(self.lord_gods.nian_zhi_element, '年支', supporting_list, opposing_list)
 
         if self.name == self.lord_gods.yue_gan_lord_gods:
-            position_explain.append("初入社会时就通过文笔获得好名声")
+            position_explain.append("初入社会时就通过文笔获得好名声。")
+            self.append_opinion(self.lord_gods.yue_gan_element, '月干', supporting_list, opposing_list)
 
         yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
         if self.name in yue_zhi_lord_gods:
-            position_explain.append("有一定积累之后通过文笔获得好名声")
+            position_explain.append("有一定积累之后通过文笔获得好名声。同时，月令能量比较强大，代表命主比较顾家，但是有的时候有点懒，佛系拖延症。")
+            self.append_opinion(self.lord_gods.yue_zhi_element, '月支', supporting_list, opposing_list)
 
         ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
         if self.name in ri_zhi_lord_gods:
@@ -355,9 +365,20 @@ class ZhengYin(LordGodExplain):
                 tmp += "而且能帮助到自己的事业。"
             else:
                 tmp += "但是对象跟自己关系不好。"
+
+            if self.lord_gods.is_male:
+                tmp += "男命正印在日支，比较喜欢年纪比较大的异性，御姐。"
+
+            self.append_opinion(self.lord_gods.ri_zhi_element, '日支', supporting_list, opposing_list)
             position_explain.append(tmp)
 
-        return "\n".join(position_explain)
+        return "\n".join(position_explain), supporting_list, opposing_list
+
+    def append_opinion(self, element, position, supporting_list, opposing_list):
+        if element in self.lord_gods.supporting_elements_sequence:
+            supporting_list.append(position)
+        elif element in self.lord_gods.opposing_elements_sequence:
+            opposing_list.append(position)
 
     def calc_house_explain(self):
         house_explain = ""
@@ -454,19 +475,21 @@ class ShiShen(LordGodExplain):
 
         nian_lord_gods = [self.lord_gods.nian_gan_lord_gods] + [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
         if self.name in nian_lord_gods:
-            position_explain.append("食神在年柱，代表从小家庭殷实，衣食无忧")
+            position_explain.append("食神在年柱，代表从小家庭殷实，衣食无忧。")
 
         yue_lord_gods = [self.lord_gods.yue_gan_lord_gods] + [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
         if self.name in yue_lord_gods:
-            position_explain.append("食神在月柱，代表青年时期可以发财")
+            position_explain.append("食神在月柱，代表青年时期可以发财。")
 
-        ri_lord_gods = [self.lord_gods.ri_gan_lord_gods] + [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
+        ri_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
         if self.name in ri_lord_gods:
-            position_explain.append("食神在日柱，代表中年时期可以发财")
+            position_explain.append("食神在日柱，代表中年时期可以发财。")
 
         shi_lord_gods = [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
         if self.name in shi_lord_gods:
-            position_explain.append("食神在时柱，代表晚年生活无忧，同时子孙也可以发财")
+            position_explain.append("食神在时柱，代表晚年生活无忧，同时子孙也可以发财。同时，时柱为子女宫，食神旺容易生儿子。")
+            if not self.lord_gods.is_male and self.name in self.lord_gods.shi_gan_lord_gods:
+                position_explain.append("女命食神在时干，可能会梨型身材，好生养。")
 
         return "\n".join(position_explain)
 
@@ -526,6 +549,8 @@ class ZhengGuan(LordGodExplain):
 
         if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
             position_explain.append("正官在时柱，代表晚年有权有势，子女光明正直。")
+            if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_lord_gods]:
+                position_explain.append("女命正官在时干，容易生男孩。")
 
         return "\n".join(position_explain)
 
@@ -761,7 +786,8 @@ class QiSha(LordGodExplain):
         return result
 
     def calc_female_explain(self):
-        result = "七杀对女人来说是其他人的老公"
+        result = "七杀旺的女人比较瘦，筷子腿。"
+        result += "同时七杀对女人来说是其他人的老公。"
         if self.lord_gods_count > 3:
             result += "女人七杀多，多夫之像，遇到心动的男人的可能性比较大。\n"
         return result
@@ -805,10 +831,15 @@ class PianYin(LordGodExplain):
         if self.name in [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
             result += "偏印在月令代表必有一技之长"
             if len(self.lord_gods.all_lord_gods) - 1 > 0:
-                result += "，在其他干支代表命主会主动学习技术技能"
+                result += "，在其他干支代表命主会主动学习技术技能。"
         else:
-            result += "偏印没在月令，在其他干支代表命主会主动学习技术技能"
+            result += "偏印没在月令，在其他干支代表命主会主动学习技术技能。"
+
+        if self.name in self.lord_gods.shi_gan_lord_gods:
+            result += "枭印在时干，子女不旺，不容易有子嗣。"
+
         result += "\n"
+
         return result
 
 
@@ -834,6 +865,10 @@ class ShangGuan(LordGodExplain):
         本命有伤官，大运流年遇到伤官，会有官司口舌纷争。
         """
 
+        self_strong_explain = self.calc_self_strong_explain()
+        if self_strong_explain:
+            result += self_strong_explain
+
         position_explain = self.calc_position_explain()
         if position_explain:
             result += position_explain
@@ -848,17 +883,28 @@ class ShangGuan(LordGodExplain):
     def calc_position_explain(self):
 
         position_explain = []
-        if self.name in [self.lord_gods.nian_gan_lord_gods] + [item[2] for item in self.lord_gods.nian_zhi_lord_gods]:
+        nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
+        if self.name in [self.lord_gods.nian_gan_lord_gods] + nian_zhi_lord_gods:
             position_explain.append("年柱伤官代表出身贫寒家庭，小时候经常跟人起冲突，跟父母吵架。")
 
-        if self.name in [self.lord_gods.yue_gan_lord_gods] + [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
-            position_explain.append("月柱伤官代表青年时期经常跟人起冲突，可能染上官司。")
-
-        if self.name in [self.lord_gods.ri_gan_lord_gods] + [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
+        yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
+        if self.name in [self.lord_gods.yue_gan_lord_gods] + yue_zhi_lord_gods:
+            position_explain.append("月柱伤官代表青年时期经常跟人起冲突，可能染上官司。不适合从事平凡工作，点子多，才华横溢，头脑灵活，感受性强，爱好艺术，生活方式异于凡人，不容易被人了解。兄弟姐妹不全，大多不是头胎（数量少、流产、夭折）。")
+            if self.name in yue_zhi_lord_gods:
+                position_explain.append("伤官在月令，鬼头鬼脑，聪明绝顶，原创力、叛逆性强，不太服从管教，宜从事艺术、科技类的工作。特别严重的可能法律意识淡薄。")
+        # 伤官食神是财禄，生财的，财路广
+        ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
+        if self.name in ri_zhi_lord_gods:
             position_explain.append("日柱伤官代表夫妻吵架和官司。")
 
-        if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
+        shi_zhi_lord_gods = [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
+        if self.name in [self.lord_gods.shi_gan_lord_gods] + shi_zhi_lord_gods:
             position_explain.append("时柱伤官代表晚年经常跟人起冲突，可能染上官司。")
+
+        if not self.lord_gods.is_male and self.name in yue_zhi_lord_gods and self.name in ri_zhi_lord_gods:
+            position_explain.append("女性伤官在月令（能量强）和日支（夫妻宫）大概率离婚。")
+            if self.name in nian_zhi_lord_gods + yue_zhi_lord_gods + ri_zhi_lord_gods + shi_zhi_lord_gods:
+                position_explain.append("女性伤官四柱都有为，可能会有婚外情。")
 
         return "\n".join(position_explain)
 
@@ -874,6 +920,12 @@ class ShangGuan(LordGodExplain):
             female_explain += "女坐伤官必克夫。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
 
         return female_explain
+
+    def calc_self_strong_explain(self):
+        result = ""
+        if self.lord_gods.self_strong:
+            result += "身强又逢伤官，无论男女都长相清秀，受人喜欢。\n"
+        return result
 
 
 class JieCai(LordGodExplain):
@@ -1000,8 +1052,8 @@ class BiJian(LordGodExplain):
             position_explain.append(f"比肩在年柱，少年时期{'被同辈、同学坑' if self.lord_gods.self_strong else '多得同辈照顾'}")
 
         if self.name in [self.lord_gods.yue_gan_lord_gods] + [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
-            position_explain.append(f"比肩在月柱，青年时期{'被同辈、朋友坑，有财务冲突' if self.lord_gods.self_strong else '有同事、朋友照应'}")
-
+            position_explain.append(f"比肩在月柱，青年时期{'被同辈、朋友坑，有财务冲突' if self.lord_gods.self_strong else '有同事、朋友照应'}。")
+#自我观念强，不愿受限制，是难以驾驭的人。
         if self.name in [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
             position_explain.append(f"比肩在日柱，壮年时期{'与合伙人多有龃龉' if self.lord_gods.self_strong else '有伙伴合作愉快'}")
 
@@ -1071,6 +1123,8 @@ class PianCai(LordGodExplain):
 
         if self.name in [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
             position_explain.append("偏财在日支，代表配偶会给自己带来财富，同时代表感情方面会有烂桃花。")
+            if self.lord_gods.is_male:
+                position_explain.append("男命偏财在日支（夫妻宫），可能心有二意，脚踩两条船，有贼心没贼胆的喜欢搞暧昧，有贼心有贼胆的可能回去嫖娼。")
 
         if self.name in [self.lord_gods.shi_gan_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]:
             position_explain.append("偏财在时柱，代表晚年会比较有钱，子女的条件也会不错。")

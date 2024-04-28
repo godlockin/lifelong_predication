@@ -4,8 +4,8 @@ import constants
 from constants import *
 
 
-def parse_birthday_info(config):
-    return config.get('birthday', constants.BASE_DATE)
+def parse_input_datetime_info(config):
+    return config.get('base_datetime', constants.BASE_DATE)
 
 
 def get_heavenly_stem_element(heavenly_stem):

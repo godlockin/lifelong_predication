@@ -84,13 +84,13 @@ class Intermarriage:
         male_primary_element = self.man_demigod.primary_element
         female_primary_element = self.woman_demigod.primary_element
 
-        if WU_XING_XIANG_KE[male_primary_element] == female_primary_element:
+        if ELEMENTS_OPPOSING[male_primary_element] == female_primary_element:
             return '男方追女方'
-        elif WU_XING_XIANG_KE[female_primary_element] == male_primary_element:
+        elif ELEMENTS_OPPOSING[female_primary_element] == male_primary_element:
             return '女方追男方'
-        elif WU_XING_XIANG_SHENG[male_primary_element] == female_primary_element:
+        elif ELEMENTS_SUPPORTING[male_primary_element] == female_primary_element:
             return '女方追男方'
-        elif WU_XING_XIANG_SHENG[female_primary_element] == male_primary_element:
+        elif ELEMENTS_SUPPORTING[female_primary_element] == male_primary_element:
             return '男方追女方'
         return '男方追女方'
 
@@ -318,7 +318,7 @@ class Intermarriage:
             },
         }
 
-        marry_date_meta = MetaInfo(birthday=self.marry_date)
+        marry_date_meta = MetaInfo(base_datetime=self.marry_date)
         check_date = marry_date_meta.ri_zhu
 
         check = {}
@@ -337,7 +337,7 @@ class Intermarriage:
 
             idx_month = marry_date_meta.lunar_month
             result += f"""
-        预期婚期为：{marry_date_meta.birthday_normal.strftime('%Y-%m-%d')}，农历：{marry_date_meta.birthday_lunar_str}
+        预期婚期为：{marry_date_meta.input_datetime.strftime('%Y-%m-%d')}，农历：{marry_date_meta.lunar_of_input_datetime_str}
         年支为：{idx_zhi}，婚期预计为农历 {idx_month} 月「{msg}」
         """
             if check_date in messed_up_date:

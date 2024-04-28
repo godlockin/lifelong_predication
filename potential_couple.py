@@ -118,9 +118,9 @@ class PotentialCouple(LordGods):
         self_ri_gan_element = self_ri_gan_details['element']
         self_ri_gan_yinyang = self_ri_gan_details['yinyang']
         if self.is_male:
-            self.couple_gan_element = WU_XING_XIANG_KE[self_ri_gan_element]
+            self.couple_gan_element = ELEMENTS_OPPOSING[self_ri_gan_element]
         else:
-            self.couple_gan_element = SWAPPED_WU_XING_XIANG_KE[self_ri_gan_element]
+            self.couple_gan_element = SWAPPED_ELEMENTS_OPPOSING[self_ri_gan_element]
 
         couple_primary_yin_yang = YIN_YANG_SWAP[self_ri_gan_yinyang]
         couple_secondary_yin_yang = self_ri_gan_yinyang

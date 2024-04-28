@@ -24,7 +24,7 @@ if __name__ == "__main__":
     ru_zhui = args.ru_zhui
 
     life = LifePrediction(
-        birthday=main_birthday,
+        base_datetime=main_birthday,
         meta_info_display=True,
         explain_append=explain_append,
         couple_birthday=couple_birthday,

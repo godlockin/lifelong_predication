@@ -1,8 +1,9 @@
+from lord_gods import LordGods
 from utils import *
 from ba_zi_elements import BaZiElements
 
 
-class FamilySupport(BaZiElements):
+class FamilySupport(LordGods):
 
     """
     喜用就关系好，能得到六亲的帮助
@@ -27,15 +28,9 @@ class FamilySupport(BaZiElements):
             self.spouse,
             self.primary_child,
             self.following_child,
-        ] = [self.elements_relationships_mapping[item][0] for item in [self.nian_gan_element,
-                                                                       self.nian_zhi_element,
-                                                                       self.yue_gan_element,
-                                                                       self.yue_zhi_element,
-                                                                       self.ri_zhi_element,
-                                                                       self.shi_gan_element,
-                                                                       self.shi_zhi_element,
-                                                                       ]
-             ]
+        ] = [self.elements_relationships_mapping[item][0] for item in self.all_elements]
+
+        self.family_relations = self.calc_family_relations()
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -57,4 +52,129 @@ class FamilySupport(BaZiElements):
         时干（长子）：{self.primary_child}
         时支（次子）：{self.following_child}
         '''
+
+        if self.family_relations:
+            msg += f'''
+        {self.family_relations}
+            '''
         return msg
+
+    def calc_family_relations(self):
+        result = []
+        # 年柱
+        result.extend(self.calc_nian_zhu())
+        # 月柱
+        result.extend(self.calc_yue_zhu())
+        # 日柱
+        result.extend(self.calc_ri_zhu())
+        # 时柱
+        result.extend(self.calc_shi_zhu())
+
+        return "\n".join(result) if result else ""
+
+    def calc_nian_zhu(self):
+        result = []
+        result.append("年柱代表祖先宫和父母。")
+        nian_positive = 0
+        if self.nian_gan_element in self.supporting_elements_sequence:
+            result.append(f"年干（{self.nian_zhi_element}）为喜用，代表父亲家族对自己有促进作用。")
+            nian_positive += 1
+        if self.nian_zhi_element in self.supporting_elements_sequence:
+            result.append(f"年支（{self.nian_zhi_element}）为喜用，代表母亲家族对自己有促进作用。")
+            nian_positive += 1
+        if nian_positive == 2:
+            result.append(f"年柱（{self.nian_zhi_element}/{self.nian_zhi_element}）双喜用，代表祖上为名门望族，有钱有势。面相上，额头（福德宫）上比较饱满。")
+
+        nian_negative = 0
+        if self.nian_gan_element in self.opposing_elements_sequence:
+            result.append(f"年干（{self.nian_zhi_element}）为忌凶，代表父亲家族会拖累自己。")
+            nian_negative += 1
+        if self.nian_zhi_element in self.opposing_elements_sequence:
+            result.append(f"年支（{self.nian_zhi_element}）为忌凶，代表母亲家族会拖累自己。")
+            nian_negative += 1
+        if nian_negative == 2:
+            result.append(f"年柱（{self.nian_zhi_element}/{self.nian_zhi_element}）双忌凶，代表祖上情况比较一般，对自己没有帮助甚至需要消耗自己。")
+
+        if ELEMENTS_SUPPORTING[self.nian_gan_element] == self.nian_zhi_element or SWAPPED_ELEMENTS_SUPPORTING[self.nian_gan_element] == self.nian_zhi_element:
+            result.append(f"年柱（{self.nian_gan_element}/{self.nian_zhi_element}）五行相生，代表父母关系良好。")
+            if ELEMENTS_SUPPORTING[self.nian_gan_element] == self.nian_zhi_element:
+                result.append(f"「{self.nian_gan_element}」生「{self.nian_zhi_element}」，母亲会促进父亲。")
+            else:
+                result.append(f"「{self.nian_zhi_element}」生「{self.nian_gan_element}」，父亲会促进母亲。")
+
+        elif ELEMENTS_OPPOSING[self.nian_gan_element] == self.nian_zhi_element or SWAPPED_ELEMENTS_OPPOSING[self.nian_gan_element] == self.nian_zhi_element:
+            result.append(f"年柱（{self.nian_gan_element}/{self.nian_zhi_element}）五行相克，代表父母关系不好。")
+            if ELEMENTS_OPPOSING[self.nian_gan_element] == self.nian_zhi_element:
+                result.append(f"「{self.nian_gan_element}」克「{self.nian_zhi_element}」，父亲会压制母亲。")
+            else:
+                result.append(f"「{self.nian_zhi_element}」克「{self.nian_gan_element}」，母亲会压制父亲。")
+
+        return result
+
+    def calc_yue_zhu(self):
+        result = []
+        result.append("月柱代表成长环境和兄弟姐妹。")
+        yue_positive = 0
+        if self.yue_gan_element in self.supporting_elements_sequence:
+            result.append(f"月干（{self.yue_zhi_element}）为喜用，代表哥哥姐姐对自己有促进作用。")
+            yue_positive += 1
+        if self.yue_zhi_element in self.supporting_elements_sequence:
+            result.append(f"月支（{self.yue_zhi_element}）为喜用，代表弟弟妹妹对自己有促进作用。")
+            yue_positive += 1
+        if yue_positive == 2:
+            result.append(f"月柱（{self.yue_zhi_element}/{self.yue_zhi_element}）双喜用，代表同辈兄弟姐妹感情深厚，对命主多有帮助。")
+
+        yue_negative = 0
+        if self.yue_gan_element in self.opposing_elements_sequence:
+            result.append(f"月干（{self.yue_zhi_element}）为忌凶，代表哥哥姐姐会拖累自己。")
+            yue_negative += 1
+        if self.yue_zhi_element in self.opposing_elements_sequence:
+            result.append(f"月支（{self.yue_zhi_element}）为忌凶，代表弟弟妹妹会拖累自己。")
+            yue_negative += 1
+        if yue_negative == 2:
+            result.append(f"月柱（{self.yue_zhi_element}/{self.yue_zhi_element}）双忌凶，代表命主与兄弟姐妹不和，无法相互依靠，同时月柱也代表命主成长环境波折多阻。")
+
+        return result
+
+    def calc_ri_zhu(self):
+        result = []
+        result.append("日柱为夫妻宫代表对象。")
+        if self.ri_zhi_element in self.supporting_elements_sequence:
+            result.append(f"日支（{self.ri_zhi_element}）为喜用，可以{'娶贤妻' if self.is_male else '嫁贤夫'}，婚姻美满。")
+            if self.is_male and '正财' in [item[2] for item in self.ri_zhi_lord_gods]:
+                result.append(f"同时正财在日支，比较适合让老婆管钱，能让整体生活水平上升。性生活较和谐，双方需求都能满足。")
+
+        if self.ri_zhi_element in self.opposing_elements_sequence:
+            result.append(f"日支（{self.ri_zhi_element}）为忌凶，代表婚姻波折、口角纷争多，甚至可能离婚。性生活不太和谐。")
+
+        if ELEMENTS_SUPPORTING[self.ri_gan_element] == self.ri_zhi_element or SWAPPED_ELEMENTS_SUPPORTING[self.ri_gan_element] == self.ri_zhi_element:
+            result.append(f"日柱（{self.ri_gan_element}/{self.ri_zhi_element}）五行相生，代表夫妻相敬如宾情深意切。")
+            if ELEMENTS_SUPPORTING[self.ri_gan_element] == self.ri_zhi_element:
+                result.append(f"「{self.ri_gan_element}」生「{self.ri_zhi_element}」，对象促进自己。")
+            else:
+                result.append(f"「{self.ri_zhi_element}」生「{self.ri_gan_element}」，自己促进对象。")
+
+        elif ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element or SWAPPED_ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element:
+            result.append(f"日柱（{self.ri_gan_element}/{self.ri_zhi_element}）五行相克，代表夫妻反目，视如仇敌。")
+            if ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element:
+                result.append(f"「{self.ri_gan_element}」克「{self.ri_zhi_element}」，自己压制对象。")
+            else:
+                result.append(f"「{self.ri_zhi_element}」克「{self.ri_gan_element}」，对象压制自己。")
+
+        return result
+
+    def calc_shi_zhu(self):
+        result = []
+        result.append("时柱代表学业、事业、子女。")
+        if self.shi_gan_element in self.supporting_elements_sequence:
+            result.append(f"时干（{self.shi_gan_element}）为喜用，晚年幸福，儿孙抱膝。")
+        if self.shi_zhi_element in self.supporting_elements_sequence:
+            result.append(f"时支（{self.shi_zhi_element}）为喜用，学业、事业可以凭自己努力成功。")
+
+        if self.shi_gan_element in self.opposing_elements_sequence:
+            result.append(f"时干（{self.shi_gan_element}）为忌凶，子女难管、难养。年纪大了之后，小孩不太来看你，你们没啥交流。")
+        if self.shi_zhi_element in self.opposing_elements_sequence:
+            result.append(f"时支（{self.shi_zhi_element}）为忌凶，子女孝顺，亲近{'父亲' if self.is_male else '母亲'}。学业、事业很难凭自己努力成功。")
+
+        return result
+

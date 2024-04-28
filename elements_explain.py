@@ -77,10 +77,10 @@ class ElementsExplain:
             tmp = conditions[element]
             element_list = [
                 element,
-                SWAPPED_WU_XING_XIANG_SHENG[element],
-                WU_XING_XIANG_SHENG[element],
-                WU_XING_XIANG_KE[element],
-                SWAPPED_WU_XING_XIANG_KE[element],
+                SWAPPED_ELEMENTS_SUPPORTING[element],
+                ELEMENTS_SUPPORTING[element],
+                ELEMENTS_OPPOSING[element],
+                SWAPPED_ELEMENTS_OPPOSING[element],
             ]
 
             score_list = [self.elements_count[e] * ELEMENTS_POSITION_DELTA[idx] for idx, e in enumerate(element_list)]
@@ -123,7 +123,7 @@ class ElementsExplain:
             },
             '火': {
                 'explain': "火主礼，名日炎上，为向上发光、发热、温暖之意。",
-                'color': "红色、赤色、橋红色、粉红色",
+                'color': "红色、赤色、橋红色、粉红色、紫色",
                 'number': "2/7",
                 'direction': "南",
                 'symbol': '三角形',

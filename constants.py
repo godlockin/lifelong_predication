@@ -276,6 +276,21 @@ ZHI_DETAILS = {line[0]: {
 
 ZHI = list(ZHI_DETAILS.keys())
 
+CANG_GAN = {
+    "子": ["癸", "", "", ],
+    "卯": ["乙", "", "", ],
+    "午": ["丁", "己", "", ],
+    "酉": ["辛", "", "", ],
+    "寅": ["甲", "丙", "戊", ],
+    "巳": ["丙", "戊", "庚", ],
+    "申": ["庚", "壬", "戊", ],
+    "亥": ["壬", "甲", "", ],
+    "丑": ["己", "癸", "辛", ],
+    "辰": ["戊", "乙", "癸", ],
+    "未": ["己", "丁", "乙", ],
+    "戌": ["戊", "辛", "丁", ],
+}
+
 LUNAR_INFO = [0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
               0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
               0x04970, 0x0a4b0, 0x0b4b5, 0x06a50, 0x06d40, 0x1ab54, 0x02b60, 0x09570, 0x052f2, 0x04970,
@@ -350,26 +365,26 @@ WU_XING_ZHU_YI = {
 }
 
 # 相生关系为：金生水，水生木，木生火，火生土，土生金
-WU_XING_XIANG_SHENG = {
+ELEMENTS_SUPPORTING = {
     "金": "水",
     "水": "木",
     "木": "火",
     "火": "土",
     "土": "金",
 }
-SWAPPED_WU_XING_XIANG_SHENG = {value: key for key, value in WU_XING_XIANG_SHENG.items()}
+SWAPPED_ELEMENTS_SUPPORTING = {value: key for key, value in ELEMENTS_SUPPORTING.items()}
 
 # 相克关系为：火克金，金克木，木克土，土克水，水克火
-WU_XING_XIANG_KE = {
+ELEMENTS_OPPOSING = {
     "火": "金",
     "金": "木",
     "木": "土",
     "土": "水",
     "水": "火",
 }
-SWAPPED_WU_XING_XIANG_KE = {value: key for key, value in WU_XING_XIANG_KE.items()}
+SWAPPED_ELEMENTS_OPPOSING = {value: key for key, value in ELEMENTS_OPPOSING.items()}
 
-GAN_ZHI_WU_XING_WEIGHT = [
+GAN_ZHI_POSITION_WEIGHT = [
     [8, 12, 0, 12],
     [4, 40, 12, 12]
 ]
