@@ -89,6 +89,7 @@ class ElementsExplain:
             if score > 3:
                 elements_healthy[element] = {
                     "score": score,
+                    'count': self.elements_count[element],
                     "status": "旺",
                     "organ": tmp["organ"],
                     "emotion": tmp["emotion"],
@@ -97,6 +98,7 @@ class ElementsExplain:
             elif score < 1:
                 elements_healthy[element] = {
                     "score": score,
+                    'count': self.elements_count[element],
                     "status": "衰",
                     "organ": tmp["organ"],
                     "emotion": tmp["emotion"],
@@ -136,7 +138,7 @@ class ElementsExplain:
                 'company_with': '夸赞，彩虹屁，避免硬碰硬',
             },
             '土': {
-                'explain': "土主信， 土日稼穑，为生券万物、券育、孕育之意",
+                'explain': "土主信，土日稼穑，为生券万物、券育、孕育之意",
                 'color': "黄色、咖啡色、茶色、褐色",
                 'number': "5/10（0）",
                 'direction': "中",
@@ -225,19 +227,16 @@ class ElementsExplain:
 
         msg = f"""
         五行对应五脏，金主肺，水主肾，木主干，火主心，土主脾。
-        如果八 字中某一属性过旺(3 个或 3 个以上)，就会导致该五行克的属性太弱，这两个属性都会有对应的疾病隐患，同样如果一个五行没有，也是太弱。
+        如果八字中某一属性过旺(3个或3个以上)，就会导致该五行克的属性太弱，这两个属性都会有对应的疾病隐患，同样如果一个五行没有，也是太弱。
         """
-        element_health_details = []
         for item in self.elements_healthy_list:
             details = item[1]
-            element_health_details.append(f"{item[0]}（{details['score']}）：{details['status']}\n"
-                                          f"所属器官：{details['organ']}\n"
-                                          f"情绪：{details['emotion']}\n"
-                                          f"易感症状：{details['hidden_danger']}")
-        tmp_str = "\n".join(element_health_details)
-        msg += f'''
-        {tmp_str}
-        '''
+            msg += f"""
+        {item[0]}（{details.get('count', 0)}/{details['score']}）：{details['status']}
+        所属器官：{details['organ']}
+        情绪：{details['emotion']}
+        易感症状：{details['hidden_danger']}
+            """
 
         return msg
 

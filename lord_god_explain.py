@@ -99,12 +99,12 @@ class LordGodExplain:
     def calc_all_lord_gods_explain(self):
         all_explain = f"""
         ### 十神解析
-        十神也讲究平衡，无论吉神与恶神，多了都不好；一位为真，两位为争，三位为病，四五六都不好，七个反而变好了。
+        十神也讲究平衡，无论吉神与恶神，多了都不好；一位为真，两位为争，三位为杂，四五六个乱如麻，七个八个反成奇。
         """
 
         all_lord_gods_names = list(set(self.lord_gods.all_lord_gods))
         single_explain = [self.single_explain_mapping[item] for item in all_lord_gods_names]
-        single_explain.sort(key=lambda x: (x.total_weight, x.lord_gods_count), reverse=True)
+        single_explain.sort(key=lambda x: (x.lord_gods_count, x.total_weight), reverse=True)
         for item in single_explain:
             all_explain += f"""
         {item.explain()}
@@ -324,15 +324,21 @@ class ZhengYin(LordGodExplain):
 
         position_explain, supporting_list, opposing_list = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         house_explain = self.calc_house_explain()
         if house_explain:
-            result += house_explain
+            result += f"""
+        {house_explain}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
@@ -341,22 +347,30 @@ class ZhengYin(LordGodExplain):
         supporting_list = []
         opposing_list = []
         if self.name == self.lord_gods.nian_gan_lord_gods:
-            position_explain.append("父亲家族比较注重知识文化。")
-            self.append_opinion(self.lord_gods.nian_gan_element, '年干', supporting_list, opposing_list)
+            position_explain.append("父亲家族比较注重知识文化。\n受祖母、双亲宠爱、呵护（尤其是母亲）。\n双亲及长辈个性温和，富有人情味。\n幼时家境大多较好。")
+            tmp_s, tmp_o = self.append_opinion(self.lord_gods.nian_gan_element, '年干')
+            supporting_list.extend(tmp_s)
+            opposing_list.extend(tmp_o)
 
         nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
         if self.name in nian_zhi_lord_gods:
-            position_explain.append("母亲家族比较注重知识文化。")
-            self.append_opinion(self.lord_gods.nian_zhi_element, '年支', supporting_list, opposing_list)
+            position_explain.append("母亲家族比较注重知识文化。\n兄弟姐妹样貌都长得不错，理智，口才好，写作能力亦佳。\n记忆力好。")
+            tmp_s, tmp_o = self.append_opinion(self.lord_gods.nian_zhi_element, '年支')
+            supporting_list.extend(tmp_s)
+            opposing_list.extend(tmp_o)
 
         if self.name == self.lord_gods.yue_gan_lord_gods:
-            position_explain.append("初入社会时就通过文笔获得好名声。")
-            self.append_opinion(self.lord_gods.yue_gan_element, '月干', supporting_list, opposing_list)
+            position_explain.append("初入社会时就通过文笔获得好名声。\n受母亲的教养比父亲多。\n聪明、慈悲、性好胜、博学、容易成名。\n儿女孝顺，尤其是次子、次女、四子、四女；儿女善变、乏耐性、但不失稳重。")
+            tmp_s, tmp_o = self.append_opinion(self.lord_gods.yue_gan_element, '月干')
+            supporting_list.extend(tmp_s)
+            opposing_list.extend(tmp_o)
 
         yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
         if self.name in yue_zhi_lord_gods:
-            position_explain.append("有一定积累之后通过文笔获得好名声。同时，月令能量比较强大，代表命主比较顾家，但是有的时候有点懒，佛系拖延症。")
-            self.append_opinion(self.lord_gods.yue_zhi_element, '月支', supporting_list, opposing_list)
+            position_explain.append("有一定积累之后通过文笔获得好名声。\n同时，月令能量比较强大，代表命主比较顾家，但是有的时候有点懒，佛系拖延症。\n大都是智慧型人物。\n因为容易受父母宠溺而养成耽于安乐、华而不实、依赖心重的个性。\n富有人情味、爱面子、喜欢人家恭维，有优越感，守旧，用钱保守。\n男性多不是长子，女性多是长女（代行母职）")
+            tmp_s, tmp_o = self.append_opinion(self.lord_gods.yue_zhi_element, '月支')
+            supporting_list.extend(tmp_s)
+            opposing_list.extend(tmp_o)
 
         ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
         if self.name in ri_zhi_lord_gods:
@@ -367,18 +381,32 @@ class ZhengYin(LordGodExplain):
                 tmp += "但是对象跟自己关系不好。"
 
             if self.lord_gods.is_male:
-                tmp += "男命正印在日支，比较喜欢年纪比较大的异性，御姐。"
+                tmp += "\n男命正印在日支，比较喜欢年纪比较大的异性，御姐。\n"
 
-            self.append_opinion(self.lord_gods.ri_zhi_element, '日支', supporting_list, opposing_list)
+            tmp += "配偶贤良有助力，以日主弱者尤佳（甲子、乙亥、戊午、己巳日）。\n配偶气质高雅。\n容易逃避现实问题。\n有谦让的君子风度。"
+
+            tmp_s, tmp_o = self.append_opinion(self.lord_gods.ri_zhi_element, '日支')
+            supporting_list.extend(tmp_s)
+            opposing_list.extend(tmp_o)
             position_explain.append(tmp)
+
+        if self.name == self.lord_gods.shi_gan_lord_gods:
+            position_explain.append("儿女聪明孝顺，晚年享受盛誉，衣食无忧。\n职业居处常变动。")
+
+        shi_zhi_lord_gods = [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
+        if self.name in shi_zhi_lord_gods:
+            position_explain.append("巧于谋事，食禄丰厚。\n一生与名声、荣誉结缘。\n掌大权、任要职，是受重视的人物；生月支是正官者，晚年尊荣。\n性生活比较呆板清淡。")
 
         return "\n".join(position_explain), supporting_list, opposing_list
 
-    def append_opinion(self, element, position, supporting_list, opposing_list):
+    def append_opinion(self, element, position) -> (list, list):
         if element in self.lord_gods.supporting_elements_sequence:
-            supporting_list.append(position)
+            return [position], []
         elif element in self.lord_gods.opposing_elements_sequence:
-            opposing_list.append(position)
+            return [], [position]
+        else:
+            return [], []
+
 
     def calc_house_explain(self):
         house_explain = ""
@@ -452,15 +480,21 @@ class ShiShen(LordGodExplain):
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
@@ -522,16 +556,22 @@ class ZhengGuan(LordGodExplain):
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         if not self.lord_gods.is_male:
             female_explain = self.calc_female_explain()
             if female_explain:
-                result += female_explain
+                result += f"""
+        {female_explain}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
@@ -594,20 +634,28 @@ class ZhengCai(LordGodExplain):
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         if self.lord_gods.is_male:
             male_explain = self.calc_male_explain()
             if male_explain:
-                result += male_explain
+                result += f"""
+        {male_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
@@ -681,19 +729,33 @@ class QiSha(LordGodExplain):
         if not self.lord_gods.is_male:
             female_explain = self.calc_female_explain()
             if female_explain:
-                result += female_explain
+                result += f"""
+        {female_explain}
+            """
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
+
+        position_explain_extra = self.calc_position_explain_extra()
+        if position_explain_extra:
+            result += f"""
+        {position_explain_extra}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
@@ -757,7 +819,12 @@ class QiSha(LordGodExplain):
             position_explain += f"{zhi_position}容易出慢性病。" if zhi_position else ""
             position_explain += "\n"
 
+        if self.name in [self.lord_gods.nian_gan_lord_gods] + [item[2] for item in self.lord_gods.nian_zhi_lord_gods]:
+            position_explain += "七杀在年柱，小时候家里管的比较严，可能过于严格棍棒教育\n"
         return position_explain
+
+    def calc_position_explain_extra(self):
+        pass
 
     def calc_self_strong_explain(self):
         result = "七杀如果有东西克制可能会变好，但是如果没有克制，在天干容易突发灾祸致残致死，在地支为慢性恶疾。\n"
@@ -812,35 +879,54 @@ class PianYin(LordGodExplain):
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         not_exists_explain = self.calc_not_exists_explain()
         if not_exists_explain:
-            result += not_exists_explain
+            result += f"""
+        {not_exists_explain}
+            """
 
         return result
 
     def calc_not_exists_explain(self):
-        if self.lord_gods_count != 0:
-            return ""
-
-        return "命局没有偏印，做事不注重细节，没法感知别人内心的感受。"
+        return "命局没有偏印，做事不注重细节，没法感知别人内心的感受。" if self.lord_gods_count == 0 else ""
 
     def calc_position_explain(self):
-        result = ""
-        if self.name in [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
-            result += "偏印在月令代表必有一技之长"
+
+        position_explain = []
+        if self.name == self.lord_gods.nian_gan_lord_gods:
+            position_explain.append("双亲是有理想有能力的人，由于忙碌冷落了你。\n与出生地无缘，会抛弃祖产在他乡创立家业。\n如果年支又是偏印，长亲不利，祖上寒微。")
+
+        nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
+        if self.name in nian_zhi_lord_gods:
+            position_explain.append("兄弟姐妹不喜欢受束缚，善辩，不喜欢吐露心事，容易与亲族疏远，被认为是“怪人”。\n与出生地缘分薄，大多在他乡打拼。")
+
+        if self.name == self.lord_gods.yue_gan_lord_gods:
+            position_explain.append("生活方式异于常人，常被认为是“怪人”。\n头脑灵活第六感强，求知欲强，不喜陈旧很创新。\n宜当医生、艺术家。")
+
+        yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
+        if self.name in yue_zhi_lord_gods:
+            result = "偏印在月令代表必有一技之长"
             if len(self.lord_gods.all_lord_gods) - 1 > 0:
                 result += "，在其他干支代表命主会主动学习技术技能。"
-        else:
-            result += "偏印没在月令，在其他干支代表命主会主动学习技术技能。"
+            position_explain.append(result)
+            position_explain.append("性情，爱之欲其生，恨之欲其死。\n孤独，不喜欢袒露心声，遇事常以消极的态度抵制。\n与打针、吃药结了不了之缘（肠胃病居多）。有的人久病成医，与宗教也很有缘，常吃斋或清修。\n以五术为业，若临衰病死绝之位，其貌不扬，人气不好。")
+
+        ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
+        if self.name in ri_zhi_lord_gods:
+            position_explain.append("看日元当令与否：日强者，配偶贤良，日弱者，配偶带给你烦恼。\n丙寅、壬申日的女性，幸福、得优秀的子女；男性妻子娴淑。\n丁卯、癸酉日生人，幼年时代易患大病，早离双亲，婚姻不美满。\n癸酉日生的女性，夫缘尤劣。\n庚辰、辛丑日生者，与父母缘薄；男性，妻缘不好，女性，可得贤良子女，一生幸福，但庚辰日生者，夫缘不佳。\n辛未、庚戌日生人，双亲缘薄，婚姻不美满；女性，表面柔顺内心冷酷，克翁姑。\n幼年时容易生病，而且都属于严重危险的急症。\n能以发明、创作成功。")
 
         if self.name in self.lord_gods.shi_gan_lord_gods:
-            result += "枭印在时干，子女不旺，不容易有子嗣。"
+            position_explain.append("枭印在时干，子女不旺，不容易有子嗣。\n兼职多，晚年亦不得清闲。\n子女性情不良（特异的特质），若为喜用神，子女酉特殊成就、孝顺；若为忌神，子女夭折，甚者绝嗣。")
 
-        result += "\n"
+        shi_zhi_lord_gods = [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
+        if self.name in shi_zhi_lord_gods:
+            position_explain.append("不喜欢热闹、喧哗，喜欢独自研究学术、技艺，铁I人。\n对医药、占卜、风水、宗教等有深入的研究或特殊的成就。\n时干正印则代表同时拥有两种以上的工作。")
 
-        return result
+        return "\n".join(position_explain) if position_explain else ""
 
 
 class ShangGuan(LordGodExplain):
@@ -867,16 +953,22 @@ class ShangGuan(LordGodExplain):
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         if not self.lord_gods.is_male:
             female_explain = self.calc_female_explain()
             if female_explain:
-                result += female_explain
+                result += f"""
+        {female_explain}
+            """
 
         return result
 
@@ -909,10 +1001,7 @@ class ShangGuan(LordGodExplain):
         return "\n".join(position_explain)
 
     def calc_not_exists_explain(self):
-        if self.lord_gods_count != 0:
-            return ""
-
-        return "命局没有偏印，做事不注重细节，没法感知别人内心的感受。"
+        return "命局没有偏印，做事不注重细节，没法感知别人内心的感受。" if self.lord_gods_count == 0 else ""
 
     def calc_female_explain(self):
         female_explain = "女带伤官必骂夫，夫妻经常吵吵闹闹。"
@@ -959,11 +1048,15 @@ class JieCai(LordGodExplain):
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         gander_explain = self.calc_gander_explain()
         if gander_explain:
-            result += gander_explain
+            result += f"""
+        {gander_explain}
+            """
 
         return result
 
@@ -1028,11 +1121,15 @@ class BiJian(LordGodExplain):
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         return result
 
@@ -1053,7 +1150,7 @@ class BiJian(LordGodExplain):
 
         if self.name in [self.lord_gods.yue_gan_lord_gods] + [item[2] for item in self.lord_gods.yue_zhi_lord_gods]:
             position_explain.append(f"比肩在月柱，青年时期{'被同辈、朋友坑，有财务冲突' if self.lord_gods.self_strong else '有同事、朋友照应'}。")
-#自我观念强，不愿受限制，是难以驾驭的人。
+        #自我观念强，不愿受限制，是难以驾驭的人。
         if self.name in [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
             position_explain.append(f"比肩在日柱，壮年时期{'与合伙人多有龃龉' if self.lord_gods.self_strong else '有伙伴合作愉快'}")
 
@@ -1091,15 +1188,21 @@ class PianCai(LordGodExplain):
         if self.lord_gods.is_male:
             male_explain = self.calc_male_explain()
             if male_explain:
-                result += male_explain
+                result += f"""
+        {male_explain}
+            """
 
         self_strong_explain = self.calc_self_strong_explain()
         if self_strong_explain:
-            result += self_strong_explain
+            result += f"""
+        {self_strong_explain}
+            """
 
         position_explain = self.calc_position_explain()
         if position_explain:
-            result += position_explain
+            result += f"""
+        {position_explain}
+            """
 
         return result
 

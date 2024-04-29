@@ -137,6 +137,16 @@ TIAN_GAN_CHONG = [
     "丙壬",
     "丁癸",
 ]
+TIAN_GAN_CHONG_MAPPING = {
+    "甲": "庚",
+    "庚": "甲",
+    "乙": "辛",
+    "辛": "乙",
+    "丙": "壬",
+    "壬": "丙",
+    "丁": "癸",
+    "癸": "丁",
+}
 
 YIN_YANG = ["阳", "阴"]
 YIN_YANG_SWAP = {
@@ -158,6 +168,7 @@ GAN_MATRIX = [
     ["癸", "北", "阴", "水", "黑/蓝", "肾", "足", "(小水)溪、井、小河、露水、下水道", "雨露之水", "润物无声，其性柔质软，润泽万物，故为阴水。",]
 ]
 GAN_DETAILS = {line[0]: {
+    "gan": line[0],
     "direction": line[1],
     "yinyang": line[2],
     "element": line[3],
@@ -168,8 +179,22 @@ GAN_DETAILS = {line[0]: {
     "meaning": line[8],
     "explanation": line[9],
 } for line in GAN_MATRIX}
-
 GAN = list(GAN_DETAILS.keys())
+
+GAN_ELEMENTS_MAPPING = {
+    f"{line[2]}_{line[3]}": {
+        "gan": line[0],
+        "direction": line[1],
+        "yinyang": line[2],
+        "element": line[3],
+        "color": line[4],
+        "organ": line[5],
+        "body_part": line[6],
+        "image": line[7],
+        "meaning": line[8],
+        "explanation": line[9],
+    } for line in GAN_MATRIX
+}
 
 # 子丑合土，寅亥合木，卯戌合火，辰酉合金，巳申合水，午未合土。
 DI_ZHI_HE = [
@@ -262,6 +287,7 @@ ZHI_MATRIX = [
     ["亥", "西北", "蓝/黑", "阴", "水", "阴历10月", "21～23点", "壬甲", "猪", "肾", "头", ],
 ]
 ZHI_DETAILS = {line[0]: {
+    "zhi": line[0],
     "direction": line[1],
     "color": line[2],
     "yinyang": line[3],
@@ -273,8 +299,24 @@ ZHI_DETAILS = {line[0]: {
     "organ": line[9],
     "body_part": line[10],
 } for line in ZHI_MATRIX}
-
 ZHI = list(ZHI_DETAILS.keys())
+
+ZHI_ELEMENTS_MAPPING = {
+    f"{line[3]}_{line[4]}": {
+        "zhi": line[0],
+        "direction": line[1],
+        "color": line[2],
+        "yinyang": line[3],
+        "element": line[4],
+        "month": line[5],
+        "time": line[6],
+        "cang_tian_gan": line[7],
+        "zodiac": line[8],
+        "organ": line[9],
+        "body_part": line[10],
+    }
+    for line in ZHI_MATRIX
+}
 
 CANG_GAN = {
     "子": ["癸", "", "", ],
@@ -337,6 +379,18 @@ LORD_GODS_MATRIX = [
     ["壬", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印", "比肩", "劫财"],
     ["癸", "伤官", "食神", "正财", "偏财", "正官", "七杀", "正印", "偏印", "劫财", "比肩"],
 ]
+LORD_GODS_DETAILS = {item[0]: {
+    item[1]: LORD_GODS_MATRIX[0][1],
+    item[2]: LORD_GODS_MATRIX[0][2],
+    item[3]: LORD_GODS_MATRIX[0][3],
+    item[4]: LORD_GODS_MATRIX[0][4],
+    item[5]: LORD_GODS_MATRIX[0][5],
+    item[6]: LORD_GODS_MATRIX[0][6],
+    item[7]: LORD_GODS_MATRIX[0][7],
+    item[8]: LORD_GODS_MATRIX[0][8],
+    item[9]: LORD_GODS_MATRIX[0][9],
+    item[10]: LORD_GODS_MATRIX[0][10],
+} for item in LORD_GODS_MATRIX[1:]}
 
 SHENG_SI_JUE_WANG_MAPPING = [
     ["天干", "长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"],
@@ -506,6 +560,7 @@ LIFE_PREDICTION_LABELS = [
     'bone_weight',
     'zodiac_explain',
     'lord_gods',
+    'lord_gods_structure',
     'demigods',
     'family_support',
     'life_stages_luck',

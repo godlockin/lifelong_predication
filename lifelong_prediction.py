@@ -5,6 +5,7 @@ from family_support import FamilySupport
 from intermarriage import Intermarriage
 from life_stages_luck import LifeStagesLuck
 from lord_gods import LordGods
+from lord_gods_structure import LordGodsStructure
 from metainfo import MetaInfo
 from potential_couple import PotentialCouple
 from ten_years_luck import TenYearsLuck
@@ -22,6 +23,7 @@ class LifePrediction(MetaInfo):
         self.bone_weight = BoneWeight(**kwargs)
 
         self.lord_gods = LordGods(**kwargs)
+        self.lord_gods_structure = LordGodsStructure(**kwargs)
         self.demigods = Demigod(**kwargs)
 
         self.family_support = FamilySupport(**kwargs)
@@ -61,6 +63,7 @@ class LifePrediction(MetaInfo):
         conditions = {
             'bone_weight': self.bone_weight.__str__(),
             'lord_gods': self.lord_gods.__str__(),
+            'lord_gods_structure': self.lord_gods_structure.__str__(),
             'demigods': self.demigods.__str__(),
             'family_support': self.family_support.__str__(),
             'life_stages_luck': self.life_stages_luck.__str__(),

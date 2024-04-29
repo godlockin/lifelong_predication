@@ -26,6 +26,12 @@ class LordGods(BaZiElements):
             (self.shi_zhi_cang_gan_list, self.shi_zhi_lord_gods)
         ) = self.handle_zhi_lord_gods(self.ri_gan_idx)
 
+        """
+        [
+            ["比肩", ...],
+            [[('丙', '火', '正印'), ('戊', '土', '劫财'), ('庚', '金', '伤官')], ...]
+        ]
+        """
         self.lord_gods_matrix = [
             [
                 self.nian_gan_lord_gods, self.yue_gan_lord_gods, self.ri_gan_lord_gods, self.shi_gan_lord_gods
@@ -44,17 +50,17 @@ class LordGods(BaZiElements):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 十神：
-        年干：{self.nian_gan_lord_gods}
-        年支：{self.nian_zhi_lord_gods}
+        年干：{self.nian_gan_lord_gods}（{self.nian_gan},{GAN_DETAILS[self.nian_gan]['element']}）
+        年支：{self.nian_zhi_lord_gods}（{self.nian_zhi},{ZHI_DETAILS[self.nian_zhi]['element']}）
         
-        月干：{self.yue_gan_lord_gods}
-        月令：{self.yue_zhi_lord_gods}
+        月干：{self.yue_gan_lord_gods}（{self.yue_gan},{GAN_DETAILS[self.yue_gan]['element']}）
+        月令：{self.yue_zhi_lord_gods}（{self.yue_zhi},{ZHI_DETAILS[self.yue_zhi]['element']}）
         
-        日干：{self.ri_gan_lord_gods}(日主)
-        日支：{self.ri_zhi_lord_gods}
+        日干：日主（{self.ri_gan},{GAN_DETAILS[self.ri_gan]['element']}）
+        日支：{self.ri_zhi_lord_gods}（{self.ri_zhi},{ZHI_DETAILS[self.ri_zhi]['element']}）
         
-        时干：{self.shi_gan_lord_gods}
-        时支：{self.shi_zhi_lord_gods}
+        时干：{self.shi_gan_lord_gods}（{self.shi_gan},{GAN_DETAILS[self.shi_gan]['element']}）
+        时支：{self.shi_zhi_lord_gods}（{self.shi_zhi},{ZHI_DETAILS[self.shi_zhi]['element']}）
         '''
 
         if self.explain_append:
