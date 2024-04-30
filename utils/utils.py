@@ -1,8 +1,12 @@
+from pytz import timezone
+
 from constants.constants import *
 
 
 def parse_input_datetime_info(config):
-    return config.get('base_datetime', BASE_DATE)
+    base_datetime = config.get('base_datetime', BASE_DATE)
+    base_datetime = base_datetime.replace(tzinfo=timezone('Asia/Shanghai'))
+    return base_datetime
 
 
 def get_heavenly_stem_element(heavenly_stem):

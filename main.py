@@ -15,7 +15,7 @@ app.include_router(api_router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(f"{__name__}:app", host="0.0.0.0", port=8080, log_level="info", reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8082, log_level="info", reload=True)
 
     parser = argparse.ArgumentParser(description='This is a calc project of BaZi.')
     parser.add_argument('-b', '--birthday', help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"', required=True)

@@ -18,10 +18,10 @@ class LordGodsStructure(LordGods):
 
         msg += f"""
         命主为：{self.structure}格（身{'强' if self.self_strong else '弱'}）
-        {self.strength_comment['structure']}
-        因为，{self.strength_comment['comment']}
-        形象：{self.strength_comment['imagery']}
-        由于命主身{'强' if self.self_strong else '弱'}，所以：{self.strength_comment['strength_comment']}
+        {self.strength_comment.get('structure', '')}
+        因为，{self.strength_comment.get('comment', '')}
+        形象：{self.strength_comment.get('imagery', '')}
+        由于命主身{'强' if self.self_strong else '弱'}，所以：{self.strength_comment.get('strength_comment', '')}
         """
         return msg
 
@@ -122,6 +122,9 @@ class LordGodsStructure(LordGods):
         # 身强 + 喜用
         positive_supporting_list = ['正财', '偏财', '正官', '偏官', '食神', '伤官']
         negative_supporting_list = ['正印', '偏印', '比肩', '劫财']
+
+        if self.structure not in conditions:
+            return {}
 
         details = copy.deepcopy(conditions[self.structure])
         if self.self_strong:
