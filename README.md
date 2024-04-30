@@ -4,14 +4,16 @@
 ## 用法
 1. 直接通过命令行调用
 ```bash
-python main.py -b "1996-01-03 05:20:00" -g True -e True -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00"
+# 命主生日 1996-01-03 05:20:00，显示元信息，显示解释，配偶生日 1996-01-03 05:20:00，结婚日期 2014-01-03 05:20:00
+python main.py -b "1996-01-03 05:20:00" -g -e -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00"
 ```
 
 2. 通过调用函数
+
 ```python
 import constants
 import datetime
-from lifelong_prediction import LifePrediction
+from func.lifelong_prediction import LifePrediction
 from utils import *
 
 if __name__ == "__main__":

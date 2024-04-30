@@ -1,7 +1,7 @@
-from demigod import CommonDemigod
-from lord_god_explain import LordGodExplain
-from lord_gods import LordGods
-from utils import *
+from .demigod import CommonDemigod
+from .lord_god_explain import LordGodExplain
+from .lord_gods import LordGods
+from constants.constants import *
 
 
 class TenYearsLuck(LordGods):

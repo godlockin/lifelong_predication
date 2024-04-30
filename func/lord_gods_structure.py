@@ -1,6 +1,6 @@
 import copy
-from constants import *
-from lord_gods import LordGods
+from constants.constants import *
+from .lord_gods import LordGods
 
 
 class LordGodsStructure(LordGods):

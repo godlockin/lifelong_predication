@@ -1,17 +1,17 @@
-from marriage_gods import MarriageGods
-from metainfo import MetaInfo
-from utils import *
-
+from .marriage_gods import MarriageGods
+from .metainfo import MetaInfo
+from constants.constants import *
+from utils.utils import get_gong_gua_for_gan_zhi
 
 class Intermarriage:
     def __init__(self, **kwargs):
-        self.man_birthday = kwargs.get('man_birthday', constants.BASE_DATE)
+        self.man_birthday = kwargs.get('man_birthday', BASE_DATE)
         self.man_demigod = MarriageGods(
             birthday=self.man_birthday,
             is_male=True
         )
 
-        self.woman_birthday = kwargs.get('woman_birthday', constants.BASE_DATE)
+        self.woman_birthday = kwargs.get('woman_birthday', BASE_DATE)
         self.woman_demigod = MarriageGods(
             birthday=self.woman_birthday,
             is_male=False
@@ -23,7 +23,7 @@ class Intermarriage:
         self.relationships = self.calc_relationship()
         self.element_supporting = self.calc_element_supporting()
 
-        self.marry_date = kwargs.get('marry_date', constants.BASE_DATE)
+        self.marry_date = kwargs.get('marry_date', BASE_DATE)
         self.ru_zhui = kwargs.get('ru_zhui', False)
         self.marry_date_comment = self.check_marry_date()
 
@@ -31,7 +31,7 @@ class Intermarriage:
             self.lv_cai_he_hun_explain = self.calc_lv_cai_he_hun_explain()
 
     def __str__(self):
-        if any(item == constants.BASE_DATE for item in [self.man_birthday, self.woman_birthday]):
+        if any(item == BASE_DATE for item in [self.man_birthday, self.woman_birthday]):
             return ""
 
         result = f'''
@@ -327,7 +327,7 @@ class Intermarriage:
                 check = {v: k for k, v in value.items()}
                 break
 
-        if constants.BASE_DATE != self.marry_date:
+        if BASE_DATE != self.marry_date:
             idx_month = marry_date_meta.lunar_month
             msg = ''
             for key, value in check.items():

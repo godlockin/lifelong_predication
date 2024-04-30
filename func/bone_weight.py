@@ -1,5 +1,5 @@
-from constants import *
-from metainfo import MetaInfo
+from constants.constants import *
+from .metainfo import MetaInfo
 
 
 class BoneWeight(MetaInfo):

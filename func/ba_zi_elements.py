@@ -1,8 +1,8 @@
 from collections import Counter
 
-from elements_explain import ElementsExplain
-from metainfo import MetaInfo
-from utils import *
+from .elements_explain import ElementsExplain
+from .metainfo import MetaInfo
+from utils.utils import *
 
 
 class BaZiElements(MetaInfo):

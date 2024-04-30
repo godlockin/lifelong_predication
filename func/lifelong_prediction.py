@@ -1,17 +1,17 @@
-from ba_zi_elements import BaZiElements
-from bone_weight import BoneWeight
-from demigod import Demigod
-from family_support import FamilySupport
-from intermarriage import Intermarriage
-from life_stages_luck import LifeStagesLuck
-from lord_gods import LordGods
-from lord_gods_structure import LordGodsStructure
-from metainfo import MetaInfo
-from potential_couple import PotentialCouple
-from ten_years_luck import TenYearsLuck
-from utils import *
-from yearly_luck import YearlyLuck
-from zodiac_explain import ZodiacExplain
+from func.ba_zi_elements import BaZiElements
+from func.bone_weight import BoneWeight
+from func.demigod import Demigod
+from func.family_support import FamilySupport
+from func.intermarriage import Intermarriage
+from func.life_stages_luck import LifeStagesLuck
+from func.lord_gods import LordGods
+from func.lord_gods_structure import LordGodsStructure
+from func.metainfo import MetaInfo
+from func.potential_couple import PotentialCouple
+from func.ten_years_luck import TenYearsLuck
+from func.yearly_luck import YearlyLuck
+from func.zodiac_explain import ZodiacExplain
+from constants.constants import *
 
 
 class LifePrediction(MetaInfo):
@@ -36,11 +36,11 @@ class LifePrediction(MetaInfo):
 
         if kwargs.get('is_male', True):
             man_birthday = self.input_datetime
-            woman_birthday = kwargs.get('couple_birthday', constants.BASE_DATE)
+            woman_birthday = kwargs.get('couple_birthday', BASE_DATE)
             self.primary_birthday = man_birthday
             self.couple_birthday = woman_birthday
         else:
-            man_birthday = kwargs.get('couple_birthday', constants.BASE_DATE)
+            man_birthday = kwargs.get('couple_birthday', BASE_DATE)
             woman_birthday = self.input_datetime
             self.primary_birthday = woman_birthday
             self.couple_birthday = man_birthday
@@ -48,7 +48,7 @@ class LifePrediction(MetaInfo):
         self.intermarriage = Intermarriage(
             man_birthday=man_birthday,
             woman_birthday=woman_birthday,
-            marry_date=kwargs.get('marry_date', constants.BASE_DATE),
+            marry_date=kwargs.get('marry_date', BASE_DATE),
             ru_zhui=kwargs.get('ru_zhui', False),
             explain_append=kwargs.get('explain_append', False),
         )
@@ -82,10 +82,12 @@ class LifePrediction(MetaInfo):
         enabled_labels = []
         enabled_labels_str = kwargs.get('enabled_labels', "")
         enabled_labels_items = [item.strip().lower() for item in enabled_labels_str.split(',') if item]
-        if not enabled_labels_items or 'all' in enabled_labels_items:
-            return constants.LIFE_PREDICTION_LABELS
+        if not enabled_labels_items or 'core' in enabled_labels_items:
+            return CORE_LIFE_PREDICTION_LABELS
+        if 'all' in enabled_labels_items:
+            return LIFE_PREDICTION_LABELS
         for item in enabled_labels_items:
-            if item in constants.LIFE_PREDICTION_LABELS:
+            if item in LIFE_PREDICTION_LABELS:
                 enabled_labels.append(item)
 
         return enabled_labels

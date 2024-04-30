@@ -1,11 +1,8 @@
-from datetime import datetime
-
-import constants
-from constants import *
+from constants.constants import *
 
 
 def parse_input_datetime_info(config):
-    return config.get('base_datetime', constants.BASE_DATE)
+    return config.get('base_datetime', BASE_DATE)
 
 
 def get_heavenly_stem_element(heavenly_stem):

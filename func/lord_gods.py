@@ -1,8 +1,8 @@
 from itertools import chain
 
-from ba_zi_elements import BaZiElements
-from constants import *
-from lord_god_explain import LordGodExplain
+from .ba_zi_elements import BaZiElements
+from constants.constants import *
+from .lord_god_explain import LordGodExplain
 
 
 class LordGods(BaZiElements):

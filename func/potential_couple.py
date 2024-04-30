@@ -1,6 +1,6 @@
-from constants import *
-from demigod import Demigod
-from lord_gods import LordGods
+from constants.constants import *
+from .demigod import Demigod
+from .lord_gods import LordGods
 
 
 class PotentialCouple(LordGods):

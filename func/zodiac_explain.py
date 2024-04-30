@@ -1,4 +1,4 @@
-from constants import *
+from constants.constants import *
 
 
 class ZodiacExplain:

@@ -570,6 +570,12 @@ LIFE_PREDICTION_LABELS = [
     'potential_couple',
 ]
 
+CORE_LIFE_PREDICTION_LABELS = [
+    'lord_gods',
+    'family_support',
+    'life_stages_luck',
+]
+
 ZHI_ATTRIBUTES = {
     "子": {"冲": "午", "刑": "卯", "被刑": "卯", "合": ("申", "辰"), "会": ("亥", "丑"), '害': '未', '破': '酉',
            "六": "丑", "暗": "", },

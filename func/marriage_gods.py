@@ -1,5 +1,5 @@
-from ba_zi_elements import BaZiElements
-from utils import *
+from .ba_zi_elements import BaZiElements
+from utils.utils import *
 
 
 class MarriageGods(BaZiElements):

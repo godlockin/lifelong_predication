@@ -1,10 +1,10 @@
 from collections import Counter
 
-from ba_zi_elements import BaZiElements
-from demigod_explain import DemigodExplain
-from lord_gods import LordGods
-from utils import *
-
+from .ba_zi_elements import BaZiElements
+from .demigod_explain import DemigodExplain
+from .lord_gods import LordGods
+from constants.constants import *
+from utils.utils import di_zhi_yin_yang
 
 class Demigod(BaZiElements):
     def __init__(self, **kwargs):
@@ -1181,8 +1181,7 @@ class CommonDemigod:
     def hong_yan(self, zhi):
         """
         此以日为主，年为副，见四柱之支，即甲乙午、丙寅、丁未、戊己辰、庚戌、辛酉、壬子、癸甲，皆为红艳煞。
-        :param gan:
-        :param all_zhi:
+        :param zhi:
         :return:
         """
         conditions = {

@@ -1,8 +1,8 @@
-from demigod import CommonDemigod
-from lord_god_explain import LordGodExplain
-from ten_years_luck import TenYearsLuck
-from utils import *
-
+from .demigod import CommonDemigod
+from .lord_god_explain import LordGodExplain
+from .ten_years_luck import TenYearsLuck
+from constants.constants import *
+from utils.utils import get_gan_zhi_for_year
 
 class YearlyLuck(TenYearsLuck):
     def __init__(self, **kwargs):
