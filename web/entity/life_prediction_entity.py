@@ -17,10 +17,10 @@ class LifePredictionData(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "birthday": "1988-11-25 16:00:00",
+                "birthday": "1996-01-01 16:00:00",
                 "gander": True,
                 "explain": True,
-                "couple_birthday": "1989-08-29 14:15:00",
+                "couple_birthday": "1996-01-01 14:15:00",
                 "marry_date": "2024-08-29 05:20:00",
                 "ru_zhui": False,
                 "option": ["core"],
