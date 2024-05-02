@@ -216,6 +216,7 @@ DI_ZHI_CHONG = [
     "辰戌",
     "巳亥",
 ]
+DI_ZHI_CHONG_MAPPING = {**{a: b for (a, b) in DI_ZHI_CHONG}, **{b: a for (a, b) in DI_ZHI_CHONG}}
 
 # 子未相害，丑午相害，寅巳相害，卯辰相害，申亥相害，酉戌相害
 # 穿害表示互相折磨，长期损耗。
@@ -227,6 +228,7 @@ DI_ZHI_HAI = [
     "申亥",
     "酉戌",
 ]
+DI_ZHI_HAI_MAPPING = {**{a: b for (a, b) in DI_ZHI_HAI}, **{b: a for (a, b) in DI_ZHI_HAI}}
 
 # 地支相刑子卯相刑，丑未戌相刑，寅巳申相刑，辰午酉亥自刑。
 # 吵架 很快能和好 对自己伤害小
@@ -462,6 +464,16 @@ POSITION_NAMES = [
     ["年支", "月令", "日支", "时支"],
 ]
 
+POSITION_RELATIONSHIP_NAMES = [
+    ["父亲", "哥哥姐姐", "日主", "长子"],
+    ["母亲", "弟弟妹妹", "妻子/丈夫", "幼子"],
+]
+
+POSITION_ORGAN_NAMES = [
+    ["头部", "胸部", "小腹", "大腿"],
+    ["脖子", "腹部", "腰胯", "小腿/脚部"],
+]
+
 POSITION_COLUMN_NAMES = ['年柱', '月柱', '日柱', '时柱']
 
 LIFE_WEIGHT_MAPPING = {"2.1": "短命非业谓大凶，平生灾难事重重，凶祸频临限逆境，终世困苦事不成",
@@ -561,6 +573,7 @@ LIFE_PREDICTION_LABELS = [
     'zodiac_explain',
     'lord_gods',
     'lord_gods_structure',
+    'finance_storage',
     'demigods',
     'family_support',
     'life_stages_luck',

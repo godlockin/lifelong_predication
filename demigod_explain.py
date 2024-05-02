@@ -112,7 +112,7 @@ class TianDeGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天德贵人"
         self.type = "护身神煞"
-        self.explanation = "天有神助，遇难呈祥，化险为夷"
+        self.explanation = "天有神助，遇难呈祥，化险为夷。如果天德月德并存，其人多一生如意，荣华富贵，在社会上能获得很高的名誉地位，少凶灾横祸。"
 
 
 class YueDeGuiRen(DemigodExplain):
@@ -128,7 +128,7 @@ class TianYiGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天乙贵人"
         self.type = "最吉神煞"
-        self.explanation = "解难神煞、贵人相助、雪中送炭、做事容易成功"
+        self.explanation = "解难神煞、贵人相助、雪中送炭、做事容易成功。后天际遇中的提携、解厄之神，若人遇之则荣名早达，成事多助，官禄易进。"
 
 
 class WenChangGuiRen(DemigodExplain):
@@ -229,7 +229,7 @@ class TaoHua(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "桃花"
         self.type = "花心之神"
-        self.explanation = "贞操观念差，容易和多个异性发生关系。自己不用很出众，但是会有很多人愿意扑。"
+        self.explanation = "贞操观念差，容易和多个异性发生关系。自己不用很出众，但是会有很多人愿意扑。命带桃花，其人聪明，有同情心，爱风骚，多才艺。桃花处于升旺之地时，其主任帅气/俊美。男命慷慨好交游，喜美色；女命风情万种，漂亮诱人。"
 
     def explain(self):
         result = super().explain()
@@ -553,7 +553,7 @@ class GuaSu(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "寡宿"
         self.type = ""
-        self.explanation = "女命犯之夫早别离，独守空闺。"
+        self.explanation = "女命犯之夫早别离，独守空闺。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。"
 
     def explain(self):
         return super().explain() if not self.demigods.is_male else ""
@@ -770,7 +770,7 @@ class GuChen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "孤辰"
         self.type = ""
-        self.explanation = "性格孤僻沉默不语、清心寡欲、依恋安逸、没有上进心。"
+        self.explanation = "性格孤僻沉默不语、清心寡欲、依恋安逸、没有上进心。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。"
 
 
 class TianShe(DemigodExplain):

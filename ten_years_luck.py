@@ -1,6 +1,7 @@
 from demigod import CommonDemigod
 from lord_god_explain import LordGodExplain
 from lord_gods import LordGods
+from ten_years_luck_explain import TenYearsLuckExplain
 from utils import *
 
 
@@ -26,8 +27,11 @@ class TenYearsLuck(LordGods):
         ) = self.build_ten_years_luck_attributes(ri_gan_idx, ri_zhi_cang_gan_idx, tian_gan_sheng_wang_si_jue_idx)
 
         self.ten_years_luck_details = self.build_ten_years_luck_details()
+        self.ten_years_luck_list = sorted(self.ten_years_luck_details.items(), key=lambda x: x[1]['idx'])
         self.lord_god_explain = LordGodExplain(self)
         self.lord_god_explain.init_explanation()
+
+        self.ten_years_luck_explains = TenYearsLuckExplain(self)
 
     def __str__(self):
         result = f"{super().__str__() if self.meta_info_display else ''}"
@@ -35,10 +39,9 @@ class TenYearsLuck(LordGods):
         ## 大运：
         年份        大运循环        大运十神        大运神煞        {'大运状态' if self.explain_append else ''}
         '''
-        ten_years_luck_list = sorted(self.ten_years_luck_details.items(), key=lambda x: x[1]['idx'])
         lord_gods_set = set()
         ten_years_luck_out_list = []
-        for (k, v) in ten_years_luck_list:
+        for (k, v) in self.ten_years_luck_list:
             tmp_lord_gods = v['lord_gods']
             lord_gods_set = lord_gods_set.union(set(tmp_lord_gods))
             msg = (f"{v['year_num']}年（{k}）  "
@@ -63,6 +66,10 @@ class TenYearsLuck(LordGods):
             result += f'''
         ### 十神意象：
         {msg}
+            '''
+
+            result += f'''
+        {self.ten_years_luck_explains}
             '''
         return result
 

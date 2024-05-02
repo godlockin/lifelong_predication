@@ -2,6 +2,7 @@ from ba_zi_elements import BaZiElements
 from bone_weight import BoneWeight
 from demigod import Demigod
 from family_support import FamilySupport
+from finance_storage import FinanceStorage
 from intermarriage import Intermarriage
 from life_stages_luck import LifeStagesLuck
 from lord_gods import LordGods
@@ -20,19 +21,22 @@ class LifePrediction(MetaInfo):
         kwargs['meta_info_display'] = False
         self.ba_zi_elements = BaZiElements(**kwargs)
 
+        self.enabled_labels = self.calc_enabled_labels(**kwargs)
+
         self.bone_weight = BoneWeight(**kwargs)
 
         self.lord_gods = LordGods(**kwargs)
         self.lord_gods_structure = LordGodsStructure(**kwargs)
-        self.demigods = Demigod(**kwargs)
+
+        self.finance_storage = FinanceStorage(**kwargs)
 
         self.family_support = FamilySupport(**kwargs)
         self.life_stages_luck = LifeStagesLuck(**kwargs)
 
+        self.demigods = Demigod(**kwargs)
+
         self.ten_years_luck = TenYearsLuck(**kwargs)
         self.yearly_luck = YearlyLuck(**kwargs)
-
-        self.enabled_labels = self.calc_enabled_labels(**kwargs)
 
         if kwargs.get('is_male', True):
             man_birthday = self.input_datetime
@@ -64,6 +68,7 @@ class LifePrediction(MetaInfo):
             'bone_weight': self.bone_weight.__str__(),
             'lord_gods': self.lord_gods.__str__(),
             'lord_gods_structure': self.lord_gods_structure.__str__(),
+            'finance_storage': self.finance_storage.__str__(),
             'demigods': self.demigods.__str__(),
             'family_support': self.family_support.__str__(),
             'life_stages_luck': self.life_stages_luck.__str__(),

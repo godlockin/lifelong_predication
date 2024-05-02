@@ -1,4 +1,4 @@
-from itertools import chain
+from collections import defaultdict
 
 from ba_zi_elements import BaZiElements
 from constants import *
@@ -17,7 +17,7 @@ class LordGods(BaZiElements):
             self.yue_gan_lord_gods,
             self.ri_gan_lord_gods,
             self.shi_gan_lord_gods
-         ) = self.handle_gan_lord_gods(self.ri_gan_idx)
+        ) = self.handle_gan_lord_gods(self.ri_gan_idx)
 
         (
             (self.nian_zhi_cang_gan_list, self.nian_zhi_lord_gods),
@@ -41,10 +41,12 @@ class LordGods(BaZiElements):
             ]
         ]
 
-        self.all_gan_lord_gods = self.lord_gods_matrix[0]
-        self.all_zhi_lord_gods = list(chain.from_iterable([[item[2] for item in zhi_lord_gods] for zhi_lord_gods in self.lord_gods_matrix[1]]))
+        self.lord_gods_core_matrix = self.calc_lord_gods_core_matrix()
+
+        self.all_gan_lord_gods, self.all_zhi_lord_gods = self.lord_gods_core_matrix[0], self.lord_gods_core_matrix[1]
 
         self.all_lord_gods = self.all_gan_lord_gods + self.all_zhi_lord_gods
+        self.distinct_all_lord_gods = list(set(item for sublist in self.all_lord_gods for item in sublist if item))
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -80,7 +82,9 @@ class LordGods(BaZiElements):
         # 第二步根据每个藏干找到对应的十神
         di_zhi_lord_gods_list = [
             # 对于每个地支的藏干元素，查表去找它的十神
-            (cang_gan_list, [(item, GAN_MATRIX[GAN.index(item)][3], LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)]) for item in cang_gan_list if item])
+            (cang_gan_list,
+             [(item, GAN_MATRIX[GAN.index(item)][3], LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)]) for
+              item in cang_gan_list if item])
             for cang_gan_list in di_zhi_cang_gan_list
         ]
 
@@ -188,3 +192,13 @@ class LordGods(BaZiElements):
                     result += "比劫月时两见，无论男女命，主任情而钱财难得，主婚姻及财运一生不顺。"
 
         return result
+
+    def calc_lord_gods_core_matrix(self):
+        core_matrix = defaultdict(list)
+        for row_idx, row in enumerate(self.lord_gods_matrix):
+            for col_idx, col in enumerate(row):
+                if 0 == row_idx:
+                    core_matrix[row_idx].append([col])
+                else:
+                    core_matrix[row_idx].append([item[2] for item in col])
+        return core_matrix
