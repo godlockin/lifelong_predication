@@ -115,10 +115,10 @@ class MetaInfo:
         农历：{self.lunar_of_input_datetime_str}({self.lunar_of_input_datetime.strftime('%Y-%m-%d')} {shi_chen}时)
         八字：{self.ba_zi}
         生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
-        年干  月干  日干（{"男" if self.is_male else "女"}主）  时干
-        {self.nian_gan}（{self.nian_gan_element}）    {self.yue_gan}（{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_element}）    {self.shi_gan}（{self.shi_gan_element}）
-        年支  月令  日支  时支
-        {self.nian_zhi}（{self.nian_zhi_element}）    {self.yue_zhi}（{self.yue_zhi_element}）    {self.ri_zhi}（{self.ri_zhi_element}）    {self.shi_zhi}（{self.shi_zhi_element}）
+        年干     月干      日干（{"男" if self.is_male else "女"}主）    时干
+        {self.nian_gan}（{self.nian_gan_element}）  {self.yue_gan}（{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_element}）      {self.shi_gan}（{self.shi_gan_element}）
+        年支     月令      日支          时支
+        {self.nian_zhi}（{self.nian_zhi_element}）  {self.yue_zhi}（{self.yue_zhi_element}）   {self.ri_zhi}（{self.ri_zhi_element}）      {self.shi_zhi}（{self.shi_zhi_element}）
         '''
 
         return msg

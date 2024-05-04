@@ -10,19 +10,11 @@ class DemigodExplain:
         self.explanation = ""
 
     def explain(self):
+        type_str = f'（{self.type}）' if self.type else ''
         result = f'''
-        {self.name}
-        '''
-
-        if self.type:
-            result += f'''
-        {self.type}
-            '''
-
-        result += f'''
+        {self.name}{type_str}
         {self.explanation}
         '''
-
         return result
 
     def calc_all_demigod_explain(self, demigods, lord_gods):
@@ -185,14 +177,14 @@ class YiMa(DemigodExplain):
         日柱上有驿马，可能会有一辆登记在{'太太' if self.demigods.is_male else '先生'}名下的车。\n
         """
 
-        if '文昌贵人' in self.demigods.all_demigod and self.demigods.all_demigod.index(
-                '文昌贵人') > self.demigods.all_demigod.index(self.name):
+        if ('文昌贵人' in self.demigods.all_demigod
+                and self.demigods.all_demigod.index('文昌贵人') == self.demigods.all_demigod.index(self.name) + 1):
             result += f"""
         文昌贵人在驿马之后，说明这辆车的档次挺高的。\n
         """
 
-        if '劫煞' in self.demigods.all_demigod and self.demigods.all_demigod.index(
-                '劫煞') > self.demigods.all_demigod.index(self.name):
+        if ('劫煞' in self.demigods.all_demigod
+                and self.demigods.all_demigod.index('劫煞') == self.demigods.all_demigod.index(self.name) + 1):
             result += f"""
         劫煞在驿马之后，说明这辆车可能会被偷。\n
         """
@@ -211,7 +203,7 @@ class TaiJiGuiRen(DemigodExplain):
 
         demigod_position = super().demigod_exist_position_for_age_stages(self.name)
         if demigod_position:
-            result += f'在：{",".join(demigod_position)}会遇到懂周易的人。\n'
+            result += f'在{demigod_position}会遇到懂周易的人。\n'
 
         return result
 
@@ -810,7 +802,7 @@ class TongZi(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "童子"
         self.type = "弱凶神（不利婚姻）"
-        self.explanation = "童子命的人婚姻不利，晚婚，或无婚恋，痴迷爱情的倒不多，因为根本就不会谈恋爱，一谈就吹，或者有人追、自己会谈也不行，一谈就出意外，即使硬撮合的也会因故而分手，多次离婚，更有一结婚或一破身就生病。"
+        self.explanation = "童子命的人婚姻不利，晚婚，或无婚恋，痴迷爱情的倒不多，因为根本就不会谈恋爱，一谈就吹，或者有人追、自己会谈也不行，一谈就出意外，即使硬撮合的也会因故而分手，多次离婚，更有概率一结婚或一破身就生病。"
 
 
 class GuLuan(DemigodExplain):

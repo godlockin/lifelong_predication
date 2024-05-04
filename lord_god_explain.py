@@ -309,8 +309,13 @@ class LordGodExplain:
     def lord_god_exist_position_for_index(self, idx_name, base_matrix):
         position_mapping = []
         core_matrix = defaultdict(list)
-        for row_idx, row in self.lord_gods.lord_gods_core_matrix.items():
-            for col_idx, col in enumerate(row):
+
+        # 获取列的数量
+        num_cols = len(self.lord_gods.lord_gods_core_matrix[0])
+
+        for col_idx in range(num_cols):
+            for row_idx, row in self.lord_gods.lord_gods_core_matrix.items():
+                col = row[col_idx]
                 if idx_name in col:
                     position_mapping.append(base_matrix[row_idx][col_idx])
                     core_matrix[row_idx].append(True)
@@ -372,14 +377,14 @@ class ZhengYin(LordGodExplain):
             [
                 "母亲家族比较注重知识文化。\n兄弟姐妹样貌都长得不错，理智，口才好，写作能力亦佳。\n记忆力好。",
                 "有一定积累之后通过文笔获得好名声。\n同时，月令能量比较强大，代表命主比较顾家，但是有的时候有点懒，佛系拖延症。\n大都是智慧型人物。\n因为容易受父母宠溺而养成耽于安乐、华而不实、依赖心重的个性。\n富有人情味、爱面子、喜欢人家恭维，有优越感，守旧，用钱保守。\n男性多不是长子，女性多是长女（代行母职）",
-                f"对象家族有掌权之人，{'而且能帮助到自己的事业。' if self.lord_gods.self_strong else '但是对象跟自己关系不好。'}\n{'男命正印在日支，比较喜欢年纪比较大的异性，御姐。' if self.lord_gods.is_male else ''}配偶贤良有助力，以日主弱者尤佳（甲子、乙亥、戊午、己巳日）。\n配偶气质高雅。\n容易逃避现实问题。\n有谦让的君子风度。"
+                f"对象家族有掌权之人，{'而且能帮助到自己的事业。' if self.lord_gods.self_strong else '但是对象跟自己关系不好。'}\n{'男命正印在日支，比较喜欢年纪比较大的异性，御姐。' if self.lord_gods.is_male else ''}配偶贤良有助力，以日主弱者尤佳（甲子、乙亥、戊午、己巳日）。\n配偶气质高雅。\n容易逃避现实问题。\n有谦让的君子风度。",
                 "巧于谋事，食禄丰厚。\n一生与名声、荣誉结缘。\n掌大权、任要职，是受重视的人物；生月支是正官者，晚年尊荣。\n性生活比较呆板清淡。",
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
         position_explain.extend(position)
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(set([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
     def append_opinion(self, element, position) -> (list, list):
@@ -503,13 +508,13 @@ class ShiShen(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
         if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_lord_gods]:
             position_explain.append("女命食神在时干，可能会梨型身材，好生养。")
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
 
-        return "\n".join(position_explain)
+        return "\n".join(position_explain) if position_explain else ""
 
     def calc_not_exists_explain(self):
         return "命中没有食神的人，不会玩，口才不好，不善言辞\n" if self.lord_gods_count == 0 else ""
@@ -576,11 +581,11 @@ class ZhengGuan(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
         if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_lord_gods]:
             position_explain.append("女命正官在时干，容易生男孩。")
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
 
         return "\n".join(position_explain)
 
@@ -666,11 +671,11 @@ class ZhengCai(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
         if self.name in self.lord_gods.lord_gods_core_matrix[1][3]:
             position_explain.append("在时支（55岁以后），代表晚年可能再婚。")
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
 
         return "\n".join(position_explain) if position_explain else ""
 
@@ -772,8 +777,11 @@ class QiSha(LordGodExplain):
         position, core_matrix = super().lord_god_exist_position_for_organ(self.name)
         gan_position = []
         zhi_position = []
-        for row_idx, row in core_matrix.items():
-            for col_idx, col in enumerate(row):
+
+        num_cols = len(core_matrix[0])
+        for col_idx in range(num_cols):
+            for row_idx, row in self.lord_gods.lord_gods_core_matrix.items():
+                col = row[col_idx]
                 if col:
                     if row_idx == 0:
                         gan_position.append(POSITION_ORGAN_NAMES[row_idx][col_idx])
@@ -816,7 +824,8 @@ class QiSha(LordGodExplain):
             "癸己"
         ]
         if self.lord_gods.nian_gan + self.lord_gods.ri_gan in conditions:
-            position_explain.append("甲年庚日、乙年辛日、丙年壬日、丁年癸日、戊年甲日、己年乙日、庚年丙日、辛年丁日、壬年戊日、癸年己日出生，能开创与祖先不同的功业。\nB血型者七杀的特性加强。")
+            position_explain.append(
+                "甲年庚日、乙年辛日、丙年壬日、丁年癸日、戊年甲日、己年乙日、庚年丙日、辛年丁日、壬年戊日、癸年己日出生，能开创与祖先不同的功业。\nB血型者七杀的特性加强。")
 
         matrix = [
             [
@@ -833,9 +842,9 @@ class QiSha(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
     def calc_self_strong_explain(self):
@@ -907,6 +916,50 @@ class PianYin(LordGodExplain):
 
     def calc_position_explain(self):
         position_explain = []
+        conditions = {
+            '丙寅': {
+                'common': '',
+                'male': '妻子娴淑',
+                'female': '一生幸福、易得优秀的子女'
+            },
+            '壬申': {
+                'common': '',
+                'male': '妻子娴淑',
+                'female': '一生幸福、易得优秀的子女'
+            },
+            '丁卯': {
+                'common': '幼年时代易患大病，早离双亲，婚姻不美满',
+                'male': '',
+                'female': ''
+            },
+            '癸酉': {
+                'common': '幼年时代易患大病，早离双亲，婚姻不美满',
+                'male': '',
+                'female': '夫缘尤劣'
+            },
+            '庚辰': {
+                'common': '与父母缘薄',
+                'male': '妻缘不好',
+                'female': '可得贤良子女，一生幸福，但夫缘不佳'
+            },
+            '辛丑': {
+                'common': '与父母缘薄',
+                'male': '妻缘不好',
+                'female': '可得贤良子女，一生幸福'
+            },
+            '辛未': {
+                'common': '双亲缘薄，婚姻不美满',
+                'male': '',
+                'female': '表面柔顺内心冷酷，克翁姑'
+            },
+            '庚戌': {
+                'common': '双亲缘薄，婚姻不美满',
+                'male': '',
+                'female': '表面柔顺内心冷酷，克翁姑'
+            },
+        }
+        append_item = conditions.get(self.lord_gods.ri_zhu, {})
+
         matrix = [
             [
                 "双亲是有理想有能力的人，由于忙碌冷落了你。\n与出生地无缘，会抛弃祖产在他乡创立家业。\n如果年支又是偏印，长亲不利，祖上寒微。",
@@ -917,12 +970,12 @@ class PianYin(LordGodExplain):
             [
                 "兄弟姐妹不喜欢受束缚，善辩，不喜欢吐露心事，容易与亲族疏远，被认为是“怪人”。\n与出生地缘分薄，大多在他乡打拼。",
                 "偏印在月令代表必有一技之长，在其他干支代表命主会主动学习技术技能。\n性情，爱之欲其生，恨之欲其死。\n孤独，不喜欢袒露心声，遇事常以消极的态度抵制。\n与打针、吃药结了不了之缘（肠胃病居多）。有的人久病成医，与宗教也很有缘，常吃斋或清修。\n以五术为业，若临衰病死绝之位，其貌不扬，人气不好。",
-                "看日元当令与否：日强者，配偶贤良，日弱者，配偶带给你烦恼。\n丙寅、壬申日的女性，幸福、得优秀的子女；男性妻子娴淑。\n丁卯、癸酉日生人，幼年时代易患大病，早离双亲，婚姻不美满。\n癸酉日生的女性，夫缘尤劣。\n庚辰、辛丑日生者，与父母缘薄；男性，妻缘不好，女性，可得贤良子女，一生幸福，但庚辰日生者，夫缘不佳。\n辛未、庚戌日生人，双亲缘薄，婚姻不美满；女性，表面柔顺内心冷酷，克翁姑。\n幼年时容易生病，而且都属于严重危险的急症。\n能以发明、创作成功。",
+                f"看日元当令与否：{'命主日强，配偶贤良' if self.lord_gods.self_strong else '命主日弱，配偶带给你烦恼'}。\n{self.lord_gods.ri_zhu}生{'男' if self.lord_gods.is_male else '女'}命主，{append_item.get('common', '')}{append_item.get('male', '') if self.lord_gods.is_male else append_item.get('female', '')}。幼年时容易生病，而且都属于严重危险的急症。\n能以发明、创作成功。",
                 "不喜欢热闹、喧哗，喜欢独自研究学术、技艺，铁I人。\n对医药、占卜、风水、宗教等有深入的研究或特殊的成就。\n时干正印则代表同时拥有两种以上的工作。",
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
         return "\n".join(position_explain) if position_explain else ""
 
 
@@ -933,7 +986,7 @@ class ShangGuan(LordGodExplain):
         self.short_name = "伤"
         self.type = "狂神"
         self.character = "聪明灵巧，个性突出，容易抢风头，能言善辩，不服输，胆大有魄力，有才华，很有自信，但是也可能自负，语言尖锐刻薄，狂傲不羁，度量狭小，记仇，得理不饶人，任性蛮横，逞强好胜，一身傲骨，鄙视他人，死不认错。"
-        self.imagery = "口舌，官司，纷争（男）" if self.lord_gods.is_male else "克夫（女）"
+        self.imagery = f"才华、技艺、{'口舌，官司，纷争（男）' if self.lord_gods.is_male else '克夫（女）'}"
         self.career = "文学，书画，艺术，如文学家，影星，歌星，舞蹈家，音乐家，画家"
         self.representatives = "晚辈，学生，下属"
         self.representatives_for_male = "祖母，孙女"
@@ -1098,9 +1151,9 @@ class JieCai(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
     def calc_gander_explain(self):
@@ -1185,9 +1238,9 @@ class BiJian(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
 
@@ -1260,9 +1313,9 @@ class PianCai(LordGodExplain):
             ]
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
-        position_explain.extend(position)
+        position_explain += position
 
-        position_explain = [item for item in position_explain if item]
+        position_explain = list(dict.fromkeys([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
     def calc_male_explain(self):

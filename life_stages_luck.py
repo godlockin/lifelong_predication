@@ -32,21 +32,11 @@ class LifeStagesLuck(BaZiElements):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 人生阶段运势：
-        少年：
-        年干（1-9岁）：{self.kid_age}
-        年支（10-18岁）：{self.teenage}
-        
-        青年：
-        月干（19-27岁）：{self.young_adult}
-        月令（28-36岁）：{self.adult}
-          
-        中年：
-        日元
-        日支（37-45岁）：{self.elder_adult}
-        
-        晚年：
-        时干（46-54岁）：{self.old_age}
-        时支（晚年）：{self.elder_age}
+        年柱少年                 月柱青年                 日柱中年               时柱晚年
+        年干（1-9岁）            月干（19-27岁）           日元（自己）           时干（46-54岁）
+        {self.kid_age}          {self.young_adult}                                {self.old_age}
+        年支（10-18岁）          月令（28-36岁）           日支（37-45岁）        时支（晚年）
+        {self.teenage}          {self.adult}          {self.elder_adult}       {self.elder_age}
         '''
         return msg
 

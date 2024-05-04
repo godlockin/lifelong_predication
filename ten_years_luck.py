@@ -118,6 +118,8 @@ class TenYearsLuck(LordGods):
                 'sheng_si': self.ten_years_luck_sheng_si_list[idx],
                 'lord_gods': self.ten_years_luck_lord_gods[idx],
                 'demigods': self.ten_years_luck_demigods[idx],
+                'gan_element': gan_element,
+                'zhi_element': zhi_element,
                 'gan_support': self.elements_relationships_mapping[gan_element],
                 'zhi_support': self.elements_relationships_mapping[zhi_element],
                 'is_finance': opposing_element == gan_element,

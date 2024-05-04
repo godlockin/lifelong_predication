@@ -95,7 +95,7 @@ class ElementsExplain:
                     "emotion": tmp["emotion"],
                     "hidden_danger": tmp["positive"],
                 }
-            elif score < 1:
+            elif score < 0:
                 elements_healthy[element] = {
                     "score": score,
                     'count': self.elements_count[element],

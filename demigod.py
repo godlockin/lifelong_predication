@@ -66,7 +66,7 @@ class Demigod(BaZiElements):
 
     def get_demigod_explain(self, demigod_explain):
         if demigod_explain:
-            str_explain = '\n'.join([item.explain() for item in demigod_explain if item.explain()])
+            str_explain = ''.join([item.explain() for item in demigod_explain if item.explain()])
             return f"{str_explain}\n" if str_explain else ""
         return ""
 

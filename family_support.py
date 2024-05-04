@@ -35,21 +35,11 @@ class FamilySupport(LordGods):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 家庭支持：
-        祖先宫：
-        年干（父亲及家族）：{self.father_family}
-        年支（母亲及家族）：{self.mother_family}
-        
-        父母/兄弟姐妹/社会关系宫：
-        月干（哥哥姐姐）：{self.elder_family_members}
-        月令（弟弟妹妹）：{self.younger_family_members}
-          
-        夫妻宫：
-        日元（自己）
-        日支（夫/妻）：{self.spouse}
-
-        子女宫：
-        时干（长子）：{self.primary_child}
-        时支（次子）：{self.following_child}
+        年柱祖先宫                  月柱父母/兄弟姐妹/社会关系宫        日柱夫妻宫         时柱子女宫
+        年干（父亲及家族）           月干（哥哥姐姐）                   日元（自己）       时干（长子）
+        {self.father_family}                       {self.elder_family_members}                                             {self.primary_child}
+        年支（母亲及家族）           月令（弟弟妹妹）                   日支（夫/妻）      时支（次子）
+        {self.mother_family}                       {self.younger_family_members}                             {self.spouse}             {self.following_child}
         '''
 
         if self.family_relations:

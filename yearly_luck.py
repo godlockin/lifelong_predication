@@ -2,6 +2,7 @@ from demigod import CommonDemigod
 from lord_god_explain import LordGodExplain
 from ten_years_luck import TenYearsLuck
 from utils import *
+from yearly_luck_explain import YearlyLuckExplain
 
 
 class YearlyLuck(TenYearsLuck):
@@ -22,6 +23,9 @@ class YearlyLuck(TenYearsLuck):
         self.opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
 
         self.yearly_luck_items = self.build_yearly_luck_items()
+        self.yearly_luck_list = sorted(self.yearly_luck_items.items(), key=lambda x: x[0])
+        self.yearly_luck_luck_explains = YearlyLuckExplain(self)
+
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -38,10 +42,9 @@ class YearlyLuck(TenYearsLuck):
         msg += f'''
         年份        流年十神        流年神煞        {'流年状态' if self.explain_append else ''}
         '''
-        yearly_luck_list = sorted(self.yearly_luck_items.items(), key=lambda x: x[0])
         lord_gods_set = set()
         yearly_luck_out_list = []
-        for item in yearly_luck_list:
+        for item in self.yearly_luck_list:
             year, record = item
             gan_lord_god = record['gan_god']
             zhi_lord_god = record['zhi_god']
@@ -50,7 +53,7 @@ class YearlyLuck(TenYearsLuck):
             tmp = (f"{year}年（{record['gan_zhi']}）  "
                    f"{gan_lord_god},{zhi_lord_god}  "
                    f"{record['demigods']}")
-            if record.get('is_finance_year', False):
+            if record.get('is_finance', False):
                 tmp += "（财）"
             if record.get('gan_support', ()):
                 tmp += f"  *{record['gan_support'][0]}|{record['zhi_support'][0]}"
@@ -71,6 +74,8 @@ class YearlyLuck(TenYearsLuck):
         ### 十神意象：
         {tmp}
             '''
+
+            msg += self.yearly_luck_luck_explains.__str__()
 
         return msg
 
@@ -101,21 +106,20 @@ class YearlyLuck(TenYearsLuck):
             zhi_element = ZHI_DETAILS[zhi]['element']
 
             item = {
-                'year': year,
+                'year_num': year,
                 'gan_zhi': gan_zhi,
                 'gan': gan,
                 'gan_god': gan_god,
                 'zhi': zhi,
                 'zhi_god': zhi_god,
                 'demigods': demigods,
+                'gan_element': gan_element,
+                'zhi_element': zhi_element,
+                'is_finance': self.opposing_element == gan_element,
+                'gan_support': self.elements_relationships_mapping[gan_element],
+                'zhi_support': self.elements_relationships_mapping[zhi_element]
             }
 
-            if self.explain_append:
-                item.update({
-                    'is_finance_year': self.opposing_element == gan_element,
-                    'gan_support': self.elements_relationships_mapping[gan_element],
-                    'zhi_support': self.elements_relationships_mapping[zhi_element]
-                })
             yearly_luck_items[year] = item
 
         return yearly_luck_items
