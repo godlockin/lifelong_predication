@@ -1,4 +1,5 @@
 import argparse
+from collections import Counter
 
 from utils import *
 
@@ -84,25 +85,37 @@ class MetaInfo:
         # 生肖地支
         self.zodiac_zhi = get_zhi_of_year(self.lunar_year)
         # 生肖五行
-        self.zodiac_element = get_earthly_branch_element(self.zodiac_zhi)
+        self.zodiac_element = ZHI_DETAILS[self.zodiac_zhi]['element']
 
         # 八字
         self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.input_datetime)
-        # 各个干支
-        (self.nian_gan, self.nian_zhi), (self.yue_gan, self.yue_zhi), (self.ri_gan, self.ri_zhi), (
-            self.shi_gan, self.shi_zhi) = self.split_gan_zhi()
-        self.all_gan = [self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan]
-        self.all_zhi = [self.nian_zhi, self.yue_zhi, self.ri_zhi, self.shi_zhi]
 
         # 四柱
         (self.nian_zhu, self.yue_zhu, self.ri_zhu, self.shi_zhu) = self.ba_zi.split(",")
 
+        # 各个干支
+        ((self.nian_gan, self.nian_zhi),
+         (self.yue_gan, self.yue_zhi),
+         (self.ri_gan, self.ri_zhi),
+         (self.shi_gan, self.shi_zhi)) = self.split_gan_zhi()
+        self.all_gan = [self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan]
+        self.all_zhi = [self.nian_zhi, self.yue_zhi, self.ri_zhi, self.shi_zhi]
+
         # 干支对应五行
-        self.element_matrix = self.mapping_gan_zhi_elements()
+        self.elements_matrix = self.mapping_gan_zhi_elements()
         [
             [self.nian_gan_element, self.yue_gan_element, self.ri_gan_element, self.shi_gan_element],
             [self.nian_zhi_element, self.yue_zhi_element, self.ri_zhi_element, self.shi_zhi_element]
-        ] = self.element_matrix
+        ] = self.elements_matrix
+
+        self.all_elements = [
+            self.nian_gan_element, self.nian_zhi_element,
+            self.yue_gan_element, self.yue_zhi_element,
+            self.ri_gan_element, self.ri_zhi_element,
+            self.shi_gan_element, self.shi_zhi_element
+        ]
+
+        self.elements_count = Counter(self.all_elements)
 
         # 农历生日
         self.lunar_of_input_datetime = datetime(self.lunar_year, self.lunar_month, self.lunar_day)
@@ -126,12 +139,12 @@ class MetaInfo:
         return msg
 
     def split_gan_zhi(self):
-        return [[gan, zhi] for gan, zhi in self.ba_zi.split(',')]
+        return [[gan, zhi] for gan, zhi in (self.nian_zhu, self.yue_zhu, self.ri_zhu, self.shi_zhu)]
 
     def mapping_gan_zhi_elements(self):
         return [
-            [get_heavenly_stem_element(item) for item in (self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan)],
-            [get_earthly_branch_element(item) for item in (self.nian_zhi, self.yue_zhi, self.ri_zhi, self.shi_zhi)]
+            [GAN_DETAILS[item]['element'] for item in self.all_gan],
+            [ZHI_DETAILS[item]['element'] for item in self.all_zhi]
         ]
 
 

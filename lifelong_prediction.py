@@ -10,6 +10,7 @@ from life_stages_luck import LifeStagesLuck
 from lord_gods import LordGods
 from lord_gods_structure import LordGodsStructure
 from metainfo import MetaInfo
+from nine_stars import NineStars
 from potential_couple import PotentialCouple
 from ten_years_luck import TenYearsLuck
 from utils import *
@@ -39,6 +40,10 @@ class LifePrediction(MetaInfo):
 
         self.ten_years_luck = TenYearsLuck(**kwargs)
         self.yearly_luck = YearlyLuck(**kwargs)
+
+        self.nine_stars = NineStars(
+            self_element=self.ba_zi_elements.primary_element,
+        )
 
         if kwargs.get('is_male', True):
             man_birthday = self.input_datetime
@@ -74,6 +79,7 @@ class LifePrediction(MetaInfo):
             'demigods': self.demigods.__str__(),
             'family_support': self.family_support.__str__(),
             'life_stages_luck': self.life_stages_luck.__str__(),
+            'nine_stars': self.nine_stars.__str__(),
             'ten_years_luck': self.ten_years_luck.__str__(),
             'yearly_luck': self.yearly_luck.__str__(),
             'intermarriage': self.intermarriage.__str__(),

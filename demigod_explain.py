@@ -332,7 +332,7 @@ class TaoHua(DemigodExplain):
 
     def calc_shui(self):
         result = ""
-        if [self.demigods.element_matrix[0] + self.demigods.element_matrix[0]].count('水') >= 5:
+        if [self.demigods.elements_matrix[0] + self.demigods.elements_matrix[0]].count('水') >= 5:
             result += "八字带桃花，又有水局，异性缘特好，淫不可言。经云:桃花带水，必是浪游之子。"
             if not self.demigods.is_male:
                 result += "女命可为媢。"

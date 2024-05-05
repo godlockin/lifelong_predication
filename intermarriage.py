@@ -20,12 +20,12 @@ class Intermarriage:
         )
         self.explain_append = kwargs.get('explain_append', False)
 
+        self.marry_date = kwargs.get('marry_date', constants.BASE_DATE)
+        self.ru_zhui = kwargs.get('ru_zhui', False)
+
         self.lv_cai_he_hun = self.build_lv_cai_he_hun()
         self.pursue = self.calc_pursue_relationship()
         self.relationships = self.calc_relationship()
-
-        self.marry_date = kwargs.get('marry_date', constants.BASE_DATE)
-        self.ru_zhui = kwargs.get('ru_zhui', False)
         self.marry_date_comment = self.check_marry_date()
 
         if self.explain_append:
@@ -85,14 +85,10 @@ class Intermarriage:
         male_primary_element = self.man_demigod.primary_element
         female_primary_element = self.woman_demigod.primary_element
 
-        if ELEMENTS_OPPOSING[male_primary_element] == female_primary_element:
-            return '男方追女方'
-        elif ELEMENTS_OPPOSING[female_primary_element] == male_primary_element:
+        if ELEMENTS_OPPOSING[female_primary_element] == male_primary_element:
             return '女方追男方'
         elif ELEMENTS_SUPPORTING[male_primary_element] == female_primary_element:
             return '女方追男方'
-        elif ELEMENTS_SUPPORTING[female_primary_element] == male_primary_element:
-            return '男方追女方'
         return '男方追女方'
 
     def calc_relationship(self):
@@ -231,6 +227,7 @@ class Intermarriage:
         }
         result += f"""
         {self.lv_cai_he_hun}：{conditions[self.lv_cai_he_hun]}
+        
         上婚，主子孫昌盛，家宅平安；中婚為中吉，雖然有不吉因素，但是無大妨；如遇下婚，就要進行趨避。
         """
 
@@ -242,8 +239,21 @@ class Intermarriage:
         首先陰差陽錯日不能選
         :return:
         """
-        messed_up_date = ["辛卯", "壬辰", "癸已", "丙午", "丁未", "戊申", "辛酉", "壬戌", "癸亥", "丙子", "丁醜",
-                          "戊寅"]
+        messed_up_date = [
+            "辛卯",
+            "壬辰",
+            "癸已",
+            "丙午",
+            "丁未",
+            "戊申",
+            "辛酉",
+            "壬戌",
+            "癸亥",
+            "丙子",
+            "丁醜",
+            "丁丑",
+            "戊寅",
+        ]
 
         result = f""
         comment = "古代對結婚的月份很有講究，"
@@ -368,9 +378,15 @@ if __name__ == "__main__":
                         default=True)
     parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes',
                         action='store_true', default=False)
-    parser.add_argument('-c', '--couple_birthday', help='The birthday of your couple, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"', required=False, default="2014-01-03 05:20:00")
-    parser.add_argument('-md', '--marry_date', help='The date which you couples prepare to get marriage, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"', required=False)
-    parser.add_argument('-rz', '--ru_zhui', help='Set male as primary info to do calculation, and there were a special case on male\'s marriage is [ru zhui], default as False', action='store_true', default=False)
+    parser.add_argument('-c', '--couple_birthday',
+                        help='The birthday of your couple, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"',
+                        required=False, default="2014-01-03 05:20:00")
+    parser.add_argument('-md', '--marry_date',
+                        help='The date which you couples prepare to get marriage, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"',
+                        required=False)
+    parser.add_argument('-rz', '--ru_zhui',
+                        help='Set male as primary info to do calculation, and there were a special case on male\'s marriage is [ru zhui], default as False',
+                        action='store_true', default=False)
 
     args = parser.parse_args()
 

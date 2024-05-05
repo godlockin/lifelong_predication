@@ -592,6 +592,7 @@ LIFE_PREDICTION_LABELS = [
     'demigods',
     'family_support',
     'life_stages_luck',
+    'nine_stars',
     'ten_years_luck',
     'yearly_luck',
     'intermarriage',
@@ -623,4 +624,192 @@ ZHI_ATTRIBUTES = {
            "六": "卯", "暗": "", },
     "亥": {"冲": "巳", "刑": "亥", "被刑": "亥", "合": ("卯", "未"), "会": ("子", "丑"), '害': '申', '破': '寅',
            "六": "寅", "暗": "午", },
+}
+
+BA_GUA_POSITION_MATRIX = [
+    [4, 9, 2],
+    [3, 5, 7],
+    [8, 1, 6]
+]
+
+NINE_STARS_DETAILS = {
+    1: {
+        "name": "贪狼",
+        "color": "白",
+        "element": "水",
+        "meaning": "桃花星，主恋爱和婚姻，又主官运、财运。"
+    },
+    2: {
+        "name": "巨门",
+        "color": "黑",
+        "element": "土",
+        "meaning": "病符星，主疾病伤痛，飞来横祸。"
+    },
+    3: {
+        "name": "禄存",
+        "color": "碧",
+        "element": "木",
+        "meaning": "是非星，主是非争吵，官司诉讼，遇盗遭窃。"
+    },
+    4: {
+        "name": "文曲",
+        "color": "绿",
+        "element": "木",
+        "meaning": "文昌星，主学业、考试，又主桃花、恋爱。"
+    },
+    5: {
+        "name": "廉贞",
+        "color": "黄",
+        "element": "土",
+        "meaning": "大凶星，主重病、破财损丁，血光之灾。"
+    },
+    6: {
+        "name": "武曲",
+        "color": "白",
+        "element": "金",
+        "meaning": "财星，主飞来横财，又主权位官运。"
+    },
+    7: {
+        "name": "破军",
+        "color": "红",
+        "element": "金",
+        "meaning": "肃杀星，主官非盗窃、血光之灾，诉讼牢狱。"
+    },
+    8: {
+        "name": "左辅",
+        "color": "白",
+        "element": "土",
+        "meaning": "太白财星，主财运，财运滚滚，旺田宅发丁财。"
+    },
+    9: {
+        "name": "右弼",
+        "color": "紫",
+        "element": "火",
+        "meaning": "吉庆星，主嫁娶、添丁之事，又主官运。"
+    }
+}
+
+BA_GUA_POSITION_MEANING = {
+    "震": {
+        "name": "震",
+        "position": 3,
+        "location": "东",
+        "element": "木",
+        "binary_symbol": "001",
+        "family_member": "长男",
+        "image": "震卦代表雷，象征觉醒和行动。木元素与生长、发展相关。",
+        "usage": "长子的卧室、家庭活动区或书房。",
+        "promote": "促进个人成长、活力和创新。",
+        "oppose": "重型储藏或静态活动区。",
+        "inhibition": "可能抑制成长和活力。"
+    },
+    "巽": {
+        "name": "巽",
+        "position": 4,
+        "location": "东南",
+        "element": "木",
+        "binary_symbol": "110",
+        "family_member": "长女",
+        "image": "巽卦代表风，与交流和变化相关。",
+        "usage": "长女的卧室、客厅或绿化区。",
+        "promote": "促进交流、灵活性和社交。",
+        "oppose": "过度的变化和不稳定。",
+        "inhibition": "可能导致沟通不畅和僵化。"
+    },
+    "离": {
+        "name": "离",
+        "position": 9,
+        "location": "南",
+        "element": "火",
+        "binary_symbol": "101",
+        "family_member": "中女",
+        "image": "离卦代表火，象征热情和活力。",
+        "usage": "中女的卧室、客厅或明亮的活动区。",
+        "promote": "促进热情、欢乐和明朗气氛。",
+        "oppose": "过于阴暗或冷漠的布置。",
+        "inhibition": "可能导致缺乏活力和热情。"
+    },
+    "坤": {
+        "name": "坤",
+        "position": 2,
+        "location": "西南",
+        "element": "土",
+        "binary_symbol": "000",
+        "family_member": "母亲",
+        "image": "坤卦代表地，象征母性、包容和稳定。",
+        "usage": "母亲的卧室、主卧或家庭聚会区。",
+        "promote": "促进稳定、和谐和滋养。",
+        "oppose": "过于杂乱或不稳定的空间。",
+        "inhibition": "可能导致缺乏安全感和和谐。"
+    },
+    "兑": {
+        "name": "兑",
+        "position": 7,
+        "location": "西",
+        "element": "金",
+        "binary_symbol": "011",
+        "family_member": "中男",
+        "image": "兑卦代表湖泊，象征沟通和情感。",
+        "usage": "中子的卧室、休闲区。",
+        "promote": "促进沟通、情感和社交。",
+        "oppose": "过于严肃或压抑的布置。",
+        "inhibition": "可能导致压力和不愉快。"
+    },
+    "乾": {
+        "name": "乾",
+        "position": 6,
+        "location": "西北",
+        "element": "金",
+        "binary_symbol": "111",
+        "family_member": "父亲",
+        "image": "乾卦代表天，象征权威和力量。",
+        "usage": "父亲的卧室、办公室或领导区。",
+        "promote": "增强权威、决断力和领导能力。",
+        "oppose": "杂乱无章或缺乏秩序的空间。",
+        "inhibition": "可能导致权威受损和决策困难。"
+    },
+    "坎": {
+        "name": "坎",
+        "position": 1,
+        "location": "北",
+        "element": "水",
+        "binary_symbol": "010",
+        "family_member": "小子",
+        "image": "坎卦代表水，象征智慧和灵感。",
+        "usage": "小子的卧室、冥想区或水元素丰富的区域。",
+        "promote": "促进智慧、灵活性和适应能力。",
+        "oppose": "干燥或缺乏流动性的区域。",
+        "inhibition": "可能导致思维僵化和缺乏适应性。"
+    },
+    "艮": {
+        "name": "艮",
+        "position": 8,
+        "location": "东北",
+        "element": "土",
+        "binary_symbol": "100",
+        "family_member": "小女",
+        "image": "艮卦代表山，象征稳定和坚守。",
+        "usage": "小女的卧室、学习区或安静的区域。",
+        "promote": "促进稳定、坚守和专注力。",
+        "oppose": "喧闹或频繁变动的空间。",
+        "inhibition": "可能导致隔离和缺乏活力。"
+    },
+    "中": {
+        "name": "中",
+        "position": 5,
+        "location": "中",
+        "element": "土",
+        "binary_symbol": "---",
+        "family_member": "中心",
+        "image": "中卦代表中心，象征平衡和调和。",
+        "usage": "家庭中心区域。",
+        "promote": "",
+        "oppose": "",
+        "inhibition": ""
+
+    }
+}
+
+BA_GUA_POSITION_MEANING_INDEXING = {
+    value['position']: value for value in BA_GUA_POSITION_MEANING.values()
 }

@@ -26,6 +26,7 @@ class FamilySupport(LordGods):
             self.mother_family,
             self.elder_family_members,
             self.younger_family_members,
+            _, # 日主自己的不用计算
             self.spouse,
             self.primary_child,
             self.following_child,

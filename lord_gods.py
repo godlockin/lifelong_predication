@@ -84,18 +84,15 @@ class LordGods(BaZiElements):
         # 第二步根据每个藏干找到对应的十神
         di_zhi_lord_gods_list = [
             # 对于每个地支的藏干元素，查表去找它的十神
-            (cang_gan_list,
-             [(item, GAN_MATRIX[GAN.index(item)][3], LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)]) for
-              item in cang_gan_list if item])
+            (cang_gan_list, [(item, GAN_MATRIX[GAN.index(item)][3], LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)])
+                             for item in cang_gan_list if item])
             for cang_gan_list in di_zhi_cang_gan_list
         ]
 
         return di_zhi_lord_gods_list
 
     def handle_gan_lord_gods(self, ri_gan_idx):
-        base_list = [self.nian_gan, self.yue_gan, self.ri_gan, self.shi_gan]
-        result = [LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)] for item in base_list]
-        return result
+        return [LORD_GODS_MATRIX[ri_gan_idx][LORD_GODS_MATRIX[0].index(item)] for item in self.all_gan]
 
     def di_zhi_cang_gan(self, zhi):
         """

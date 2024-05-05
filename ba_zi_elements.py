@@ -12,42 +12,32 @@ class BaZiElements(MetaInfo):
         self.meta_info_display = kwargs.get('meta_info_display', False)
         self.explain_append = kwargs.get('explain_append', False)
 
-        self.primary_element = get_heavenly_stem_element(self.ri_gan)
+        # 命主五行
+        self.primary_element = GAN_DETAILS[self.ri_gan]['element']
         self.support_element = SWAPPED_ELEMENTS_SUPPORTING[self.primary_element]
-        # 命主身强
+
+        # 命主自身强弱
         self.self_strong = self.calc_element_strength()
         # 命主旺衰
         self.self_positive = self.calc_positive()
 
-        self.elements_relationships = self.calc_element_relationship()
+        # 命主五行喜忌关系
+        self.elements_strength_sequence = self.calc_elements_strength_sequence()
+
+        # 命主五行强度
         self.elements_weight = self.calc_element_weight()
-        elements_weight_rounded = {element: round(weight, 2) for element, weight in self.elements_weight.items()}
 
         self.elements_relationships_mapping = {
-            element: (ELEMENTS_RELATIONS[i], elements_weight_rounded[element])
-            for i, element in enumerate(self.elements_relationships)
+            element: (ELEMENTS_RELATIONS[i], self.elements_weight[element])
+            for i, element in enumerate(self.elements_strength_sequence)
         }
 
-        self.all_elements = [self.nian_gan_element, self.nian_zhi_element,
-                             self.yue_gan_element, self.yue_zhi_element,
-                             self.ri_zhi_element,
-                             self.shi_gan_element, self.shi_zhi_element, ]
-
-        self.elements_matrix = [
-            [
-                self.nian_gan_element, self.yue_gan_element, self.ri_gan_element, self.shi_gan_element
-            ],
-            [
-                self.nian_zhi_element, self.yue_zhi_element, self.ri_zhi_element, self.shi_zhi_element
-            ]
-        ]
-
         if self.self_strong:
-            self.supporting_elements_sequence = self.elements_relationships[:3]
-            self.opposing_elements_sequence = self.elements_relationships[3:]
+            self.supporting_elements_sequence = self.elements_strength_sequence[:3]
+            self.opposing_elements_sequence = self.elements_strength_sequence[3:]
         else:
-            self.supporting_elements_sequence = self.elements_relationships[:2]
-            self.opposing_elements_sequence = self.elements_relationships[2:]
+            self.supporting_elements_sequence = self.elements_strength_sequence[:2]
+            self.opposing_elements_sequence = self.elements_strength_sequence[2:]
 
         if self.explain_append:
             self.elements_explain = ElementsExplain(self)
@@ -81,20 +71,18 @@ class BaZiElements(MetaInfo):
 
         positive_weight = 0
         negative_weight = 0
-        for row in range(len(self.element_matrix)):
-            for col in range(len(self.element_matrix[row])):
-                if self.element_matrix[row][col] in [self.primary_element, self.support_element]:
+        for row in range(len(self.elements_matrix)):
+            for col in range(len(self.elements_matrix[row])):
+                if self.elements_matrix[row][col] in [self.primary_element, self.support_element]:
                     positive_weight += GAN_ZHI_POSITION_WEIGHT[row][col]
                 else:
                     negative_weight -= GAN_ZHI_POSITION_WEIGHT[row][col]
 
         if positive_weight > 50:
             return True
-        elif negative_weight < -50:
-            return False
         return False
 
-    def calc_element_relationship(self):
+    def calc_elements_strength_sequence(self):
         """
         运气公式：
         |名称|变化|身强|身弱|
@@ -123,17 +111,9 @@ class BaZiElements(MetaInfo):
         return elements_sequence
 
     def calc_element_weight(self):
-        self.ba_zi_elements_list = [
-            self.nian_gan_element, self.nian_zhi_element,
-            self.yue_gan_element, self.yue_zhi_element,
-            self.ri_gan_element, self.ri_zhi_element,
-            self.shi_gan_element, self.shi_zhi_element
-        ]
-
-        self.elements_count = Counter(self.ba_zi_elements_list)
 
         elements_weight = {}
-        element_to_index = {element: idx for idx, element in enumerate(self.elements_relationships)}
+        element_to_index = {element: idx for idx, element in enumerate(self.elements_strength_sequence)}
         for element, idx in element_to_index.items():
             base_weight = (self.elements_count[element] / 8)
             base_weight += ELEMENTS_POSITION_DELTA[idx]
@@ -143,6 +123,7 @@ class BaZiElements(MetaInfo):
         return elements_weight
 
     def calc_positive(self):
+        # 月令五行与日主相同为旺
         return GAN_DETAILS[self.ri_gan]['element'] == ZHI_DETAILS[self.yue_zhi]['element']
 
 

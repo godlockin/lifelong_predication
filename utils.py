@@ -1,74 +1,9 @@
-from datetime import datetime
-
 import constants
 from constants import *
 
 
 def parse_input_datetime_info(config):
     return config.get('base_datetime', constants.BASE_DATE)
-
-
-def get_heavenly_stem_element(heavenly_stem):
-    """
-    天干五行
-    甲乙同属木, 甲为阳, 乙为阴
-    丙丁同属火, 丙为阳, 丁为阴
-    戊己同属土, 戊为阳, 己为阴
-    庚辛同属金, 庚为阳, 辛为阴
-    壬癸同属水, 壬为阳, 癸为阴
-    """
-
-    if heavenly_stem in ['甲', '乙']:
-        return "木"
-    elif heavenly_stem in ['丙', '丁']:
-        return "火"
-    elif heavenly_stem in ['戊', '己']:
-        return "土"
-    elif heavenly_stem in ['庚', '辛']:
-        return "金"
-    elif heavenly_stem in ['壬', '癸']:
-        return "水"
-    else:
-        return ""
-
-
-def get_earthly_branch_element(earthly_branch):
-    """
-    地支五行
-    亥子属水，巳午属火，寅卯属木，申酉属金，辰丑未戌属土，
-    丑未为阴土，辰戌为阳土，辰丑为湿土，未戌为燥土。
-    """
-
-    if earthly_branch in ['寅', '卯']:
-        return "木"
-    elif earthly_branch in ['巳', '午']:
-        return "火"
-    elif earthly_branch in ['辰', '丑', '未', '戌']:
-        return "土"
-    elif earthly_branch in ['申', '酉']:
-        return "金"
-    elif earthly_branch in ['亥', '子']:
-        return "水"
-    else:
-        return ""
-
-
-def di_zhi_yin_yang(zhi):
-    conditions = {
-        "子": "阳",
-        "寅": "阳",
-        "辰": "阳",
-        "午": "阳",
-        "申": "阳",
-        "戌": "阳",
-        "丑": "阴",
-        "卯": "阴",
-        "巳": "阴",
-        "未": "阴",
-        "酉": "阴",
-        "亥": "阴"
-    }
-    return conditions.get(zhi, '')
 
 
 def get_calendar_from_string(year, date_format):

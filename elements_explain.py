@@ -4,6 +4,7 @@ from constants import *
 class ElementsExplain:
     def __init__(self, ba_zi_elements):
 
+        self.ba_zi_elements = ba_zi_elements
         self.ri_gan = ba_zi_elements.ri_gan
         self.ri_gan_element = ba_zi_elements.ri_gan_element
         self.supporting_elements_sequence = ba_zi_elements.supporting_elements_sequence
@@ -11,7 +12,6 @@ class ElementsExplain:
 
         self.self_element_analysis = self.self_analysis()
 
-        self.elements_count = self.calc_elements_count()
         self.elements_healthy = self.calc_elements_healthy()
         self.elements_healthy_list = sorted(self.elements_healthy.items(), key=lambda x: -x[1]['score'])
         self.self_elements_healthy_analysis = self.elements_healthy_analysis()
@@ -24,19 +24,6 @@ class ElementsExplain:
         msg += self.self_element_analysis
 
         return msg
-
-    def calc_elements_count(self):
-        elements_count = {
-            '金': 0,
-            '木': 0,
-            '水': 0,
-            '火': 0,
-            '土': 0,
-        }
-        for row in self.elements_matrix:
-            for element in row:
-                elements_count[element] += 1
-        return elements_count
 
     def calc_elements_healthy(self):
         conditions = {
@@ -73,7 +60,7 @@ class ElementsExplain:
         }
 
         elements_healthy = {}
-        for element, count in self.elements_count.items():
+        for element, count in self.ba_zi_elements.elements_count.items():
             tmp = conditions[element]
             element_list = [
                 element,
@@ -83,13 +70,13 @@ class ElementsExplain:
                 SWAPPED_ELEMENTS_OPPOSING[element],
             ]
 
-            score_list = [self.elements_count[e] * ELEMENTS_POSITION_DELTA[idx] for idx, e in enumerate(element_list)]
+            score_list = [self.ba_zi_elements.elements_count[e] * ELEMENTS_POSITION_DELTA[idx] for idx, e in enumerate(element_list)]
             score = round(sum(score_list), 2)
 
             if score > 3:
                 elements_healthy[element] = {
                     "score": score,
-                    'count': self.elements_count[element],
+                    'count': count,
                     "status": "旺",
                     "organ": tmp["organ"],
                     "emotion": tmp["emotion"],
@@ -98,7 +85,7 @@ class ElementsExplain:
             elif score < 0:
                 elements_healthy[element] = {
                     "score": score,
-                    'count': self.elements_count[element],
+                    'count': count,
                     "status": "衰",
                     "organ": tmp["organ"],
                     "emotion": tmp["emotion"],

@@ -250,8 +250,8 @@ class Demigod(BaZiElements):
         # 勾绞煞
         # 阳男阴女, 命前三辰为勾, 命后三辰为绞.阴男阳女, 命前三辰为绞, 命后三辰为勾.
         # 查法: 以年支为主, 查四柱其余地支. 如庚午年生男, 命前三辰为酉为勾,命后三辰为卯为绞.
-        if (self.is_male and di_zhi_yin_yang(self.nian_zhi) == "阳") or (
-                not self.is_male and di_zhi_yin_yang(self.nian_zhi) == "阴"):
+        if (self.is_male and ZHI_DETAILS[self.nian_zhi]['yinyang'] == "阳") or (
+                not self.is_male and ZHI_DETAILS[self.nian_zhi]['yinyang'] == "阴"):
             if self.di_zhi_idx == self.di_zhi_order_backward:
                 result.append("勾煞")
             elif self.di_zhi_idx == self.di_zhi_order_forward:
@@ -815,8 +815,8 @@ class CommonDemigod:
             "亥": "辰",
         }
 
-        if (is_male and di_zhi_yin_yang(nian_zhi) == "阳") or (
-                not is_male and di_zhi_yin_yang(nian_zhi) == "阴"):
+        if (is_male and ZHI_DETAILS[nian_zhi]['yinyang'] == "阳") or (
+                not is_male and ZHI_DETAILS[nian_zhi]['yinyang'] == "阴"):
             return zhi == yang_nan_yin_nv_conditions.get(nian_zhi, '')
         else:
             return zhi == yin_nan_yang_nv_conditions.get(nian_zhi, '')

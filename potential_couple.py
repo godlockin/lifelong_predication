@@ -11,29 +11,36 @@ class PotentialCouple(LordGods):
         self.meta_info_display = kwargs.get('meta_info_display', False)
         self.explain_append = kwargs.get('explain_append', False)
 
-        self.element_appearance_mapping = {
-            '火': '亮丽，面红润。',
-            '木': '高，发秀。',
-            '水': '较胖，团活，面黑，人机灵，相貌一般。',
-            '土': '敦厚结实，个头矮，较丑。',
-            '金': '白皙端庄。',
-        }
-        self.position_relationship_mapping = {
-            "年柱": "婚恋对象年龄较大，大约在一旬左右甚至以上；或者 距离较远，有可能不是当地的或同城的；也有可能是上司或老板等。",
-            "月柱": "婚恋对象年龄稍大，大约在半旬左右甚至以上；或者 距离稍近，有可能是当地或同城的熟人、同学、朋友等。",
-            "日柱": "婚恋对象年龄相仿，大约在两三岁或是同龄人，也有可能稍小；或者 距离很近，有可能是经常接触的熟人朋友等。",
-            "时柱": "婚恋对象年龄较小，有可能相差半旬左右或以上；或者距离稍远，也有可能是熟人朋友或下属等。",
-        }
+        self.element_appearance_mapping = self.init_element_appearance_mapping()
+
+        self.position_relationship_mapping = self.calc_position_relationship_mapping()
 
         self.primary_couple_gan_details, self.secondary_couple_gan_details = self.calc_couple_gan()
         self.gan_appearance = self.calc_gan_appearance()
-        self.gong_appearance = self.calc_gong_appearance()
+        self.position_appearance = self.calc_position_appearance()
         self.gan_zhi_appearance = self.calc_gan_zhi_appearance()
         self.element_based_appearance = self.calc_element_based_appearance()
         self.guan_position = self.calc_guan_position(**kwargs)
         self.finance_position = self.calc_finance_position()
         self.finance_columns = self.calc_finance_columns()
         self.palace = self.calc_palace()
+
+    def calc_position_relationship_mapping(self):
+        return {
+            "年柱": "婚恋对象年龄较大，大约在一旬左右甚至以上；或者 距离较远，有可能不是当地的或同城的；也有可能是上司或老板等。",
+            "月柱": "婚恋对象年龄稍大，大约在半旬左右甚至以上；或者 距离稍近，有可能是当地或同城的熟人、同学、朋友等。",
+            "日柱": "婚恋对象年龄相仿，大约在两三岁或是同龄人，也有可能稍小；或者 距离很近，有可能是经常接触的熟人朋友等。",
+            "时柱": "婚恋对象年龄较小，有可能相差半旬左右或以上；或者距离稍远，也有可能是熟人朋友或下属等。",
+        }
+
+    def init_element_appearance_mapping(self):
+        return {
+            '火': '亮丽，面红润。',
+            '木': '高，发秀。',
+            '水': '较胖，团活，面黑，人机灵，相貌一般。',
+            '土': '敦厚结实，个头矮，较丑。',
+            '金': '白皙端庄。',
+        }
 
     def __str__(self):
         couple_name = "太太" if self.is_male else "先生"
@@ -84,7 +91,7 @@ class PotentialCouple(LordGods):
 
         return msg
 
-    def calc_gong_appearance(self):
+    def calc_position_appearance(self):
         """
         古人从配偶宫看另一半长相的论断是：
         日支为子午卯酉者，主配偶长相漂亮或帅气，身材纤巧，或文弱书卷，比较周正或端庄，而且有才华或能力，性情浪漫，富有情调，情趣昂然，但感情善变。
@@ -155,8 +162,8 @@ class PotentialCouple(LordGods):
         比如男命以财星为妻，女命以官星为夫，这个“财”和这个“官”，就是配偶星。同时官/财也分正偏（正式夫妻/情人（再婚））。
         命主为{'男' if self.is_male else '女'}
         所以以{'正财-偏财' if self.is_male else '正官-偏官（七杀）'}的顺序显示。
-        正缘：「{self.gan_appearance[0]}{self.gong_appearance}」
-        次缘：「{self.gan_appearance[1]}{self.gong_appearance}」
+        正缘：「{self.gan_appearance[0]}{self.position_appearance}」
+        次缘：「{self.gan_appearance[1]}{self.position_appearance}」
         """
 
         return result
@@ -237,8 +244,7 @@ class PotentialCouple(LordGods):
         all_gan = self.lord_gods_matrix[0]
         # 日主不算
         all_gan[2] = ''
-        all_zhi = [[item[2] for item in zhi_cang_gan] for zhi_cang_gan in self.lord_gods_matrix[1]]
-
+        all_zhi = self.lord_gods_core_matrix[1]
 
         def find_lord_gods(trgt_lord_god):
             matched_list = []
@@ -346,13 +352,15 @@ class PotentialCouple(LordGods):
         """
         配偶宫所居十神为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好；配偶宫所居十神为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好。
         """
-        positive = set(ri_zhi_lord_gods_core).intersection({'正官', '正印', '食神', '正财'})
-        negative = set(ri_zhi_lord_gods_core).intersection({'七杀', '枭印', '伤官', '劫财'})
+        four_positive_lord_gods = ['正官', '正印', '食神', '正财']
+        four_negative_lord_gods = ['七杀', '枭印', '伤官', '劫财']
+        positive = set(ri_zhi_lord_gods_core).intersection(set(four_positive_lord_gods))
+        negative = set(ri_zhi_lord_gods_core).intersection(set(four_negative_lord_gods))
         if positive:
             result += f"""
         配偶宫所居十神（{list(positive)[0]}）为“四善星”（正官、正印、食神、正财）的人，配偶一般个性较好
             """
-        elif any(item in ri_zhi_lord_gods_core for item in ['七杀', '枭印', '伤官', '劫财']):
+        elif negative:
             result += f"""
         配偶宫所居十神（{list(negative)[0]}）为“四恶星”（七杀、枭印、伤官、劫财）的人，配偶一般脾气较差，个性不是很好
         """

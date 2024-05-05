@@ -1,6 +1,5 @@
 import argparse
 import copy
-from collections import Counter
 
 from constants import *
 from lord_gods import LordGods
@@ -157,12 +156,8 @@ class LordGodsStructure(LordGods):
                 break
 
         structure_gan_details = GAN_DETAILS[structure_gan]
-        structure_lord_god_details = LORD_GODS_DETAILS[structure_gan]
-        self_gan_details = GAN_DETAILS[self.ri_gan]
         self_lord_god_details = LORD_GODS_DETAILS[self.ri_gan]
 
-        is_positive = True
-        fix_func = ''
         is_finance_exists = any(item in self.all_lord_gods for item in ['正财', '偏财'])
         is_yin_exists = any(item in self.all_lord_gods for item in ['正印', '偏印'])
         is_shi_shang_exists = any(item in self.all_lord_gods for item in ['食神', '伤官'])
@@ -229,7 +224,7 @@ class LordGodsStructure(LordGods):
                             or
                             # 日干强，杀尤过之，食神制杀而不见财
                             (
-                                    self.elements_weight.get(structure_element, 0) < self.elements_weight.get(GAN_DETAILS[LORD_GODS_SWAPPED_DETAILS[self.ri_gan]['七杀']]['element'], 0)
+                                    self.elements_weight.get(structure_element, 0) < self.elements_weight.get(GAN_DETAILS[LORD_GODS_DETAILS[self.ri_gan]['七杀']]['element'], 0)
                                     and not is_finance_exists
                             )
                             or
