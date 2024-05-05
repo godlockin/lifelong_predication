@@ -322,17 +322,17 @@ ZHI_ELEMENTS_MAPPING = {
 
 CANG_GAN = {
     "子": ["癸", "", "", ],
-    "卯": ["乙", "", "", ],
-    "午": ["丁", "己", "", ],
-    "酉": ["辛", "", "", ],
-    "寅": ["甲", "丙", "戊", ],
-    "巳": ["丙", "戊", "庚", ],
-    "申": ["庚", "壬", "戊", ],
-    "亥": ["壬", "甲", "", ],
     "丑": ["己", "癸", "辛", ],
-    "辰": ["戊", "乙", "癸", ],
-    "未": ["己", "丁", "乙", ],
+    "寅": ["甲", "丙", "戊", ],
+    "卯": ["乙", "", "", ],
+    "辰": ["戊", "癸", "乙", ],
+    "巳": ["丙", "戊", "庚", ],
+    "午": ["丁", "己", "", ],
+    "未": ["己", "乙", "丁", ],
+    "申": ["庚", "壬", "戊", ],
+    "酉": ["辛", "", "", ],
     "戌": ["戊", "辛", "丁", ],
+    "亥": ["壬", "甲", "", ],
 }
 
 LUNAR_INFO = [0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
@@ -393,6 +393,21 @@ LORD_GODS_DETAILS = {item[0]: {
     item[9]: LORD_GODS_MATRIX[0][9],
     item[10]: LORD_GODS_MATRIX[0][10],
 } for item in LORD_GODS_MATRIX[1:]}
+
+LORD_GODS_SWAPPED_DETAILS = {
+    item[0]: {
+        LORD_GODS_MATRIX[0][1]: item[1],
+        LORD_GODS_MATRIX[0][2]: item[2],
+        LORD_GODS_MATRIX[0][3]: item[3],
+        LORD_GODS_MATRIX[0][4]: item[4],
+        LORD_GODS_MATRIX[0][5]: item[5],
+        LORD_GODS_MATRIX[0][6]: item[6],
+        LORD_GODS_MATRIX[0][7]: item[7],
+        LORD_GODS_MATRIX[0][8]: item[8],
+        LORD_GODS_MATRIX[0][9]: item[9],
+        LORD_GODS_MATRIX[0][10]: item[10],
+    } for item in LORD_GODS_MATRIX[1:]
+}
 
 SHENG_SI_JUE_WANG_MAPPING = [
     ["天干", "长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"],

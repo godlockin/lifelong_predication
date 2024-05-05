@@ -1,4 +1,7 @@
+import argparse
 import copy
+from collections import Counter
+
 from constants import *
 from lord_gods import LordGods
 
@@ -23,12 +26,17 @@ class LordGodsStructure(LordGods):
         因为，{self.strength_comment['comment']}
         形象：{self.strength_comment['imagery']}
         由于命主身{'强' if self.self_strong else '弱'}，所以：{self.strength_comment['strength_comment']}
+        整体来看，命主命格{'正' if self.is_positive_overall[0] else '负'}向。
+        {self.is_positive_overall[1]}
         """
         return msg
 
     def calc_structure(self):
+        # 月令藏干十神为本气根、中气根、余气根
+        # 月令食神中有根，天干中透出者为格
+        # 如果不存在，则以本气根为格
         yue_zhi_lord_gods = self.lord_gods_core_matrix[1][1]
-        for item in self.lord_gods_core_matrix[1][1]:
+        for item in yue_zhi_lord_gods:
             if item in self.lord_gods_matrix[0]:
                 return item
 
@@ -153,46 +161,299 @@ class LordGodsStructure(LordGods):
         self_gan_details = GAN_DETAILS[self.ri_gan]
         self_lord_god_details = LORD_GODS_DETAILS[self.ri_gan]
 
-        # 正官
         is_positive = True
         fix_func = ''
+        is_finance_exists = any(item in self.all_lord_gods for item in ['正财', '偏财'])
+        is_yin_exists = any(item in self.all_lord_gods for item in ['正印', '偏印'])
+        is_shi_shang_exists = any(item in self.all_lord_gods for item in ['食神', '伤官'])
+        is_harmful_exists = (
+                TIAN_GAN_CHONG_MAPPING[structure_gan] in self.all_gan
+                or
+                any(ZHI_ATTRIBUTES[self.yue_zhi][item] in self.all_zhi for item in ['冲', '刑', '害', '破'])
+        )
+        fix_func = self.calc_fix_func(structure_element, structure_gan_details)
+
+        # 正官
         if '正官' == self.structure:
             if (
-                # 日干强，又有财来生官
-                (self.self_strong and any(item in self.all_lord_gods for item in ['正财', '偏财']))
-                or
-                # 日干弱，正官强，有印生身
-                (not self.self_strong and structure_gan in self.opposing_elements_sequence and any(item in self.all_lord_gods for item in ['正印', '偏印']))
-                or
-                # 正官不见七杀混杂
-                ('七杀' not in [item[2] for item in self.yue_zhi_lord_gods])
+                    # 日干强，又有财来生官
+                    (
+                            self.self_strong
+                            and is_finance_exists
+                    )
+                    or
+                    # 日干弱，正官强，有印生身
+                    (
+                            not self.self_strong
+                            and self.elements_weight.get(structure_element, 0) > 1
+                            and is_yin_exists
+                    )
+                    or
+                    # 正官不见七杀混杂
+                    (
+                            '七杀' not in self.lord_gods_core_matrix[1][1]
+                    )
             ):
-                return is_positive, fix_func
+                return True, ""
 
             if (
-                # 见伤官而无印
-                ('伤官' in self.all_lord_gods and not any(item in self.all_lord_gods for item in ['正印', '偏印']))
-                or
-                # 杀来混杂
-                ('七杀' not in [item[2] for item in self.yue_zhi_lord_gods])
-                or
-                # 刑冲破害
-                (TIAN_GAN_CHONG_MAPPING[structure_gan] in self.all_gan)
+                    # 见伤官而无印
+                    (
+                            '伤官' in self.all_lord_gods and not is_yin_exists
+                    )
+                    or
+                    # 杀来混杂
+                    (
+                            '七杀' in self.lord_gods_core_matrix[1][1]
+                    )
+                    or
+                    # 刑冲破害
+                    (
+                            is_harmful_exists
+                    )
             ):
-                structure_supporting_element = SWAPPED_ELEMENTS_SUPPORTING[structure_element]
-                OPPOSING_YIN_YANG = YIN_YANG_SWAP[structure_gan_details['yinyang']]
-                if self.self_strong:
-                    yin_details = GAN_ELEMENTS_MAPPING[f"{OPPOSING_YIN_YANG}_{structure_supporting_element}"]
-                else:
-                    yin_details = GAN_ELEMENTS_MAPPING[f"{structure_gan_details['yinyang']}_{structure_supporting_element}"]
-                fix_func = "建议多接触「{}」，以增强正官的正能量".format(yin_details['meaning'])
-                return not is_positive, fix_func
-        elif any(item == self.structure for item in ['正印', '偏印']):
-            # TODO
-            if self.self_strong:
-                pass
+                return False, fix_func
+
+        # 食神
+        if '食神' == self.structure:
+
+            if (
+                    self.self_strong
+                    and
+                    (
+                            # 日干强，食亦强，再见财
+                            (
+                                    self.elements_weight.get(structure_element, 0) > 1
+                                    and is_finance_exists
+                            )
+                            or
+                            # 日干强，杀尤过之，食神制杀而不见财
+                            (
+                                    self.elements_weight.get(structure_element, 0) < self.elements_weight.get(GAN_DETAILS[LORD_GODS_SWAPPED_DETAILS[self.ri_gan]['七杀']]['element'], 0)
+                                    and not is_finance_exists
+                            )
+                            or
+                            # 日干强，食神泄气太过，见印护身
+                            (
+                                    self.elements_weight.get(structure_element, 0) > 1.5
+                                    and is_yin_exists
+                            )
+                    )
+            ):
+                return True, ""
+
+            if (
+                    # 日干强，食轻又逢枭
+                    (
+                            self.self_strong
+                            and self.elements_weight.get(structure_element, 0) < 1
+                            and '偏印' in self.all_lord_gods
+                    )
+                    or
+                    # 日干弱，食神生财，而又露杀
+                    (
+                            not self.self_strong
+                            and is_finance_exists
+                            and '七杀' in self.all_lord_gods
+                    )
+                    or
+                    # 逢刑冲破害
+                    (
+                            is_harmful_exists
+                    )
+            ):
+                return False, fix_func
+
+        # 正偏财
+        if any(item == self.structure for item in ['正财', '偏财']):
+            if (
+                # 日干强，财亦强，再见官星
+                    (
+                        self.self_strong
+                        and self.elements_weight.get(structure_element, 0) > 1
+                        and '正官' in self.all_lord_gods
+                    )
+                or
+                # 日干弱，财星强，有印比护身
+                    (
+                        not self.self_strong
+                        and self.elements_weight.get(structure_element, 0) > 1
+                        and is_yin_exists
+                        and '比肩' in self.all_lord_gods
+                    )
+                or
+                # 日干强，财星弱，有食伤生财
+                    (
+                        self.self_strong
+                        and self.elements_weight.get(structure_element, 0) < 1
+                        and is_shi_shang_exists
+                    )
+            ):
+                return True, ""
+
+            if (
+                # 日干强，财轻，比劫又重
+                    (
+                        self.self_strong
+                        and self.elements_weight.get(structure_element, 0) < 1
+                        and (
+                                self.elements_weight.get(GAN_DETAILS[self_lord_god_details['比肩']]['element'], 0) > 1
+                                or
+                                self.elements_weight.get(GAN_DETAILS[self_lord_god_details['劫财']]['element'], 0) > 1
+                        )
+                    )
+                or
+                # 日干弱，七杀重，财又生杀
+                    (
+                        not self.self_strong
+                        and self.elements_weight.get(GAN_DETAILS[self_lord_god_details['七杀']]['element'], 0) > 1
+                    )
+                or
+                # 逢刑冲破害
+                    (
+                        is_harmful_exists
+                    )
+            ):
+                return False, fix_func
+
+        # 伤官
+        if '伤官' == self.structure:
+            if (
+                # 日干强，伤官生财
+                    (
+                        self.self_strong
+                        and is_finance_exists
+                    )
+                or
+                # 日干弱，伤官泄气，有印护身
+                    (
+                        not self.self_strong
+                        and is_yin_exists
+                    )
+                or
+                # 日干弱，伤官强，而印杀双透
+                    (
+                        not self.self_strong
+                        and self.elements_weight.get(structure_element, 0) > 1
+                        and all((item in self.lord_gods_matrix[0]) and (item in self.lord_gods_matrix[1]) for item in ['正印', '七杀'])
+                    )
+                or
+                # 日干强，杀重，伤官驾杀
+                    (
+                        self.self_strong
+                        and self.elements_weight.get(GAN_DETAILS[self_lord_god_details['七杀']]['element'], 0) > 1
+                        and '七杀' in self.lord_gods_core_matrix[1][1]
+                    )
+            ):
+                return True, ""
+
+            if (
+                # 见官
+                    (
+                        '正官' in self.lord_gods_core_matrix[0] or '正官' in self.lord_gods_core_matrix[1]
+                    )
+                or
+                # 日干弱，又多财
+                    (
+                        not self.self_strong
+                        and is_finance_exists
+                        and self.elements_count.get(ELEMENTS_OPPOSING[self.ri_gan_element], 0) > 3
+                    )
+                or
+                # 日干强，伤官轻，而又多印
+                    (
+                        self.self_strong
+                        and self.elements_weight.get(GAN_DETAILS[self_lord_god_details['伤官']]['element'], 0) < 1.01
+                        and self.all_lord_gods_counter['正印'] > 3
+                    )
+                or
+                    # 逢刑冲破害
+                    (
+                            is_harmful_exists
+                    )
+            ):
+                return False, fix_func
+
+        # 七杀
+        if '七杀' == self.structure:
+            if (
+                # 身强
+                #     (
+                #         self.self_strong
+                #     )
+                # or
+                # 日干强，杀尤过之，有食制杀
+                    (
+                        self.self_strong
+                        and 1 < self.elements_weight.get(GAN_DETAILS[self_lord_god_details['七杀']]['element'], 0) < self.elements_weight.get(GAN_DETAILS[self_lord_god_details['食神']]['element'], 0)
+                    )
+                or
+                # 日干弱，杀旺，有印生身
+                    (
+                        not self.self_strong
+                        and self.elements_weight.get(GAN_DETAILS[self_lord_god_details['七杀']]['element'], 0) > 1
+                        and is_yin_exists
+                    )
+                or
+                # 身杀两停，无官混杀
+                    (
+                        self.self_strong
+                        and '正官' not in self.lord_gods_core_matrix[1][1]
+                    )
+            ):
+                return True, ""
+
+            if (
+                # 财当杀而无制
+                    (
+                        is_finance_exists
+                        and '正官' not in self.all_lord_gods
+                    )
+                or
+                # 日干弱
+                    (
+                        not self.self_strong
+                    )
+                or
+                    # 逢刑冲破害
+                    (
+                            is_harmful_exists
+                    )
+            ):
+
+                return False, fix_func
+
+        return True, fix_func
+
+    def calc_fix_func(self, structure_element, structure_gan_details):
+        structure_supporting_element = SWAPPED_ELEMENTS_SUPPORTING[structure_element]
+        opposing_yin_yang = YIN_YANG_SWAP[structure_gan_details['yinyang']]
+        if self.self_strong:
+            yin_details = GAN_ELEMENTS_MAPPING[f"{opposing_yin_yang}_{structure_supporting_element}"]
+        else:
+            yin_details = GAN_ELEMENTS_MAPPING[f"{structure_gan_details['yinyang']}_{structure_supporting_element}"]
+        return "建议多接触「{}」，以增强{}的正能量".format(yin_details['meaning'], self.structure)
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This is a calc project of BaZi.')
+    parser.add_argument('-b', '--birthday',
+                        help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"',
+                        required=True)
+    parser.add_argument('-g', '--gander', help='The gander of yourself, default as male', action='store_true',
+                        default=True)
+    parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes',
+                        action='store_true', default=False)
 
+    args = parser.parse_args()
 
-
+    print(f'Argument received: {args}')
+    main_birthday = datetime.strptime(args.birthday, default_date_format)
+    is_male = args.gander
+    explain_append = args.explain
+    prediction = LordGodsStructure(
+        base_datetime=main_birthday,
+        explain_append=explain_append,
+        is_male=is_male,
+    )
+    print(prediction)

@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from ba_zi_elements import BaZiElements
 from constants import *
@@ -46,23 +46,25 @@ class LordGods(BaZiElements):
         self.all_gan_lord_gods, self.all_zhi_lord_gods = self.lord_gods_core_matrix[0], self.lord_gods_core_matrix[1]
 
         self.all_lord_gods = self.all_gan_lord_gods + self.all_zhi_lord_gods
-        self.distinct_all_lord_gods = list(set(item for sublist in self.all_lord_gods for item in sublist if item))
+        self.all_lord_gods_list = [item for sublist in self.all_lord_gods for item in sublist if item]
+        self.all_lord_gods_counter = Counter(self.all_lord_gods_list)
+        self.distinct_all_lord_gods = list(set(self.all_lord_gods_list))
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 十神：
         年干：{self.nian_gan_lord_gods}（{self.nian_gan},{GAN_DETAILS[self.nian_gan]['element']}）
-        年支：{self.nian_zhi_lord_gods}（{self.nian_zhi},{ZHI_DETAILS[self.nian_zhi]['element']}）
+        年支：   （{self.nian_zhi},{ZHI_DETAILS[self.nian_zhi]['element']}）{self.nian_zhi_lord_gods}
         
         月干：{self.yue_gan_lord_gods}（{self.yue_gan},{GAN_DETAILS[self.yue_gan]['element']}）
-        月令：{self.yue_zhi_lord_gods}（{self.yue_zhi},{ZHI_DETAILS[self.yue_zhi]['element']}）
+        月令：   （{self.yue_zhi},{ZHI_DETAILS[self.yue_zhi]['element']}）{self.yue_zhi_lord_gods}
         
         日干：日主（{self.ri_gan},{GAN_DETAILS[self.ri_gan]['element']}）
-        日支：{self.ri_zhi_lord_gods}（{self.ri_zhi},{ZHI_DETAILS[self.ri_zhi]['element']}）
+        日支：   （{self.ri_zhi},{ZHI_DETAILS[self.ri_zhi]['element']}）{self.ri_zhi_lord_gods}
         
         时干：{self.shi_gan_lord_gods}（{self.shi_gan},{GAN_DETAILS[self.shi_gan]['element']}）
-        时支：{self.shi_zhi_lord_gods}（{self.shi_zhi},{ZHI_DETAILS[self.shi_zhi]['element']}）
+        时支：   （{self.shi_zhi},{ZHI_DETAILS[self.shi_zhi]['element']}）{self.shi_zhi_lord_gods}
         '''
 
         if self.explain_append:

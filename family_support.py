@@ -1,3 +1,5 @@
+import argparse
+
 from lord_gods import LordGods
 from utils import *
 
@@ -167,3 +169,27 @@ class FamilySupport(LordGods):
 
         return result
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This is a calc project of BaZi.')
+    parser.add_argument('-b', '--birthday',
+                        help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"',
+                        required=True)
+    parser.add_argument('-g', '--gander', help='The gander of yourself, default as male', action='store_true',
+                        default=True)
+    parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes',
+                        action='store_true', default=False)
+
+    args = parser.parse_args()
+
+    print(f'Argument received: {args}')
+    main_birthday = datetime.strptime(args.birthday, default_date_format)
+    is_male = args.gander
+    explain_append = args.explain
+    prediction = FamilySupport(
+        base_datetime=main_birthday,
+        meta_info_display=True,
+        explain_append=explain_append,
+        is_male=is_male,
+    )
+    print(prediction)

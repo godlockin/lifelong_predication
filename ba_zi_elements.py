@@ -1,3 +1,4 @@
+import argparse
 from collections import Counter
 
 from elements_explain import ElementsExplain
@@ -13,7 +14,10 @@ class BaZiElements(MetaInfo):
 
         self.primary_element = get_heavenly_stem_element(self.ri_gan)
         self.support_element = SWAPPED_ELEMENTS_SUPPORTING[self.primary_element]
+        # 命主身强
         self.self_strong = self.calc_element_strength()
+        # 命主旺衰
+        self.self_positive = self.calc_positive()
 
         self.elements_relationships = self.calc_element_relationship()
         self.elements_weight = self.calc_element_weight()
@@ -52,7 +56,7 @@ class BaZiElements(MetaInfo):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 五行分析
-        五行强弱：{"强" if self.self_strong else "弱"}
+        五行强弱：{"强" if self.self_strong else "弱"}+{'旺' if self.self_positive else '衰'}
         喜用：{self.supporting_elements_sequence}
         忌凶：{self.opposing_elements_sequence}
         '''
@@ -119,20 +123,45 @@ class BaZiElements(MetaInfo):
         return elements_sequence
 
     def calc_element_weight(self):
-        ba_zi_elements_list = [
+        self.ba_zi_elements_list = [
             self.nian_gan_element, self.nian_zhi_element,
             self.yue_gan_element, self.yue_zhi_element,
             self.ri_gan_element, self.ri_zhi_element,
             self.shi_gan_element, self.shi_zhi_element
         ]
 
-        elements_count = Counter(ba_zi_elements_list)
+        self.elements_count = Counter(self.ba_zi_elements_list)
 
         elements_weight = {}
         element_to_index = {element: idx for idx, element in enumerate(self.elements_relationships)}
         for element, idx in element_to_index.items():
-            elements_weight[element] = round((elements_count[element] / 8), 2)
-            elements_weight[element] += ELEMENTS_POSITION_DELTA[idx]
-            elements_weight[element] += ZODIAC_ELEMENT_WEIGHT if element == self.zodiac_element else 0
+            base_weight = (self.elements_count[element] / 8)
+            base_weight += ELEMENTS_POSITION_DELTA[idx]
+            base_weight += ZODIAC_ELEMENT_WEIGHT if element == self.zodiac_element else 0
+            elements_weight[element] = round(base_weight, 2)
 
         return elements_weight
+
+    def calc_positive(self):
+        return GAN_DETAILS[self.ri_gan]['element'] == ZHI_DETAILS[self.yue_zhi]['element']
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='This is a calc project of BaZi.')
+    parser.add_argument('-b', '--birthday', help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"', required=True)
+    parser.add_argument('-g', '--gander', help='The gander of yourself, default as male', action='store_true', default=True)
+    parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes', action='store_true', default=False)
+
+    args = parser.parse_args()
+
+    print(f'Argument received: {args}')
+    main_birthday = datetime.strptime(args.birthday, default_date_format)
+    is_male = args.gander
+    explain_append = args.explain
+    prediction = BaZiElements(
+        base_datetime=main_birthday,
+        meta_info_display=True,
+        explain_append=explain_append,
+        is_male=is_male,
+    )
+    print(prediction)

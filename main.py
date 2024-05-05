@@ -1,5 +1,5 @@
 import argparse
-import constants
+
 from lifelong_prediction import LifePrediction
 from utils import *
 
