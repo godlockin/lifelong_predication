@@ -162,7 +162,7 @@ class LordGodsStructure(LordGods):
         is_yin_exists = any(item in self.all_lord_gods for item in ['正印', '偏印'])
         is_shi_shang_exists = any(item in self.all_lord_gods for item in ['食神', '伤官'])
         is_harmful_exists = (
-                TIAN_GAN_CHONG_MAPPING[structure_gan] in self.all_gan
+                TIAN_GAN_CHONG_MAPPING.get(structure_gan, '') in self.all_gan
                 or
                 any(ZHI_ATTRIBUTES[self.yue_zhi][item] in self.all_zhi for item in ['冲', '刑', '害', '破'])
         )

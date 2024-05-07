@@ -287,7 +287,7 @@ class LordGodExplain:
         elif 0 < support_finance_count < primary_finance_count:
             result += f"正财（{primary_finance_count}）强于偏财（{support_finance_count}），命主适合按部就班的工作，做稳定的工作。"
             if primary_finance_weight > 3:
-                result += "正财权重较高，说明命主的正财运势较强，做财务相关的工作可以做到高位。"
+                result += "正财权重较高，说明命主的正财运势较强，做离钱近的工作可以做到高位。"
         elif 0 < primary_finance_count == support_finance_count:
             result += f"正财（{primary_finance_count}）和偏财（{support_finance_count}）相当，命主适合做稳定的工作的同时，维持一份副业。"
             if primary_finance_weight < support_finance_weight:

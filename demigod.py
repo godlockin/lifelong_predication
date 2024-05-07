@@ -108,7 +108,7 @@ class Demigod(BaZiElements):
         )
 
         if self.kui_gang():
-            result.append("魁罡贵人")
+            result.append("魁罡")
 
         if self.tong_zi(self.ri_zhi):
             result.append("童子")
