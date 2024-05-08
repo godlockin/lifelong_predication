@@ -3,6 +3,7 @@ from datetime import datetime
 chinese_date_format = "yyyy-MM-dd"
 default_date_format = "%Y-%m-%d %H:%M:%S"
 BASE_DATE = datetime(1900, 1, 31, 0, 0, 0)
+BASE_DATE_STR = BASE_DATE.strftime(default_date_format)
 
 # 干支，纳音，岁数，男，女
 GAN_ZHI_SOUND_GANDER_MAPPING = [

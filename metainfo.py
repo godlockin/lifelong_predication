@@ -10,8 +10,8 @@ class MetaInfo:
         self.input_datetime = parse_input_datetime_info(kwargs)
         # 默认为男性
         self.is_male = kwargs.get('is_male', True)
-        self.input_datetime_str = self.input_datetime.strftime('%Y-%m-%d %H:%M:%S')
-        self.offset = (self.input_datetime - constants.BASE_DATE).days
+        self.input_datetime_str = self.input_datetime.strftime(default_date_format)
+        self.offset = (self.input_datetime - BASE_DATE).days
 
         # yearCyl农历年与1864的相差数
         self.year_cyl = 1864
