@@ -4,7 +4,7 @@
 ## 用法
 1. 直接通过命令行调用
 ```bash
-python main.py -b "1996-01-03 05:20:00" -g -e -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00"
+python main.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
 ```
 
 2. 通过调用函数
@@ -29,5 +29,29 @@ if __name__ == "__main__":
 
 3. 查看说明
 ```bash
-python main.py -h 
+python main.py -h                                                                                                             
+usage: main.py [-h] -b BIRTHDAY [-g GANDER] [-e EXPLAIN] [-c COUPLE_BIRTHDAY] [-md MARRY_DATE] [-rz RU_ZHUI]
+
+This is a calc project of BaZi.
+
+options:
+  -h, --help            show this help message and exit
+  -b BIRTHDAY, --birthday BIRTHDAY
+                        The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"
+  -g GANDER, --gander GANDER
+                        The gander of yourself, default as male
+  -e EXPLAIN, --explain EXPLAIN
+                        To check whether append explain details on different attributes
+  -c COUPLE_BIRTHDAY, --couple_birthday COUPLE_BIRTHDAY
+                        The birthday of your couple, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"
+  -md MARRY_DATE, --marry_date MARRY_DATE
+                        The date which you couples prepare to get marriage, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"
+  -rz RU_ZHUI, --ru_zhui RU_ZHUI
+                        Set male as primary info to do calculation, and there were a special case on male's marriage is [ru zhui], default as False
+```
+
+```bash
+# 举例
+python main.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
+# python main.py -b $你自己的生日（必填，格式为"1996-01-03 05:20:00"） -e true -c $你对象的生日（可选，"1996-01-03 05:20:00"） -md $你们俩的婚礼时辰（可选，"1996-01-03 05:20:00"） -g $你是否男性（可选，默认为True，是男子） -rz $你们是否存在入赘（可选，默认false）
 ```
