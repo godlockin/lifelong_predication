@@ -152,17 +152,17 @@ class LordGods(BaZiElements):
                 if '七杀' == self.nian_gan_lord_gods:
                     result += "七杀两头挂，到老无后人\n"
                 if '伤官' == self.nian_gan_lord_gods:
-                    result += "伤官两头挂，亲情剩不下"
+                    result += "伤官两头挂，亲情剩不下\n"
                     if not self.is_male:
-                        result += "女命伤官两头挂，好骂丈夫是刁人"
+                        result += "女命伤官两头挂，好骂丈夫是刁人\n"
                 if '食神' == self.nian_gan_lord_gods:
-                    result += "食神两头挂，吃喝全天下"
+                    result += "食神两头挂，吃喝全天下\n"
                 if '正印' == self.nian_gan_lord_gods or '偏印' == self.nian_gan_lord_gods:
-                    result += "印绶两头挂，必定慈善人"
+                    result += "印绶两头挂，必定慈善人\n"
                 if '正财' == self.nian_gan_lord_gods or '偏财' == self.nian_gan_lord_gods:
-                    result += "财星两头挂，出手大方人"
+                    result += "财星两头挂，出手大方人\n"
                 if '劫财' == self.nian_gan_lord_gods:
-                    result += "劫财两头挂，到老会败家"
+                    result += "劫财两头挂，到老会败家\n"
 
         if self.yue_gan == self.shi_gan:
             result += f"月干与时干相同，名为“月时两见”。\n"

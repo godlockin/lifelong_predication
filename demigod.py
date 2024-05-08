@@ -187,6 +187,9 @@ class Demigod(BaZiElements):
         if common_demigod.yue_de_gui_ren(self.yue_zhi, gan):
             result.append("月德贵人")
 
+        if common_demigod.tian_chu(self.ri_zhi_n_nian_zhi, zhi):
+            result.append("天厨")
+
         if self.fu_xing(zhi):
             result.append("福星")
 
@@ -693,6 +696,9 @@ class CommonDemigod:
         if self.guo_yin(self.ri_gan_n_nian_gan, self.zhi):
             result.append("国印贵人")
 
+        if self.tian_chu(self.ri_zhi_n_nian_zhi, self.zhi):
+            result.append("天厨")
+
         if self.yi_ma(self.ri_zhi_n_nian_zhi, self.zhi):
             result.append("驿马")
 
@@ -1178,6 +1184,24 @@ class CommonDemigod:
         }
 
         return any(zhi in conditions.get(item, '') for item in idx_gan_list)
+
+    def tian_chu(self, idx_gan_list, zhi):
+        """
+        天厨又名「食神禄」，先贤陆位亦说:「天厨，宜食禀」，食禀是藏食粮的仓库。
+        查法：以年干、日干查余四支
+        丙干见巳，丁干见午|戊干见申，己干见酉|庚干见亥，辛干见子|壬干见寅，癸干见卯
+        :param idx_gan_list:
+        :param zhi:
+        :return:
+        """
+        conditions = {
+            "巳": "丙", "午": "丁",
+            "申": "戊", "酉": "己",
+            "亥": "庚", "子": "辛",
+            "寅": "壬", "卯": "癸",
+        }
+
+        return conditions.get(zhi, '') in idx_gan_list
 
     def hong_yan(self, zhi):
         """
