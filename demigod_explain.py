@@ -137,6 +137,17 @@ class YueDeGuiRen(DemigodExplain):
         """
 
 
+class JiuChou(DemigodExplain):
+    def __init__(self, demigods, lord_gods):
+        super().__init__(demigods, lord_gods)
+        self.name = "九丑"
+        self.type = ""
+        self.explanation = f"""
+        此煞名“丑”，不是指容貌不好看，相反的，此日生者大多容貌美丽，或很有吸引人的魅力。
+        其所以名“丑”，是指名声方面的风评，因感情的事容易出问题，严重的可能会惹上法律纠纷，名声受损。
+        """
+
+
 class TianYiGuiRen(DemigodExplain):
     def __init__(self, demigods, lord_gods):
         super().__init__(demigods, lord_gods)
@@ -744,7 +755,11 @@ class SangMen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "丧门"
         self.type = ""
-        self.explanation = "避免观丧，探病。"
+        self.explanation = f"""
+        避免观丧，探病。
+        年支前两位为丧门，比如巳年生人，前两位未就是丧门，后两位卯就是吊客，后三位寅就是批麻。
+        披麻、吊客、丧门皆为凶星。如大运、流年遇之，多主人身意外，伤病等事出现，也不容易聚财。
+        """
 
 
 class DiaoKe(DemigodExplain):
@@ -891,7 +906,19 @@ class LuShen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "禄神"
         self.type = ""
-        self.explanation = "人际社交广阔，财禄丰足，避免借贷担保，可避免诉讼。"
+        self.explanation = f"""
+        人际社交广阔，财禄丰足，避免借贷担保，可避免诉讼。
+        身旺见禄，喜见财官。身弱喜禄而逢死绝遭刑冲，又逢吉祥救应，家运可能不太顺利，容易影响到置产、家人之间的关系；同时在求财方面也较为困难。
+        在年月为“建禄”，四柱天干要见财官，“建禄生是月，财官喜透天”也。透财，富。透官，贵。
+        在时为“归禄”，不喜官星，“日禄归时没官星，号曰青云得路。
+        ”主少年发达。“建禄”主长辈之荫，主少年时代幸福。若逢卫破，家运可能不太顺利。
+        身（日主）若太旺，不屑于祖辈留有的家产，不愿坐享现成之福，会自己在外乡创事业。若逢偏印，即破禄而无禄。
+        在日为“专禄”（甲寅、乙卯、庚申、辛酉四日），主会享受，爱过阔绰的生活。要有羊刃来保护（因禄柔、刃刚），若被合去则无禄。被冲不利丈夫或者妻子的健康和运势。
+        八字如果有禄有财：丰盈一生。
+        八字如果有禄无财：祖先庇荫。
+        八字若无禄有财：白手起家。
+        大运流年与禄神冲克：可能有意外危险，难聚财，健康上也要注意。
+        """
 
 
 class FeiRen(DemigodExplain):
@@ -956,7 +983,12 @@ class GuChen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "孤辰"
         self.type = ""
-        self.explanation = "性格孤僻沉默不语、清心寡欲、依恋安逸、没有上进心。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。"
+        self.explanation = f"""
+        性格孤僻沉默不语、清心寡欲、依恋安逸、没有上进心。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。
+        男命怕孤辰落在财星之地，或日主的死绝之方。女命怕寡宿落在夫星之地，或日主的死绝之方。
+        这现像造成缘份难偕久之憾，难免刑克，内心容易伤感，尤其是孤寡入命又见空亡的八字，一生比较孤单。八字忌孤辰、寡宿同时入命。
+        如果命带孤辰或寡宿，八字又有华盖出现，则是一个非常聪明的孤独之人，往往具有特殊才华，很多艺术家、哲学家、五术家，或是修道者、牧师，多是这种命格。
+        """
 
 
 class TianShe(DemigodExplain):
@@ -1039,6 +1071,19 @@ class YinChaYangCuo(DemigodExplain):
         四是外交冷落,多有点孤傲,待人处事有所欠缺,会遇到莫名其妙的意外事件。做事往往坐失良机或机缘突变或功败垂成。
         五是不能跟首个有性关系的恋人结婚；或存在有同母异父或同父异母的兄弟姐妹之兆。
         一般带阴差阳错者可能有同母异父或同父异母的兄弟姐妹，在丧期中成婚、谈亲事时发生不愉快之事，妻子与父母相处的不太融洽，和妻舅感情疏远。做事阻碍较大，容易错失良机。
+        """
+
+
+class YinYangSha(DemigodExplain):
+    def __init__(self, demigods, lord_gods):
+        super().__init__(demigods, lord_gods)
+        self.name = "阴阳煞"
+        self.type = "凶神"
+        self.explanation = """
+        行事阴阳颠倒，多有事成反败之虞。好变不好，诸事多见在阴错阳差下，或完成、或结束。
+        阴差阳错，是太过与不及、男女不和的意思。
+        一般带阴差阳错者可能有同母异父或同父异母的兄弟姐妹，在丧期中成婚、谈亲事时发生不愉快之事，妻子与父母相处的不太融洽，和妻舅感情疏远。
+        做事阻碍较大，容易错失良机。
         """
 
 
