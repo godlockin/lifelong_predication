@@ -20,7 +20,7 @@ class YearlyLuckExplain(TenYearsLuckExplain):
         return result
 
     def build_yearly_luck_explain_list(self):
-        ty_records = {}
+        ty_records_map = {}
         for ty_item in self.ten_years_luck_explain_list:
             ty_gan_zhi = ty_item['ty_gan_zhi']
             ty_details = ty_item['ty_details']
@@ -28,9 +28,11 @@ class YearlyLuckExplain(TenYearsLuckExplain):
 
             ty_records_line = f"""
         {ty_year_num}（{ty_gan_zhi}） {'（财）' if ty_details['is_finance'] else ''}「{ty_details['sheng_si']}（{SHENG_SI_JUE_WANG_MAPPING[0].index(ty_details['sheng_si']) + 1}/{len(SHENG_SI_JUE_WANG_MAPPING[0])}）」
+        十神：{ty_details['lord_gods']}  
+        神煞：{ty_details['demigods']}
         前五年「{ty_details['gan_support'][0]}」～后五年「{ty_details['zhi_support'][0]}」
             """
-            ty_records[ty_year_num] = {
+            ty_records_map[ty_year_num] = {
                 'ty_gan_zhi': ty_gan_zhi,
                 'ty_details': ty_details,
                 'ty_records': ty_records_line
@@ -39,7 +41,7 @@ class YearlyLuckExplain(TenYearsLuckExplain):
         yearly_records = []
         for yearly_item in self.ten_years_luck.yearly_luck_list:
             year, record = yearly_item
-            ty_records = ty_records.get(str(year), {})
+            ty_records = ty_records_map.get(str(year), {})
 
             # 大运开始，添加大运信息
             if ty_records:

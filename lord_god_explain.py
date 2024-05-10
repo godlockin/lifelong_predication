@@ -401,10 +401,10 @@ class ZhengYin(LordGodExplain):
             return house_explain
 
         house_explain_items = []
-        if self.name == self.lord_gods.nian_gan_lord_gods:
+        if self.name == self.lord_gods.nian_gan_core_lord_gods:
             house_explain_items.append("父亲家族会帮忙买房子")
 
-        nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
+        nian_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][0]
         if self.name in nian_zhi_lord_gods:
             tmp = "母亲家族会帮忙"
             if nian_zhi_lord_gods.index(self.name) == 0:
@@ -413,10 +413,10 @@ class ZhengYin(LordGodExplain):
                 tmp += "出首付"
             house_explain_items.append(tmp)
 
-        if self.name == self.lord_gods.yue_gan_lord_gods:
+        if self.name == self.lord_gods.yue_gan_core_lord_gods:
             house_explain_items.append("哥哥姐姐会帮忙买房子")
 
-        yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
+        yue_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][1]
         if self.name in yue_zhi_lord_gods:
             tmp = "弟弟妹妹会帮忙"
             if yue_zhi_lord_gods.index(self.name) == 0:
@@ -425,7 +425,7 @@ class ZhengYin(LordGodExplain):
                 tmp += "出首付"
             house_explain_items.append(tmp)
 
-        ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
+        ri_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][2]
         if self.name in ri_zhi_lord_gods:
             tmp = "对象会帮忙"
             if ri_zhi_lord_gods.index(self.name) == 0:
@@ -434,7 +434,7 @@ class ZhengYin(LordGodExplain):
                 tmp += "凑首付"
             house_explain_items.append(tmp)
 
-        shi_lord_gods = [self.lord_gods.shi_zhi_lord_gods] + [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
+        shi_lord_gods = [self.lord_gods.shi_zhi_cang_gan_lord_gods] + self.lord_gods.lord_gods_core_matrix[1][2]
         if self.name in shi_lord_gods:
             house_explain_items.append("晚辈会帮忙买房子")
 
@@ -509,7 +509,7 @@ class ShiShen(LordGodExplain):
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
         position_explain += position
-        if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_lord_gods]:
+        if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_core_lord_gods]:
             position_explain.append("女命食神在时干，可能会梨型身材，好生养。")
 
         position_explain = list(dict.fromkeys([item for item in position_explain if item]))
@@ -582,7 +582,7 @@ class ZhengGuan(LordGodExplain):
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
         position_explain += position
-        if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_lord_gods]:
+        if not self.lord_gods.is_male and self.name in [self.lord_gods.shi_gan_core_lord_gods]:
             position_explain.append("女命正官在时干，容易生男孩。")
 
         position_explain = list(dict.fromkeys([item for item in position_explain if item]))
@@ -804,7 +804,7 @@ class QiSha(LordGodExplain):
             position_explain += f"{zhi_position}容易出慢性病。" if zhi_position else ""
             position_explain += "\n"
 
-        if self.name in [self.lord_gods.nian_gan_lord_gods] + [item[2] for item in self.lord_gods.nian_zhi_lord_gods]:
+        if self.name in [self.lord_gods.nian_gan_core_lord_gods] + self.lord_gods.lord_gods_core_matrix[1][0]:
             position_explain += "七杀在年柱，小时候家里管的比较严，可能过于严格棍棒教育\n"
         return position_explain
 
@@ -1025,21 +1025,21 @@ class ShangGuan(LordGodExplain):
     def calc_position_explain(self):
 
         position_explain = []
-        nian_zhi_lord_gods = [item[2] for item in self.lord_gods.nian_zhi_lord_gods]
-        if self.name in [self.lord_gods.nian_gan_lord_gods] + nian_zhi_lord_gods:
+        nian_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][0]
+        if self.name in [self.lord_gods.nian_gan_core_lord_gods] + nian_zhi_lord_gods:
             position_explain.append("年柱伤官代表出身贫寒家庭，小时候经常跟人起冲突，跟父母吵架。\n")
-            if self.name in [self.lord_gods.nian_gan_lord_gods]:
+            if self.name in [self.lord_gods.nian_gan_core_lord_gods]:
                 position_explain.append(
                     "年干伤官：双亲孤僻神经质、情绪化，虽然有人情味，但不易被了解。\n父母不全（离异或早逝），或父母是家世、性格极端差异的组合，总之上一代的关系不单纯。\n大都不是长男长女。\n晚年运衰微。")
             if self.name in nian_zhi_lord_gods:
                 position_explain.append(
                     "年支伤官：兄弟姐妹性格各异，情绪多变，孤独，冷漠，数量不多。\n年柱干支皆伤官，富而不久或生于家道中落之时。")
 
-        yue_zhi_lord_gods = [item[2] for item in self.lord_gods.yue_zhi_lord_gods]
-        if self.name in [self.lord_gods.yue_gan_lord_gods] + yue_zhi_lord_gods:
+        yue_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][1]
+        if self.name in [self.lord_gods.yue_gan_core_lord_gods] + yue_zhi_lord_gods:
             position_explain.append(
                 "月柱伤官代表青年时期经常跟人起冲突，可能染上官司。不适合从事平凡工作，点子多，才华横溢，头脑灵活，感受性强，爱好艺术，生活方式异于凡人，不容易被人了解。兄弟姐妹不全，大多不是头胎（数量少、流产、夭折）。")
-            if self.name in [self.lord_gods.yue_gan_lord_gods]:
+            if self.name in [self.lord_gods.yue_gan_core_lord_gods]:
                 position_explain.append(
                     "月干伤官：不适合从事平凡的行业。\n头脑灵活，感受性强，爱好艺术。\n细心，有点神经质。\n生活方式异于常人，不易被人理解。兄弟姐妹不全（数量少或有流产/夭折），大都不是第一胎。")
             if self.name in yue_zhi_lord_gods:
@@ -1048,7 +1048,7 @@ class ShangGuan(LordGodExplain):
                 if not self.lord_gods.is_male:
                     position_explain.append("女命若四柱没有正印或财星，婚姻多属悲剧。")
         # 伤官食神是财禄，生财的，财路广
-        ri_zhi_lord_gods = [item[2] for item in self.lord_gods.ri_zhi_lord_gods]
+        ri_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][2]
         if self.name in ri_zhi_lord_gods:
             position_explain.append("日柱伤官代表夫妻吵架和官司。\n眼高手低，能言善道。")
             if self.lord_gods.is_male:
@@ -1056,10 +1056,10 @@ class ShangGuan(LordGodExplain):
             else:
                 position_explain.append("女命爱帅哥。婚缘不佳，多离异，或丈夫早死，未婚者概率精神异常。")
 
-        shi_zhi_lord_gods = [item[2] for item in self.lord_gods.shi_zhi_lord_gods]
-        if self.name in [self.lord_gods.shi_gan_lord_gods] + shi_zhi_lord_gods:
+        shi_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][3]
+        if self.name in [self.lord_gods.shi_gan_core_lord_gods] + shi_zhi_lord_gods:
             position_explain.append("时柱伤官代表晚年经常跟人起冲突，可能染上官司。")
-            if self.name in [self.lord_gods.shi_gan_lord_gods]:
+            if self.name in [self.lord_gods.shi_gan_core_lord_gods]:
                 position_explain.append(
                     "\n子嗣不旺，或有流产/夭折者。\n四柱无正官，晚年逢财运即发达。\n时支劫财，少年发达晚年不幸，官杀岁发运。")
                 if not self.lord_gods.is_male:
@@ -1079,7 +1079,7 @@ class ShangGuan(LordGodExplain):
 
     def calc_female_explain(self):
         female_explain = "女带伤官必骂夫，夫妻经常吵吵闹闹。"
-        if self.name in [item[2] for item in self.lord_gods.ri_zhi_lord_gods]:
+        if self.name in self.lord_gods.lord_gods_core_matrix[1][2]:
             female_explain += "女坐伤官必克夫。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
 
         return female_explain

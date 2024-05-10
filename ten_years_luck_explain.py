@@ -129,7 +129,6 @@ class TenYearsLuckExplain:
 
     def build_explains(self):
 
-
         for explains in self.ten_years_luck_explain_list:
             ty_gan_zhi = explains['ty_gan_zhi']
             ty_details = explains['ty_details']

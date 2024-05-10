@@ -15,7 +15,7 @@ class TenYearsLuck(LordGods):
 
         self.ten_years_luck_gan_zhi = self.build_ten_years_luck_gan_zhi()
         ri_gan_idx = GAN.index(self.ri_gan) + 1
-        ri_zhi_cang_gan = self.nian_zhi_lord_gods[0][0]
+        ri_zhi_cang_gan = self.nian_zhi_cang_gan_lord_gods[0][0]
         ri_zhi_cang_gan_idx = GAN.index(ri_zhi_cang_gan) + 1
         tian_gan_sheng_wang_si_jue_idx = TIAN_GAN_SHENG_SI_JUE_WANG.index(self.ri_gan) + 1
 

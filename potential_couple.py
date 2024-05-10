@@ -332,7 +332,7 @@ class PotentialCouple(LordGods):
         :return:
         """
         result = ""
-        ri_zhi_lord_gods_core = [item[2] for item in self.ri_zhi_lord_gods]
+        ri_zhi_lord_gods_core = self.lord_gods_core_matrix[1][2]
         if self.ri_zhi_element in self.supporting_elements_sequence:
             result += "配偶宫为日主的喜用神的人，配偶多能富贵。\n"
             if '正官' in ri_zhi_lord_gods_core or '七杀' in ri_zhi_lord_gods_core:

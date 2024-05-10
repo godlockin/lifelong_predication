@@ -150,7 +150,7 @@ class LordGodsStructure(LordGods):
 
     def calc_is_positive_overall(self):
         structure_gan, structure_element = "", ""
-        for gan, element, lord_god in self.yue_zhi_lord_gods:
+        for gan, element, lord_god in self.yue_zhi_cang_gan_lord_gods:
             if self.structure == lord_god:
                 structure_gan, structure_element = gan, element
                 break
