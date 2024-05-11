@@ -46,7 +46,7 @@ class TenYearsLuck(LordGods):
         for (k, v) in self.ten_years_luck_list:
             tmp_lord_gods = v['lord_gods']
             lord_gods_set = lord_gods_set.union(set(tmp_lord_gods))
-            msg = (f"{v['year_num']}年（{k}）  "
+            msg = (f"{v['year_num']}年（{k}/{v['gan_element']}{v['zhi_element']}）  "
                    f"{v['sheng_si']}  "
                    f"{v['lord_gods']}  "
                    f"{v['demigods']} ")

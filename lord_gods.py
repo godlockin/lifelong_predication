@@ -160,93 +160,161 @@ class LordGods(BaZiElements):
         return CANG_GAN.get(zhi, ["", "", ""])
 
     def calc_double_appear(self):
-        result = ""
+        result = []
         if self.nian_gan == self.yue_gan:
-            result += f"年干与月干相同，名为“叠遇”。\n"
+            result.append(f"""
+        年干与月干相同，名为“叠遇”。
+            """)
             if self.nian_gan_core_lord_gods == self.yue_gan_core_lord_gods:
-                result += "主人32岁之前，性格脾气学识感情婚姻养成之时。命里反反复复见，来来回回走三遍。好的坏的，主反复难安。\n"
-                if '比肩' == self.nian_gan_core_lord_gods:
-                    result += "比肩叠遇，出身穷困，人穷志短，不重钱财，手艺吃饭。"
-                if '劫财' == self.nian_gan_core_lord_gods:
-                    result += "劫财叠遇，母安父先亡，六亲无靠，人生必遭一直两次大败。晚婚，不然二婚不到头。"
-                if '食神' == self.nian_gan_core_lord_gods:
-                    result += "食神叠遇，出身富贵，性慈善良，女嫁良夫早得子，长寿自得。"
-                if '伤官' == self.nian_gan_core_lord_gods:
-                    result += "伤官叠遇，年少不良，孤傲刚毅，六亲无靠，手艺立业，逍遥自得。"
-                    if not self.is_male:
-                        result += "女命晚婚或夫亡再嫁或少年独守空房。"
-                if '正财' == self.nian_gan_core_lord_gods or '偏财' == self.nian_gan_core_lord_gods:
-                    result += "财星叠遇，出生富贵，口含金匙，"
-                    if self.is_male:
-                        result += "男主双妻娇美。"
-                    else:
-                        result += "女主欺婆骂夫。"
-                if '正官' == self.nian_gan_core_lord_gods:
-                    result += "正官叠遇，"
-                    if self.is_male:
-                        result += "男主性情温和，学识过人，早年成家。"
-                    else:
-                        result += "女主一女二夫，婚姻不顺。"
-                if '七杀' == self.nian_gan_core_lord_gods:
-                    result += "七杀叠遇，出身贫寒，多灾多病。"
-                    if self.is_male:
-                        result += "男防牢狱。"
-                    else:
-                        result += "女防失身。"
-                if '偏印' == self.nian_gan_core_lord_gods:
-                    result += "主修身好佛，心性偏激。"
-                    if self.is_male:
-                        result += "男命心灵手巧，孤芳自赏。"
-                    else:
-                        result += "女命洁身自好，远嫁他乡。"
+                result.append(f"""
+        主人32岁之前，性格脾气学识感情婚姻养成之时。命里反反复复见，来来回回走三遍。好的坏的，主反复难安。
+                """)
+            if '比肩' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        比肩叠遇，出身穷困，人穷志短，不重钱财，手艺吃饭。
+        比肩叠遇主出身平常，上有兄姐，身无暗疾，仪容端庄，不重钱财，言多不密，三十二岁前是非小人多。
+            """)
+            if '劫财' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        劫财叠遇，母安父先亡，六亲无靠，人生必遭一直两次大败。晚婚，不然二婚不到头。
+        劫财叠遇主刚愎自负，喜怒形于色，聪明反被聪明误，三十二岁前必有大败；与父无缘，不宜早婚，恐有婚变。
+                """)
+            if '食神' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        食神叠遇，出身富贵，性慈善良，女嫁良夫早得子，长寿自得。
+        食神叠遇主出身安逸之家，性慈善良，女命早年得子，不见无刑冲、枭神夺食者，一生长寿悠游自得。
+                """)
+            if '伤官' == self.nian_gan_core_lord_gods:
+                tmp = "伤官叠遇，年少不良，孤傲刚毅，六亲无靠，手艺立业，逍遥自得。"
+                if not self.is_male:
+                    tmp += "女命晚婚或夫亡再嫁或少年独守空房。"
+                tmp += "伤官叠遇主性孤傲刚毅，六亲无靠；女命三十二岁前婚姻难言缱绻，多嫁老夫，先同居后成婚。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '正财' == self.nian_gan_core_lord_gods or '偏财' == self.nian_gan_core_lord_gods:
+                tmp = "财星叠遇，出生富贵，口含金匙，"
+                if self.is_male:
+                    tmp += "男主双妻娇美。"
+                else:
+                    tmp += "女主欺婆骂夫。"
+                tmp += "正财偏财叠遇主天生理财头脑，男命恐有双妻，女命易因财失家。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '正官' == self.nian_gan_core_lord_gods:
+                tmp = "正官叠遇，"
+                if self.is_male:
+                    tmp += "男主性情温和，学识过人，早年成家。"
+                else:
+                    tmp += "女主一女二夫，婚姻不顺。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '七杀' == self.nian_gan_core_lord_gods:
+                tmp = "七杀叠遇，出身贫寒，多灾多病。"
+                if self.is_male:
+                    tmp += "男防牢狱。"
+                else:
+                    tmp += "女防失身。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '偏印' == self.nian_gan_core_lord_gods:
+                tmp = "主修身好佛，心性偏激。"
+                if self.is_male:
+                    tmp += "男命心灵手巧，孤芳自赏。"
+                else:
+                    tmp += "女命洁身自好，远嫁他乡。"
+                tmp += "偏印叠遇主品性孤慧，剑走偏锋，六亲无靠，晚年吉祥。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '正印' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        正印叠遇主有修养，女命再见阳刃格，主性格独立，婚姻不顺。
+                """)
 
         if self.nian_gan == self.shi_gan:
-            result += f"年干与时干相同，名为“两头挂”。\n"
-            if self.nian_gan_core_lord_gods == self.shi_gan_core_lord_gods:
-                if '七杀' == self.nian_gan_core_lord_gods:
-                    result += "七杀两头挂，到老无后人\n"
-                if '伤官' == self.nian_gan_core_lord_gods:
-                    result += "伤官两头挂，亲情剩不下\n"
-                    if not self.is_male:
-                        result += "女命伤官两头挂，好骂丈夫是刁人\n"
-                if '食神' == self.nian_gan_core_lord_gods:
-                    result += "食神两头挂，吃喝全天下\n"
-                if '正印' == self.nian_gan_core_lord_gods or '偏印' == self.nian_gan_core_lord_gods:
-                    result += "印绶两头挂，必定慈善人\n"
-                if '正财' == self.nian_gan_core_lord_gods or '偏财' == self.nian_gan_core_lord_gods:
-                    result += "财星两头挂，出手大方人\n"
-                if '劫财' == self.nian_gan_core_lord_gods:
-                    result += "劫财两头挂，到老会败家\n"
+            result.append(f"""
+        年干与时干相同，名为“两头挂”。
+                    """)
+            if '七杀' == self.nian_gan_core_lord_gods or '正官' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        七杀两头挂，到老无后人。正官、七杀两头挂，因为官多为杀。无论男女命，主一生灾祸不断，不易有儿子。命局搭配不合者，甚至难有子女。
+                """)
+            if '伤官' == self.nian_gan_core_lord_gods:
+                tmp = "伤官两头挂，亲情剩不下。"
+                if not self.is_male:
+                    tmp += "女命伤官两头挂，好骂丈夫是刁人。"
+                tmp += "无论男女命，主六亲无靠，骨肉难近，注重精神享受，常有怀才不遇之感慨。若伤官伤尽，则主富贵双全。若逢正官格，一生贫贱无疑。女命宜养妇德。"
+                result.append(f"""
+        {tmp}
+                """)
+            if '食神' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        食神两头挂，吃喝全天下。无论男女命，皆主一生有口福。
+                """)
+            if '正印' == self.nian_gan_core_lord_gods or '偏印' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        印绶两头挂，必定慈善人。无论男女命，皆主善良，宜从事宗教、艺术、专长类工作。女命则不利于子息。
+                """)
+            if '正财' == self.nian_gan_core_lord_gods or '偏财' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        财星两头挂，出手大方人。无论男女命，皆主为人阔绰，出手大方。
+                """)
+            if '劫财' == self.nian_gan_core_lord_gods or '比肩' == self.nian_gan_core_lord_gods:
+                result.append(f"""
+        劫财两头挂，茕茕孑立人。比肩、劫财两头挂，无论男女命，皆主一生难得真正得力之亲友。若逢财格，一生贫寒彻骨。
+                """)
 
         if self.yue_gan == self.shi_gan:
-            result += f"月干与时干相同，名为“月时两见”。\n"
+            result.append(f"""
+        月干与时干相同，名为“月时两见”。
+                    """)
             if self.yue_gan_core_lord_gods == self.shi_gan_core_lord_gods:
                 if '正官' == self.yue_gan_core_lord_gods:
-                    result += "正官月时两见，无论男女命，皆主下有弟妹或亲人需要照顾。"
+                    tmp = "正官月时两见，无论男女命，皆主下有弟妹或亲人需要照顾。"
                     if self.is_male:
-                        result += "男命为人正直。"
+                        tmp += "男命为人正直。"
                     else:
-                        result += "女命为情所困。"
+                        tmp += "女命为情所困。"
+                    result.append(f"""
+        {tmp}
+                    """)
                 if '七杀' == self.yue_gan_core_lord_gods:
-                    result += "七杀月时两见。无论男女命，皆主性格浮躁，行事虎头蛇尾。上有兄姐，出身平凡。"
+                    result.append(f"""
+        七杀月时两见。无论男女命，皆主性格浮躁，行事虎头蛇尾。上有兄姐，出身平凡。
+                    """)
                 if '食神' == self.yue_gan_core_lord_gods or '伤官' == self.yue_gan_core_lord_gods:
-                    result += "食伤月时两见，无论男女命，皆主性格孤傲，不屈于物质现实生活，六亲不靠。"
+                    tmp = "食伤月时两见，无论男女命，皆主性格孤傲，不屈于物质现实生活，六亲不靠。"
                     if not self.is_male:
-                        result += "女命三十二岁之前，婚姻无靠。"
+                        tmp += "女命三十二岁之前，婚姻无靠。"
+                    result.append(f"""
+        {tmp}
+                    """)
                 if '正印' == self.yue_gan_core_lord_gods or '偏印' == self.yue_gan_core_lord_gods:
-                    result += "印绶月时两见，无论男女命，皆主为人清高，好礼佛，性格执拗，婚姻坎坷。"
+                    tmp = "印绶月时两见，无论男女命，皆主为人清高，好礼佛，性格执拗，婚姻坎坷。"
                     if not self.is_male:
-                        result += "女命主子息迟或无缘。"
+                        tmp += "女命主子息迟或无缘。"
+                    result.append(f"""
+        {tmp}
+                    """)
                 if '正财' == self.yue_gan_core_lord_gods or '偏财' == self.yue_gan_core_lord_gods:
-                    result += "财星月时两见，无论男女命，皆主为人现实，重视物质生活。"
+                    tmp = "财星月时两见，无论男女命，皆主为人现实，重视物质生活。"
                     if not self.is_male:
-                        result += "女命不利公婆，旺夫兴家。"
+                        tmp += "女命不利公婆，旺夫兴家。"
+                    result.append(f"""
+        {tmp}
+                    """)
                 if '比肩' == self.yue_gan_core_lord_gods or '劫财' == self.yue_gan_core_lord_gods:
-                    result += "比劫月时两见，无论男女命，主任情而钱财难得，主婚姻及财运一生不顺。"
+                    result.append(f"""
+        比劫月时两见，无论男女命，主任情而钱财难得，主婚姻及财运一生不顺，尤忌财格。
+                    """)
 
         return f"""
         ### 叠遇
-        {result}
+        {" ".join(result)}
         """ if result else ""
 
     def calc_lord_gods_w_cang_gan_core_matrix(self):

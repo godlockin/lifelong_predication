@@ -27,7 +27,7 @@ class YearlyLuckExplain(TenYearsLuckExplain):
             ty_year_num = str(ty_details['year_num'])
 
             ty_records_line = f"""
-        {ty_year_num}（{ty_gan_zhi}） {'（财）' if ty_details['is_finance'] else ''}「{ty_details['sheng_si']}（{SHENG_SI_JUE_WANG_MAPPING[0].index(ty_details['sheng_si']) + 1}/{len(SHENG_SI_JUE_WANG_MAPPING[0])}）」
+        {ty_year_num}（{ty_gan_zhi}/{ty_details['gan_element']}{ty_details['zhi_element']}） {'（财）' if ty_details['is_finance'] else ''}「{ty_details['sheng_si']}（{SHENG_SI_JUE_WANG_MAPPING[0].index(ty_details['sheng_si']) + 1}/{len(SHENG_SI_JUE_WANG_MAPPING[0])}）」
         十神：{ty_details['lord_gods']}  
         神煞：{ty_details['demigods']}
         前五年「{ty_details['gan_support'][0]}」～后五年「{ty_details['zhi_support'][0]}」
@@ -61,7 +61,7 @@ class YearlyLuckExplain(TenYearsLuckExplain):
             }
 
             yearly_records.append(f"""
-        {year}年，{'（财）' if record.get('is_finance', False) else ''}
+        {year}年({record['gan_zhi']}/{record['gan_element']}{record['zhi_element']})，{'（财）' if record.get('is_finance', False) else ''}
         前半年「{record['gan_support'][0]}」~后半年「{record['zhi_support'][0]}」
             """)
             all_lord_gods = defaultdict(float)

@@ -51,7 +51,7 @@ class YearlyLuck(TenYearsLuck):
             zhi_lord_god = record['zhi_god']
             lord_gods_set.add(gan_lord_god)
             lord_gods_set.add(zhi_lord_god)
-            tmp = (f"{year}年（{record['gan_zhi']}）  "
+            tmp = (f"{year}年（{record['gan_zhi']}/{record['gan_element']}{record['zhi_element']}）  "
                    f"{gan_lord_god},{zhi_lord_god}  "
                    f"{record['demigods']}")
             if record.get('is_finance', False):

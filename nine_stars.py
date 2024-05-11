@@ -106,8 +106,8 @@ class NineStars(BaZiElements):
           {ba_gua_symbol.get(symbol[2], '')}」
         {details['family_member']}位（{details['element']}）
         {details['image']}
-        应用作{details['usage']}，这样可以{details['promote']}
-        不应用作{details['oppose']}，否则{details['inhibition']}
+        应用作{details['usage']}这样可以{details['promote']}
+        不应用作{details['oppose']}否则{details['inhibition']}
                 """
                 if self.self_element:
                     msg += f"""

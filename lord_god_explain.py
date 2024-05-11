@@ -1118,7 +1118,7 @@ class ShangGuan(LordGodExplain):
         self.short_name = "伤"
         self.type = "狂神"
         self.character = "聪明灵巧，个性突出，容易抢风头，能言善辩，不服输，胆大有魄力，有才华，很有自信，但是也可能自负，语言尖锐刻薄，狂傲不羁，度量狭小，记仇，得理不饶人，任性蛮横，逞强好胜，一身傲骨，鄙视他人，死不认错。"
-        self.imagery = f"才华、技艺、{'口舌，官司，纷争（男）' if self.lord_gods.is_male else '克夫（女）'}"
+        self.imagery = f"才华、技艺、{'口舌，官司，纷争（男）' if self.lord_gods.is_male else '性格直爽、强势、对丈夫挑剔（女）'}"
         self.career = "文学，书画，艺术，如文学家，影星，歌星，舞蹈家，音乐家，画家"
         self.representatives = "晚辈，学生，下属"
         self.representatives_for_male = "祖母，孙女"
@@ -1213,7 +1213,7 @@ class ShangGuan(LordGodExplain):
     def calc_female_explain(self):
         female_explain = "女带伤官必骂夫，夫妻经常吵吵闹闹。"
         if self.name in [self.lord_gods.ri_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]:
-            female_explain += "女坐伤官必克夫。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
+            female_explain += "女坐伤官性格刚强直爽，说话心直口快，有的略显强势，容易对丈夫排斥不满多挑剔，更多的是家里家外好操心，到头来费力不讨好。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
 
         return female_explain
 

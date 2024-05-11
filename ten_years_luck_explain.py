@@ -134,7 +134,7 @@ class TenYearsLuckExplain:
             ty_details = explains['ty_details']
 
             result = [f"""
-        ### {ty_details['year_num']}（{ty_gan_zhi}） {'（财）' if ty_details['is_finance'] else ''}
+        ### {ty_details['year_num']}（{ty_gan_zhi}/{ty_details['gan_element']}{ty_details['zhi_element']}） {'（财）' if ty_details['is_finance'] else ''}
         大运阶段：{ty_details['sheng_si']}（{SHENG_SI_JUE_WANG_MAPPING[0].index(ty_details['sheng_si']) + 1}/{len(SHENG_SI_JUE_WANG_MAPPING[0])}）
         趋势：前五年「{ty_details['gan_support'][0]}」～后五年「{ty_details['zhi_support'][0]}」
             """]

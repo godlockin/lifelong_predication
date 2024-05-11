@@ -1,6 +1,11 @@
 # 八字排盘引擎
 输入一个阳历生日年月日即可输出所有八字、四柱、神煞…的信息
 
+## setup 环境
+```bash
+git clone https://gitclone.com/github.com/godlockin/lifelong_predication.git && cd lifelong_predication
+```
+
 ## 用法
 1. 直接通过命令行调用
 ```bash
