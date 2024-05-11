@@ -387,17 +387,30 @@ class TaoHua(DemigodExplain):
         return result
 
     def check_gods_meet(self, lord_god):
-        return ((self.name in self.demigods.nian_zhu_demigod and lord_god in [
-            self.lord_gods.nian_gan_core_lord_gods] + self.lord_gods.nian_zhi_cang_gan_lord_gods)
+        return (
+                (
+                    self.name in self.demigods.nian_zhu_demigod
+                    and
+                    lord_god in [self.lord_gods.nian_gan_core_lord_gods, self.lord_gods.nian_zhi_core_lord_gods]
+                )
                 or
-                (self.name in self.demigods.yue_zhu_demigod and lord_god in [
-                    self.lord_gods.yue_gan_core_lord_gods] + self.lord_gods.yue_zhi_cang_gan_lord_gods)
+                (
+                    self.name in self.demigods.yue_zhu_demigod
+                    and
+                    lord_god in [self.lord_gods.yue_gan_core_lord_gods, self.lord_gods.yue_zhi_core_lord_gods]
+                )
                 or
-                (self.name in self.demigods.ri_zhu_demigod and lord_god in [
-                    self.lord_gods.ri_gan_core_lord_gods] + self.lord_gods.ri_zhi_cang_gan_lord_gods)
+                (
+                    self.name in self.demigods.ri_zhu_demigod
+                    and
+                    lord_god in [self.lord_gods.ri_gan_core_lord_gods, self.lord_gods.ri_zhi_core_lord_gods])
                 or
-                (self.name in self.demigods.shi_zhu_demigod and lord_god in [
-                    self.lord_gods.shi_gan_core_lord_gods] + self.lord_gods.shi_zhi_cang_gan_lord_gods))
+                (
+                    self.name in self.demigods.shi_zhu_demigod
+                    and
+                    lord_god in [self.lord_gods.shi_gan_core_lord_gods, self.lord_gods.shi_zhi_core_lord_gods]
+                )
+        )
 
     def calc_jie(self, idx_god):
         result = ""

@@ -57,8 +57,11 @@ class BaZiElements(MetaInfo):
         {"  ".join(elements_relations)}
         '''
 
-        if self.explain_append:
-            msg += str(self.elements_explain)
+        append_explains = self.elements_explain.__str__()
+        if append_explains:
+            msg += f'''
+        {append_explains}
+            '''
 
         return msg
 

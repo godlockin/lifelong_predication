@@ -241,10 +241,10 @@ class PotentialCouple(LordGods):
             "偏财" if self.is_male else "七杀",
             "七杀" if self.is_male else "偏财",
         ]
-        all_gan = self.lord_gods_matrix[0]
+        all_gan = self.lord_gods_w_cang_gan_matrix[0]
         # 日主不算
         all_gan[2] = ''
-        all_zhi = self.lord_gods_core_matrix[1]
+        all_zhi = self.lord_gods_w_cang_gan_core_matrix[1]
 
         def find_lord_gods(trgt_lord_god):
             matched_list = []
@@ -332,7 +332,7 @@ class PotentialCouple(LordGods):
         :return:
         """
         result = ""
-        ri_zhi_lord_gods_core = self.lord_gods_core_matrix[1][2]
+        ri_zhi_lord_gods_core = [self.ri_zhi_core_lord_gods] + self.lord_gods_w_cang_gan_core_matrix[1][2]
         if self.ri_zhi_element in self.supporting_elements_sequence:
             result += "配偶宫为日主的喜用神的人，配偶多能富贵。\n"
             if '正官' in ri_zhi_lord_gods_core or '七杀' in ri_zhi_lord_gods_core:

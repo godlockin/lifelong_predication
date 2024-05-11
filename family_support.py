@@ -133,7 +133,7 @@ class FamilySupport(LordGods):
         result.append(f"日柱为夫妻宫代表对象。({self.elements_relationships_mapping[self.ri_zhi_element]})")
         if self.ri_zhi_element in self.supporting_elements_sequence:
             result.append(f"日支（{self.ri_zhi_element}）为喜用，可以{'娶贤妻' if self.is_male else '嫁贤夫'}，婚姻美满。")
-            if self.is_male and '正财' in self.lord_gods_core_matrix[1][2]:
+            if self.is_male and ('正财' in self.lord_gods_w_cang_gan_core_matrix[1][2] or '正财' == self.ri_zhi_core_lord_gods):
                 result.append(f"同时正财在日支，比较适合让老婆管钱，能让整体生活水平上升。性生活较和谐，双方需求都能满足。")
 
         if self.ri_zhi_element in self.opposing_elements_sequence:

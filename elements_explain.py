@@ -19,6 +19,10 @@ class ElementsExplain:
     def __str__(self):
         msg = "### 解析"
 
+        xing_chong_po_hai = self.calc_xing_chong_po_hai()
+        if xing_chong_po_hai:
+            msg += xing_chong_po_hai
+
         msg += self.self_elements_healthy_analysis
 
         msg += self.self_element_analysis
@@ -262,4 +266,33 @@ class ElementsExplain:
             """
 
         return msg
+
+    def calc_xing_chong_po_hai(self):
+        result = []
+        position = []
+        for base_index, base_zhi in enumerate(self.ba_zi_elements.all_zhi):
+            base_zhi_attributes = ZHI_ATTRIBUTES[base_zhi]
+            against_index = base_index
+            against_start_index = base_index + 1
+            if against_start_index == len(self.ba_zi_elements.all_zhi):
+                break
+            for against_zhi in self.ba_zi_elements.all_zhi[against_start_index:]:
+                against_index += 1
+                for key, value in base_zhi_attributes.items():
+                    position_pair = sorted([base_index, against_index])
+                    if base_index == against_index:
+                        continue
+
+                    if against_zhi in value:
+                        tmp_pair = set(position_pair + [key])
+                        if tmp_pair not in position:
+                            position.append(tmp_pair)
+                            result.append(f"{POSITION_NAMES[1][base_index]}、{POSITION_NAMES[1][against_index]}（{base_zhi}/{against_zhi}）-> 「{key}」")
+        return f"""
+    {"\n".join(result)}
+        """ if result else ""
+
+
+
+
 

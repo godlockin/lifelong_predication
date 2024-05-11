@@ -25,6 +25,12 @@ class LordGods(BaZiElements):
             self.ri_zhi_core_lord_gods,
             self.shi_zhi_core_lord_gods
         ) = self.handle_zhi_lord_gods(self.all_zhi)
+        self.all_zhi_core_lord_gods = [
+            self.nian_zhi_core_lord_gods,
+            self.yue_zhi_core_lord_gods,
+            self.ri_zhi_core_lord_gods,
+            self.shi_zhi_core_lord_gods
+        ]
 
         (
             (self.nian_zhi_cang_gan_list, self.nian_zhi_cang_gan_lord_gods),
@@ -39,7 +45,7 @@ class LordGods(BaZiElements):
             [[('丙', '火', '正印'), ('戊', '土', '劫财'), ('庚', '金', '伤官')], ...]
         ]
         """
-        self.lord_gods_matrix = [
+        self.lord_gods_w_cang_gan_matrix = [
             [
                 self.nian_gan_core_lord_gods, self.yue_gan_core_lord_gods, self.ri_gan_core_lord_gods, self.shi_gan_core_lord_gods
             ],
@@ -48,9 +54,9 @@ class LordGods(BaZiElements):
             ]
         ]
 
-        self.lord_gods_core_matrix = self.calc_lord_gods_core_matrix()
+        self.lord_gods_w_cang_gan_core_matrix = self.calc_lord_gods_w_cang_gan_core_matrix()
 
-        self.all_gan_lord_gods, self.all_zhi_lord_gods = self.lord_gods_core_matrix[0], self.lord_gods_core_matrix[1]
+        self.all_gan_lord_gods, self.all_zhi_lord_gods = self.lord_gods_w_cang_gan_core_matrix[0], self.lord_gods_w_cang_gan_core_matrix[1]
 
         self.all_lord_gods = self.all_gan_lord_gods + self.all_zhi_lord_gods
         self.all_lord_gods_list = [item for sublist in self.all_lord_gods for item in sublist if item]
@@ -72,6 +78,10 @@ class LordGods(BaZiElements):
         
         时干：{self.shi_gan_core_lord_gods}（{self.shi_gan},{GAN_DETAILS[self.shi_gan]['element']}）
         时支：*{self.shi_zhi_core_lord_gods}（{self.shi_zhi},{ZHI_DETAILS[self.shi_zhi]['element']}）{self.shi_zhi_cang_gan_lord_gods}
+        
+        ### 性格
+        人前表现出来的气质：{APPEARANCE_MAPPING[self.nian_gan_core_lord_gods]}
+        人后真实的性格：{APPEARANCE_MAPPING[self.shi_gan_core_lord_gods]}
         '''
 
         if self.explain_append:
@@ -234,14 +244,19 @@ class LordGods(BaZiElements):
                 if '比肩' == self.yue_gan_core_lord_gods or '劫财' == self.yue_gan_core_lord_gods:
                     result += "比劫月时两见，无论男女命，主任情而钱财难得，主婚姻及财运一生不顺。"
 
-        return result
+        return f"""
+        ### 叠遇
+        {result}
+        """ if result else ""
 
-    def calc_lord_gods_core_matrix(self):
+    def calc_lord_gods_w_cang_gan_core_matrix(self):
         core_matrix = defaultdict(list)
-        for row_idx, row in enumerate(self.lord_gods_matrix):
+        for row_idx, row in enumerate(self.lord_gods_w_cang_gan_matrix):
             for col_idx, col in enumerate(row):
                 if 0 == row_idx:
                     core_matrix[row_idx].append([col])
                 else:
                     core_matrix[row_idx].append([item[2] for item in col])
         return core_matrix
+
+

@@ -53,12 +53,12 @@ class LordGodExplain:
                 weight = 0
                 # 天干权重直接加
                 if '干' in position_name:
-                    if self.name == self.lord_gods.lord_gods_matrix[row_idx][col_idx]:
+                    if self.name == self.lord_gods.lord_gods_w_cang_gan_matrix[row_idx][col_idx]:
                         delta_element = self.lord_gods.elements_matrix[row_idx][col_idx]
                         delta = self.lord_gods.elements_relationships_mapping[delta_element][1]
                         weight = POSITION_WEIGHT[row_idx][col_idx] + delta
                 else:
-                    zhi_lord_gods = self.lord_gods.lord_gods_matrix[row_idx][col_idx]
+                    zhi_lord_gods = self.lord_gods.lord_gods_w_cang_gan_matrix[row_idx][col_idx]
                     for idx, cang_gan in enumerate(zhi_lord_gods):
                         if self.name == cang_gan[2]:
                             weight = POSITION_WEIGHT[row_idx][col_idx]
@@ -102,7 +102,13 @@ class LordGodExplain:
         ]
 
     def calc_all_lord_gods_explain(self):
-        all_explain = f"""
+        all_explain = ""
+
+        homosexual_tendencies = self.check_if_homosexual_tendencies()
+        if homosexual_tendencies:
+            all_explain += homosexual_tendencies
+
+        all_explain += f"""
         ### 十神解析
         十神也讲究平衡，无论吉神与恶神，多了都不好；一位为真，两位为争，三位为杂，四五六个乱如麻，七个八个反成奇。
         """
@@ -135,6 +141,132 @@ class LordGodExplain:
             """
 
         return all_explain
+
+    def check_if_homosexual_tendencies(self):
+        conditions = ["甲寅", "乙卯", "丙午", "丁巳", "戊成", "已未", "庚中", "辛酉", "壬子", "癸亥"]
+        special_ri_zhu = ["乙巳", "丁巳", "辛已", "癸已"]
+
+        result = ""
+        # 男性
+        if self.lord_gods.is_male:
+            # 身强
+            if self.lord_gods.self_strong:
+                pass
+            # 身弱
+            else:
+                # 局中官杀太过，财弱，容易有同性恋倾向
+                if (
+                    (
+                        (self.single_explain_mapping['正官'].lord_gods_count + self.single_explain_mapping['七杀'].lord_gods_count) >= 6
+                        or
+                        (self.single_explain_mapping['正官'].total_weight + self.single_explain_mapping['七杀'].total_weight) >= 8
+                    )
+                    and
+                    (
+                        (self.single_explain_mapping['正财'].lord_gods_count + self.single_explain_mapping['偏财'].lord_gods_count) <= 2
+                        or
+                        (self.single_explain_mapping['正财'].total_weight + self.single_explain_mapping['偏财'].total_weight) <= 1
+                    )
+                ):
+                    result += """
+        男命身弱，局中官杀克身太过，且不从。
+        在正常的恋爱观里面，男为阳，女为阴，作为男性，要体现出阳刚之气，对异性的掌控力，所以男命以财星为我的对象，因为我克者为财。
+        一旦某个男命局中克制身主的官杀太旺，命主毫无克财的能力，那就很容易丧失阳刚之气，变的胆小，毫无主见
+        他的角色就会发生转变，变为被控制的对象，官杀旺，换太极点，日主就变成了官杀的财，那么就容易产生同性取向。
+                    """
+
+                if (
+                    self.single_explain_mapping['食神'].lord_gods_count >= 4
+                    or
+                    self.single_explain_mapping['食神'].total_weight >= 8
+                ):
+                    result += """
+        男命食神很旺，且身弱，容易有同性取向。
+        食神和伤官都是我日主所生，代表我日主的秀气和才华，食神和伤官也代表标新立异，喜欢新鲜和刺激，所以对新事物的接受程度比较高，普遍来讲要开放很多。
+        其中食神为同性所生，温文尔雅，随遇而安，平淡，知足，祥和，这种男性的长相多女性化，很帅气，但棱角圆润，气质忧郁，所以食神代表的是充满忧郁幻想气质的女孩。
+        男命食神的忧郁气质很容易吸引到同性，且也容易对同性产生爱恋;
+                    """
+
+            if (self.single_explain_mapping['正财'].lord_gods_count + self.single_explain_mapping['偏财'].lord_gods_count) == 0:
+                result += """
+        男命中财星不见，如果夫妻宫被刑，冲，破，害比较严重的，可能有同性恋倾向。
+        夫妻宫如果受伤严重，此人的正常婚姻很难稳定，所以有很多人会经历一到两次婚姻，但大都以失败而告终
+        再加上异性星不见，导致与异性的缘分不深，他们就很容易跟同性倾诉
+        人都是情感动物，心灵之间的互相告慰必然会点燃爱意，同性之间只是在一起而没有婚姻的方式也是能够长久下去
+        所以太多人就会选择这种非正常婚姻，同性之间的关爱是没有隔阂的。
+                """
+        # 女性
+        else:
+            if self.lord_gods.self_strong:
+                if (
+                    (
+                        (self.single_explain_mapping['比肩'].lord_gods_count + self.single_explain_mapping['劫财'].lord_gods_count) >= 6
+                        or
+                        (self.single_explain_mapping['比肩'].total_weight + self.single_explain_mapping['劫财'].total_weight) >= 8
+                    )
+                    and
+                    (
+                        (self.single_explain_mapping['正官'].lord_gods_count + self.single_explain_mapping['七杀'].lord_gods_count) <= 2
+                        or
+                        (self.single_explain_mapping['正官'].total_weight + self.single_explain_mapping['七杀'].total_weight) <= 1
+                    )
+                ):
+                    result += """
+        女命身旺，局中比劫林立，且没有官杀对其约制，命局不从。
+        在正常的恋爱观里面，男为阳，女为阴，女命要体现出阴柔之气，被掌控力，所以以官杀为我的对象，因为克我者为官杀。
+        而日主女命身主过旺，阳气十足又有比劫助身，配偶星不现，个性独立，偏刚，固执，女汉子，很容易受到柔弱女子的欢迎，同性取向也是水到渠成的事情。
+                    """
+            else:
+                if (
+                    self.single_explain_mapping['伤官'].lord_gods_count >= 4
+                    or
+                    self.single_explain_mapping['伤官'].total_weight >= 8
+                ):
+                    result += """
+        女命伤官很旺，且身弱，容易有同性取向。
+        食神和伤官都是我日主所生，代表我日主的秀气和才华，食神和伤官也代表标新立异，喜欢新鲜和刺激，所以对新事物的接受程度比较高，普遍来讲要开放很多。
+        伤官为我异性所生，盛气凌人，任性，放纵，爱出风头，这种女性的长相也很漂亮，但棱角分明，气质中多一些男性美感，所以伤官代表的是狂放气傲，胆大的男孩。
+        女命伤官的坚强个性很容易被同性所欣赏。
+                    """
+
+            if (self.single_explain_mapping['正官'].lord_gods_count + self.single_explain_mapping['七杀'].lord_gods_count) == 0:
+                result += """
+        女命中官杀星不见，如果夫妻宫被刑，冲，破，害比较严重的，可能有同性恋倾向。
+        夫妻宫如果受伤严重，此人的正常婚姻很难稳定，所以有很多人会经历一到两次婚姻，但大都以失败而告终
+        再加上异性星不见，导致与异性的缘分不深，他们就很容易跟同性倾诉
+        人都是情感动物，心灵之间的互相告慰必然会点燃爱意，同性之间只是在一起而没有婚姻的方式也是能够长久下去
+        所以太多人就会选择这种非正常婚姻，同性之间的关爱是没有隔阂的。
+                """
+
+        # 不管男命女命，日支是比肩、劫财，且比劫为命局的喜用神。
+        if (
+            self.lord_gods.ri_zhu in conditions
+            or
+            any(item == self.lord_gods.ri_zhi_core_lord_gods for item in ['比肩', '劫财'])
+        ):
+            if (
+                self.lord_gods.nian_zhi_element in self.lord_gods.supporting_elements_sequence
+            ):
+                result += """
+    不管男命女命，日支是比肩、劫财，且比劫为命局的喜用神。
+    因为日支是婚姻宫，代表自己另一半的位置，这个位置被比劫所占据，比劫是与我同五行之物，也是我的同性之人
+    比劫为喜用，说明和日主的关系十分亲密，此人就容易有同性或者双性的取向。
+                """
+            else:
+                result += """
+    不管男命女命，日支是比肩、劫财，且比劫为命局的忌神，代表婚姻不顺。
+                """
+
+        if self.lord_gods.ri_zhu in special_ri_zhu:
+            result += """
+        首先'已’火为变色龙，有变性的含义，其次它在日支，日支代表日主的下半身，下半身就容易有变性的潜质
+        其次“已”火在字形上为'弯形’，那就不是直男，直女
+            """
+
+        return f"""
+        ### 潜在婚姻意向
+        {result}
+        """ if result else ""
 
     def calc_zheng_yin(self, single_explain_mapping):
         result = ""
@@ -311,10 +443,10 @@ class LordGodExplain:
         core_matrix = defaultdict(list)
 
         # 获取列的数量
-        num_cols = len(self.lord_gods.lord_gods_core_matrix[0])
+        num_cols = len(self.lord_gods.lord_gods_w_cang_gan_core_matrix[0])
 
         for col_idx in range(num_cols):
-            for row_idx, row in self.lord_gods.lord_gods_core_matrix.items():
+            for row_idx, row in self.lord_gods.lord_gods_w_cang_gan_core_matrix.items():
                 col = row[col_idx]
                 if idx_name in col:
                     position_mapping.append(base_matrix[row_idx][col_idx])
@@ -404,10 +536,10 @@ class ZhengYin(LordGodExplain):
         if self.name == self.lord_gods.nian_gan_core_lord_gods:
             house_explain_items.append("父亲家族会帮忙买房子")
 
-        nian_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][0]
+        nian_zhi_lord_gods = [self.lord_gods.nian_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][0]
         if self.name in nian_zhi_lord_gods:
             tmp = "母亲家族会帮忙"
-            if nian_zhi_lord_gods.index(self.name) == 0:
+            if nian_zhi_lord_gods.index(self.name) <= 1:
                 tmp += "买房子"
             else:
                 tmp += "出首付"
@@ -416,25 +548,25 @@ class ZhengYin(LordGodExplain):
         if self.name == self.lord_gods.yue_gan_core_lord_gods:
             house_explain_items.append("哥哥姐姐会帮忙买房子")
 
-        yue_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][1]
+        yue_zhi_lord_gods = [self.lord_gods.yue_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][1]
         if self.name in yue_zhi_lord_gods:
             tmp = "弟弟妹妹会帮忙"
-            if yue_zhi_lord_gods.index(self.name) == 0:
+            if yue_zhi_lord_gods.index(self.name) <= 1:
                 tmp += "买房子"
             else:
                 tmp += "出首付"
             house_explain_items.append(tmp)
 
-        ri_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][2]
+        ri_zhi_lord_gods = [self.lord_gods.ri_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]
         if self.name in ri_zhi_lord_gods:
             tmp = "对象会帮忙"
-            if ri_zhi_lord_gods.index(self.name) == 0:
+            if ri_zhi_lord_gods.index(self.name) <= 1:
                 tmp += "买房子"
             else:
                 tmp += "凑首付"
             house_explain_items.append(tmp)
 
-        shi_lord_gods = [self.lord_gods.shi_zhi_cang_gan_lord_gods] + self.lord_gods.lord_gods_core_matrix[1][2]
+        shi_lord_gods = [self.lord_gods.shi_zhi_cang_gan_lord_gods] + [self.lord_gods.shi_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]
         if self.name in shi_lord_gods:
             house_explain_items.append("晚辈会帮忙买房子")
 
@@ -672,7 +804,7 @@ class ZhengCai(LordGodExplain):
         ]
         position, _ = super().lord_god_exist_position_for_index(self.name, matrix)
         position_explain += position
-        if self.name in self.lord_gods.lord_gods_core_matrix[1][3]:
+        if self.name in [self.lord_gods.shi_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][3]:
             position_explain.append("在时支（55岁以后），代表晚年可能再婚。")
 
         position_explain = list(dict.fromkeys([item for item in position_explain if item]))
@@ -780,7 +912,7 @@ class QiSha(LordGodExplain):
 
         num_cols = len(core_matrix[0])
         for col_idx in range(num_cols):
-            for row_idx, row in self.lord_gods.lord_gods_core_matrix.items():
+            for row_idx, row in self.lord_gods.lord_gods_w_cang_gan_core_matrix.items():
                 col = row[col_idx]
                 if col:
                     if row_idx == 0:
@@ -804,7 +936,7 @@ class QiSha(LordGodExplain):
             position_explain += f"{zhi_position}容易出慢性病。" if zhi_position else ""
             position_explain += "\n"
 
-        if self.name in [self.lord_gods.nian_gan_core_lord_gods] + self.lord_gods.lord_gods_core_matrix[1][0]:
+        if self.name in [self.lord_gods.nian_gan_core_lord_gods] + [self.lord_gods.nian_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][0]:
             position_explain += "七杀在年柱，小时候家里管的比较严，可能过于严格棍棒教育\n"
         return position_explain
 
@@ -1025,7 +1157,7 @@ class ShangGuan(LordGodExplain):
     def calc_position_explain(self):
 
         position_explain = []
-        nian_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][0]
+        nian_zhi_lord_gods = [self.lord_gods.nian_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][0]
         if self.name in [self.lord_gods.nian_gan_core_lord_gods] + nian_zhi_lord_gods:
             position_explain.append("年柱伤官代表出身贫寒家庭，小时候经常跟人起冲突，跟父母吵架。\n")
             if self.name in [self.lord_gods.nian_gan_core_lord_gods]:
@@ -1035,7 +1167,7 @@ class ShangGuan(LordGodExplain):
                 position_explain.append(
                     "年支伤官：兄弟姐妹性格各异，情绪多变，孤独，冷漠，数量不多。\n年柱干支皆伤官，富而不久或生于家道中落之时。")
 
-        yue_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][1]
+        yue_zhi_lord_gods = [self.lord_gods.yue_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][1]
         if self.name in [self.lord_gods.yue_gan_core_lord_gods] + yue_zhi_lord_gods:
             position_explain.append(
                 "月柱伤官代表青年时期经常跟人起冲突，可能染上官司。不适合从事平凡工作，点子多，才华横溢，头脑灵活，感受性强，爱好艺术，生活方式异于凡人，不容易被人了解。兄弟姐妹不全，大多不是头胎（数量少、流产、夭折）。")
@@ -1047,8 +1179,9 @@ class ShangGuan(LordGodExplain):
                     "伤官在月令，鬼头鬼脑，聪明绝顶，原创力、叛逆性强，不太服从管教，宜从事艺术、科技类的工作。特别严重的可能法律意识淡薄。")
                 if not self.lord_gods.is_male:
                     position_explain.append("女命若四柱没有正印或财星，婚姻多属悲剧。")
+
         # 伤官食神是财禄，生财的，财路广
-        ri_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][2]
+        ri_zhi_lord_gods = [self.lord_gods.ri_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]
         if self.name in ri_zhi_lord_gods:
             position_explain.append("日柱伤官代表夫妻吵架和官司。\n眼高手低，能言善道。")
             if self.lord_gods.is_male:
@@ -1056,7 +1189,7 @@ class ShangGuan(LordGodExplain):
             else:
                 position_explain.append("女命爱帅哥。婚缘不佳，多离异，或丈夫早死，未婚者概率精神异常。")
 
-        shi_zhi_lord_gods = self.lord_gods.lord_gods_core_matrix[1][3]
+        shi_zhi_lord_gods = [self.lord_gods.shi_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][3]
         if self.name in [self.lord_gods.shi_gan_core_lord_gods] + shi_zhi_lord_gods:
             position_explain.append("时柱伤官代表晚年经常跟人起冲突，可能染上官司。")
             if self.name in [self.lord_gods.shi_gan_core_lord_gods]:
@@ -1079,7 +1212,7 @@ class ShangGuan(LordGodExplain):
 
     def calc_female_explain(self):
         female_explain = "女带伤官必骂夫，夫妻经常吵吵闹闹。"
-        if self.name in self.lord_gods.lord_gods_core_matrix[1][2]:
+        if self.name in [self.lord_gods.ri_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]:
             female_explain += "女坐伤官必克夫。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
 
         return female_explain
