@@ -62,6 +62,8 @@ class LordGods(BaZiElements):
         self.all_lord_gods_list = [item for sublist in self.all_lord_gods for item in sublist if item]
         self.all_lord_gods_counter = Counter(self.all_lord_gods_list)
         self.distinct_all_lord_gods = list(set(self.all_lord_gods_list))
+        self.lord_gods_supporting = self.calc_lord_gods_supporting()
+        self.lord_gods_supporting_lines = self.build_lord_gods_supporting_lines()
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -78,6 +80,9 @@ class LordGods(BaZiElements):
         
         时干：{self.shi_gan_core_lord_gods}（{self.shi_gan},{GAN_DETAILS[self.shi_gan]['element']}）
         时支：*{self.shi_zhi_core_lord_gods}（{self.shi_zhi},{ZHI_DETAILS[self.shi_zhi]['element']}）{self.shi_zhi_cang_gan_lord_gods}
+        
+        ### 十神喜忌：
+        {self.lord_gods_supporting_lines}
         
         ### 性格
         人前表现出来的气质：{APPEARANCE_MAPPING[self.nian_gan_core_lord_gods]}
@@ -146,7 +151,6 @@ class LordGods(BaZiElements):
                 else:
                     lord_gods.append("正官")
         return lord_gods
-
 
     def di_zhi_cang_gan(self, zhi):
         """
@@ -327,4 +331,79 @@ class LordGods(BaZiElements):
                     core_matrix[row_idx].append([item[2] for item in col])
         return core_matrix
 
+    def calc_lord_gods_supporting(self):
+        result = defaultdict(list)
+        self_details = GAN_DETAILS[self.ri_gan]
+        self_yin_yang = self_details['yinyang']
+        def append_records(self_yin_yang, element, key):
+            if element == self.ri_gan_element:
+                result[key].append({
+                    "name": "比肩",
+                    "element": element,
+                    "yinyang": self_yin_yang
+                })
+                result[key].append({
+                    "name": "劫财",
+                    "element": element,
+                    "yinyang": YIN_YANG_SWAP[self_yin_yang]
+                })
+            elif element == ELEMENTS_SUPPORTING[self.ri_gan_element]:
+                result[key].append({
+                    "name": "食神",
+                    "element": element,
+                    "yinyang": self_yin_yang
+                })
+                result[key].append({
+                    "name": "伤官",
+                    "element": element,
+                    "yinyang": YIN_YANG_SWAP[self_yin_yang]
+                })
+            elif element == SWAPPED_ELEMENTS_SUPPORTING[self.ri_gan_element]:
+                result[key].append({
+                    "name": "偏印",
+                    "element": element,
+                    "yinyang": self_yin_yang
+                })
+                result[key].append({
+                    "name": "正印",
+                    "element": element,
+                    "yinyang": YIN_YANG_SWAP[self_yin_yang]
+                })
+            elif element == ELEMENTS_OPPOSING[self.ri_gan_element]:
+                result[key].append({
+                    "name": "偏财",
+                    "element": element,
+                    "yinyang": self_yin_yang
+                })
+                result[key].append({
+                    "name": "正财",
+                    "element": element,
+                    "yinyang": YIN_YANG_SWAP[self_yin_yang]
+                })
+            elif element == SWAPPED_ELEMENTS_OPPOSING[self.ri_gan_element]:
+                result[key].append({
+                    "name": "七杀",
+                    "element": element,
+                    "yinyang": self_yin_yang
+                })
+                result[key].append({
+                    "name": "正官",
+                    "element": element,
+                    "yinyang": YIN_YANG_SWAP[self_yin_yang]
+                })
 
+        for element in self.supporting_elements_sequence:
+            append_records(self_yin_yang, element, "support_lord_gods")
+        for element in self.opposing_elements_sequence:
+            append_records(self_yin_yang, element, "opposing_lord_gods")
+
+        return result
+
+    def build_lord_gods_supporting_lines(self):
+        result = []
+        for key, value_list in self.lord_gods_supporting.items():
+            for value in value_list:
+                result.append(f"{value['name']}({'喜用' if key == 'support_lord_gods' else '忌凶'})"
+                              f"「{value['yinyang']}{value['element']}」")
+            result.append("-"*14)
+        return "\n".join(result[:-1])
