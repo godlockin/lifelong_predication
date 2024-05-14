@@ -52,9 +52,10 @@ class BaZiElements(MetaInfo):
         '''
 
         elements_relations = [f"{key}:{value}" for key, value in self.elements_relationships_mapping.items()]
+        elements_relations_line = "\n".join(elements_relations)
         msg += f'''
         五行运气：
-        {"  ".join(elements_relations)}
+        {elements_relations_line}
         '''
 
         append_explains = self.elements_explain.__str__()

@@ -32,7 +32,7 @@ class BoneWeight(MetaInfo):
             '年': LIFE_WEIGHT_YEAR_RATIO[self.nian_zhu],
             '月': LIFE_WEIGHT_MONTH_RATIO[str(self.lunar_month)],
             '日': LIFE_WEIGHT_DAY_RATIO[str(self.lunar_day)],
-            '时': LIFE_WEIGHT_HOUR_RATIO[str(self.input_datetime.hour)]
+            '时': LIFE_WEIGHT_HOUR_RATIO[str(self.input_datetime.hour)] if self.input_datetime.hour else LIFE_WEIGHT_HOUR_RATIO['24']
         }
         return result
 

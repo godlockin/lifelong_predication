@@ -288,8 +288,9 @@ class ElementsExplain:
                         if tmp_pair not in position:
                             position.append(tmp_pair)
                             result.append(f"{POSITION_NAMES[1][base_index]}、{POSITION_NAMES[1][against_index]}（{base_zhi}/{against_zhi}）-> 「{key}」")
+        tmp_str = {"\n".join(result)}
         return f"""
-    {"\n".join(result)}
+    {tmp_str}
         """ if result else ""
 
 

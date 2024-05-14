@@ -9,13 +9,13 @@ class Intermarriage:
     def __init__(self, **kwargs):
         self.man_birthday = kwargs.get('man_birthday', constants.BASE_DATE)
         self.man_demigod = MarriageGods(
-            birthday=self.man_birthday,
+            base_datetime=self.man_birthday,
             is_male=True
         )
 
         self.woman_birthday = kwargs.get('woman_birthday', constants.BASE_DATE)
         self.woman_demigod = MarriageGods(
-            birthday=self.woman_birthday,
+            base_datetime=self.woman_birthday,
             is_male=False
         )
         self.explain_append = kwargs.get('explain_append', False)
