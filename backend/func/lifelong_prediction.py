@@ -96,9 +96,9 @@ class LifePrediction(MetaInfo):
         enabled_labels_str = kwargs.get('enabled_labels', "")
         enabled_labels_items = [item.strip().lower() for item in enabled_labels_str.split(',') if item]
         if not enabled_labels_items or 'all' in enabled_labels_items:
-            return constants.LIFE_PREDICTION_LABELS
+            return constants.LIFE_PREDICTION_LABELS.keys()
         for item in enabled_labels_items:
-            if item in constants.LIFE_PREDICTION_LABELS:
+            if item in constants.LIFE_PREDICTION_LABELS.keys():
                 enabled_labels.append(item)
 
         return enabled_labels
