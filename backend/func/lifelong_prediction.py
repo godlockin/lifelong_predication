@@ -98,7 +98,7 @@ class LifePrediction(MetaInfo):
         if not enabled_labels_items or 'all' in enabled_labels_items:
             return constants.LIFE_PREDICTION_LABELS.keys()
         for item in enabled_labels_items:
-            if item in constants.LIFE_PREDICTION_LABELS.keys():
+            if item in constants.LIFE_PREDICTION_WHOLE_LABELS:
                 enabled_labels.append(item)
 
         return enabled_labels

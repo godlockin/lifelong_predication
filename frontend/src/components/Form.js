@@ -58,76 +58,85 @@ function Form({ onResult }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>命主生日:</label>
-        <DatePicker
-          selected={birthdate}
-          onChange={date => setBirthdate(date)}
-          showTimeSelect
-          dateFormat="Pp"
-          required
-        />
-      </div>
-      <div>
-        <label>命主性别:</label>
-        <Select
-          options={genderOptions}
-          value={genderOptions.find(option => option.value === gender)}
-          onChange={option => setGender(option.value)}
-        />
-      </div>
-      <div>
-        <label>命主对象生日:</label>
-        <DatePicker
-          selected={partnerBirthdate}
-          onChange={date => setPartnerBirthdate(date)}
-          showTimeSelect
-          dateFormat="Pp"
-          isClearable
-        />
-      </div>
-      <div>
-        <label>命主结婚日期:</label>
-        <DatePicker
-          selected={marriageDate}
-          onChange={date => setMarriageDate(date)}
-          showTimeSelect
-          dateFormat="Pp"
-          isClearable
-        />
-      </div>
-      <div>
-        <label>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>命主姓名:</label>
           <input
-            type="checkbox"
-            checked={isBridegroom}
-            onChange={() => setIsBridegroom(!isBridegroom)}
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
           />
-          命主婚姻是否存在入赘
-        </label>
-      </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={addDetails}
-            onChange={() => setAddDetails(!addDetails)}
+        </div>
+        <div>
+          <label>命主生日:</label>
+          <DatePicker
+              selected={birthdate}
+              onChange={date => setBirthdate(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              required
           />
-          添加详情
-        </label>
-      </div>
-      <div>
-        <label>开启功能:</label>
-        <Select
-          options={featuresOptions}
-          isMulti
-          value={featuresOptions.filter(option => enabledFeatures.includes(option.value))}
-          onChange={options => setEnabledFeatures(options.map(option => option.value))}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+        </div>
+        <div>
+          <label>命主性别:</label>
+          <Select
+              options={genderOptions}
+              value={genderOptions.find(option => option.value === gender)}
+              onChange={option => setGender(option.value)}
+          />
+        </div>
+        <div>
+          <label>命主对象生日:</label>
+          <DatePicker
+              selected={partnerBirthdate}
+              onChange={date => setPartnerBirthdate(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              isClearable
+          />
+        </div>
+        <div>
+          <label>命主结婚日期:</label>
+          <DatePicker
+              selected={marriageDate}
+              onChange={date => setMarriageDate(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              isClearable
+          />
+        </div>
+        <div>
+          <label>
+            <input
+                type="checkbox"
+                checked={isBridegroom}
+                onChange={() => setIsBridegroom(!isBridegroom)}
+            />
+            命主婚姻是否存在入赘
+          </label>
+        </div>
+        <div>
+          <label>
+            <input
+                type="checkbox"
+                checked={addDetails}
+                onChange={() => setAddDetails(!addDetails)}
+            />
+            添加详情
+          </label>
+        </div>
+        <div>
+          <label>开启功能:</label>
+          <Select
+              options={featuresOptions}
+              isMulti
+              value={featuresOptions.filter(option => enabledFeatures.includes(option.value))}
+              onChange={options => setEnabledFeatures(options.map(option => option.value))}
+          />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
   );
 }
 

@@ -1,6 +1,6 @@
-fastapi~=0.110.2
-uvicorn~=0.20.0
+fastapi
+uvicorn
 
-pydantic~=2.7.1
-starlette~=0.37.2
-fastapi-cors~=0.6.0
+pydantic
+starlette
+fastapi-cors

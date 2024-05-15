@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+
 class Item(BaseModel):
     name: str
-    description: Optional[str] = None
     birthdate: datetime
     gender: Optional[str] = None
     partnerBirthdate: Optional[datetime] = None

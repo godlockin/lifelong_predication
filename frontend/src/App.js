@@ -13,7 +13,7 @@ function App() {
     <div>
       <h1>Python Web Interface</h1>
       <Form onResult={handleResult} />
-      {result && <Result data={result} />}
+      {result && <  Result data={result} />}
     </div>
   );
 }
