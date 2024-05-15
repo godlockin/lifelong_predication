@@ -9,7 +9,7 @@ git clone https://gitclone.com/github.com/godlockin/lifelong_predication.git && 
 ## 用法
 1. 直接通过命令行调用
 ```bash
-python main.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
+python main_cli.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
 ```
 
 2. 通过调用函数
@@ -34,8 +34,8 @@ if __name__ == "__main__":
 
 3. 查看说明
 ```bash
-python main.py -h                                                                                                             
-usage: main.py [-h] -b BIRTHDAY [-g GANDER] [-e EXPLAIN] [-c COUPLE_BIRTHDAY] [-md MARRY_DATE] [-rz RU_ZHUI]
+python main_cli.py -h                                                                                                             
+usage: main_cli.py [-h] -b BIRTHDAY [-g GANDER] [-e EXPLAIN] [-c COUPLE_BIRTHDAY] [-md MARRY_DATE] [-rz RU_ZHUI]
 
 This is a calc project of BaZi.
 
@@ -57,6 +57,6 @@ options:
 
 ```bash
 # 举例
-python main.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
-# python main.py -b $你自己的生日（必填，格式为"1996-01-03 05:20:00"） -e true -c $你对象的生日（可选，"1996-01-03 05:20:00"） -md $你们俩的婚礼时辰（可选，"1996-01-03 05:20:00"） -g $你是否男性（可选，默认为True，是男子） -rz $你们是否存在入赘（可选，默认false）
+python main_cli.py -b "1996-01-03 05:20:00" -e true -c "1996-01-03 05:20:00" -md "2014-01-03 05:20:00" -g true -rz true
+# python main_cli.py -b $你自己的生日（必填，格式为"1996-01-03 05:20:00"） -e true -c $你对象的生日（可选，"1996-01-03 05:20:00"） -md $你们俩的婚礼时辰（可选，"1996-01-03 05:20:00"） -g $你是否男性（可选，默认为True，是男子） -rz $你们是否存在入赘（可选，默认false）
 ```
