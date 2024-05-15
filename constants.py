@@ -600,9 +600,9 @@ LIFE_WEIGHT_HOUR_RATIO = {'24': 1.6, '20': 0.6, '21': 0.6, '22': 0.6, '23': 1.6,
 LIFE_PREDICTION_LABELS = [
     'bone_weight',
     'zodiac_explain',
-    'lord_gods',
-    'lord_gods_structure',
     'finance_storage',
+    'lord_gods_structure',
+    'lord_gods',
     'demigods',
     'family_support',
     'life_stages_luck',
@@ -611,6 +611,16 @@ LIFE_PREDICTION_LABELS = [
     'yearly_luck',
     'intermarriage',
     'potential_couple',
+]
+
+LIFE_PREDICTION_CORE_LABELS = [
+    'bone_weight',
+    'zodiac_explain',
+    'finance_storage',
+    'lord_gods_structure',
+    'lord_gods',
+    'demigods',
+    'family_support',
 ]
 
 ZHI_ATTRIBUTES = {

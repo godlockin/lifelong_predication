@@ -21,11 +21,17 @@ class ElementsExplain:
 
         xing_chong_po_hai = self.calc_xing_chong_po_hai()
         if xing_chong_po_hai:
-            msg += xing_chong_po_hai
+            msg += f"""
+        {xing_chong_po_hai}
+        """
 
-        msg += self.self_elements_healthy_analysis
+        msg += f"""
+        {self.self_elements_healthy_analysis}
+        """
 
-        msg += self.self_element_analysis
+        msg += f"""
+        {self.self_element_analysis}
+        """
 
         return msg
 
@@ -86,7 +92,7 @@ class ElementsExplain:
                     "emotion": tmp["emotion"],
                     "hidden_danger": tmp["positive"],
                 }
-            elif score < 0:
+            elif score < 1:
                 elements_healthy[element] = {
                     "score": score,
                     'count': count,
@@ -288,10 +294,7 @@ class ElementsExplain:
                         if tmp_pair not in position:
                             position.append(tmp_pair)
                             result.append(f"{POSITION_NAMES[1][base_index]}、{POSITION_NAMES[1][against_index]}（{base_zhi}/{against_zhi}）-> 「{key}」")
-        tmp_str = {"\n".join(result)}
-        return f"""
-    {tmp_str}
-        """ if result else ""
+        return result
 
 
 

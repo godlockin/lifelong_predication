@@ -92,15 +92,14 @@ class LifePrediction(MetaInfo):
         return msg
 
     def calc_enabled_labels(self, **kwargs):
-        enabled_labels = []
         enabled_labels_str = kwargs.get('enabled_labels', "")
         enabled_labels_items = [item.strip().lower() for item in enabled_labels_str.split(',') if item]
-        if not enabled_labels_items or 'all' in enabled_labels_items:
+        if not enabled_labels_items:
+            return LIFE_PREDICTION_CORE_LABELS
+        elif 'all' in enabled_labels_items:
             return constants.LIFE_PREDICTION_LABELS
-        for item in enabled_labels_items:
-            if item in constants.LIFE_PREDICTION_LABELS:
-                enabled_labels.append(item)
 
+        enabled_labels = [item for item in enabled_labels_items if item in constants.LIFE_PREDICTION_LABELS]
         return enabled_labels
 
 

@@ -5,6 +5,12 @@ from lord_gods import LordGods
 
 
 class FinanceStorage(LordGods):
+    # 财位为离入户门最远的角落（房屋对角线）
+    # 如果门在墙中间，则为对墙的两个墙角
+    # 如果为多层，则看卧室所在层，多层都住人看男主人的卧室
+
+    # 1、宜亮不宜暗2、应平整、安静3、宜坐宜卧4、宜放置吉祥物5、忌水
+    # 如果是厕所，请一个三足金蟾放里面
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.meta_info_display = kwargs.get('meta_info_display', False)
@@ -13,6 +19,7 @@ class FinanceStorage(LordGods):
         self.finance_month = self.calc_finance_month()
         self.finance_strength_statement = self.calc_finance_strength()
         self.finance_supporting_status = self.calc_finance_supporting_status()
+        self.finance_connection = self.calc_finance_connection()
         self.self_strong_finance_mapping = {
             (True, '旺'): '有欲望，能拿得起，可以发大财',
             (True, '弱'): '无欲望，遇到特殊的流年可以发小财',
@@ -29,6 +36,7 @@ class FinanceStorage(LordGods):
             ('无', True): '财无有库，财运不佳，但是适合做会计等岗位管理支出。',
             ('无', False): '财无无库，收入不高也容易漏财，不容易存钱。',
         }
+        self.none_finance_append = self.append_content_none_finance(**kwargs)
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -51,9 +59,7 @@ class FinanceStorage(LordGods):
         {self.self_strong_finance_mapping[self_strength_key]}
         财库为：{self.finance_strength_statement['wealth_storage']}，{'存在' if self.finance_strength_statement['storage_exists'] else '不存在'}于命局中，{'有' if self.finance_strength_statement['storage_exists'] else '无'}财库。
         {self.finance_storage_mapping[finance_storage_key]}
-        '''
-
-        msg += f'''
+        {self.finance_connection}
         {self.finance_supporting_status}
         '''
 
@@ -63,6 +69,10 @@ class FinanceStorage(LordGods):
         潜在发财年份：{potential_years[self_strength_key]}
             '''
 
+        if self.none_finance_append:
+            msg += f'''
+        {self.none_finance_append}
+            '''
         return msg
 
     def calc_finance_month(self):
@@ -277,6 +287,69 @@ class FinanceStorage(LordGods):
             result += f"化泄财星「{wealth_element}（{wealth_element}生{wealth_storage_element}）」，不利于命主之财运。"
 
         return result
+
+    def append_content_none_finance(self, **kwargs):
+        result = []
+        result.append("### 八字中全无财星")
+        result.append("* 心目中没有经济和经营观念" +
+                      ("\n** 一个人八字中全无财星，说明这个人对于钱财没有概念，做事不会考虑物质利益，不会精打细算，也不会将自己的心思放在经济谋划和长袖善舞的经营方面。" if self.explain_append else ""))
+        result.append("* 开支计划性不强" +
+                      ("\n** 也正因为从来不把钱财挂在心上，故此，即使赚再多的钱，也在身上存不住。常常是上午赚钱，下午就没有钱财在身上。支出用度，盲目性很大，计划性太差，易因投资、经营而破财、破产。" if self.explain_append else ""))
+        result.append("* 父缘不足" +
+                      ("\n** 八字中偏财为父，原局无财，自然与父缘分很浅。不是父亲早丧，就是父亲病残，无能很弱；或者就是父亲不在身边，聚少离多，没有沟通与交集，有也相当于无。" if self.explain_append else ""))
+        result.append("* 妻缘浅薄" +
+                      ("\n** 八字中正财为男子之妻，原局无财，说明妻缘较浅，或者晚婚；或者夫妻感情不好，难以白头偕老；或者妻子不在身边，聚少离多。" if self.explain_append else ""))
+        result.append("* 需要用贵显富" +
+                      ("\n** 八字不见财星之人，大多一生中与财结缘的机会不多。他们与常人不同，不会一门心思、全部精力都投入到赚钱方面。因此，他们获得财富的方式，大多要通过职业和职位的发展来求取利益，有了功名则有钱。" if self.explain_append else ""))
+
+        # 克我者为官杀
+        # 我克者为财才
+        # 生我者为印枭
+        # 我生者为食伤
+        # 同我者为比劫
+        self_detail = GAN_DETAILS[self.ri_gan]
+        self_element = self.primary_element
+        self_yinyang = self_detail['yinyang']
+        # 1、八字中喜财用财，有食伤财源之人
+        if self.self_strong:
+            if (
+                (self.lord_god_explain.single_explain_mapping['食神'].lord_gods_count + self.lord_god_explain.single_explain_mapping['伤官'].lord_gods_count) >= 5
+            ):
+                result.append("* 命主八字身强，喜财用财，八字中虽然全无财星，但有有力的食伤星可用。因为，食伤星犹如财的源头，既然有源头，则不要愁没钱的来源。也主其人，一生不会缺少钱花，要靠技术、名声、专长获得财富；但要善于积累。")
+            elif (
+                self.lord_god_explain.single_explain_mapping['正官'].lord_gods_count < self.lord_god_explain.single_explain_mapping['正印'].lord_gods_count
+            ):
+                result.append("* 命主八字身强，大多用官制身。如果官星偏弱，则要财星滋官显贵。见印泄官，则贵气不显，亦要财星制印。如果原局或者岁运不见财星，其人则一生清苦，毫无财运，宜守穷途。")
+            elif (
+                    (self.lord_god_explain.single_explain_mapping['食神'].lord_gods_count + self.lord_god_explain.single_explain_mapping['伤官'].lord_gods_count)
+                    <= (self.lord_god_explain.single_explain_mapping['正官'].lord_gods_count + self.lord_god_explain.single_explain_mapping['七杀'].lord_gods_count)
+            ):
+                result.append("* 命主八字身强则要制要泄，如果制泄两出，相互缠斗，则要救应通关之财。如果局运之走，毫无财星。则官杀不能制身，食伤不能泄身，命主不得无益，自然是事业不顺，难有财运了。")
+        else:
+            if self.lord_god_explain.single_explain_mapping['七杀'].lord_gods_count >= 4:
+                result.append("* 命主八字中杀旺身弱，财星则为仇神，如果，原局全无财星，反而是财运很好的表现。行运遇见印比帮身之时，因贵而富，富贵齐来。主因为职务、名声、地位而享有财富。")
+
+        return f"""
+    {'\n'.join(result)}
+        """ if result else ''
+
+    def calc_finance_connection(self):
+        finance_element = ELEMENTS_OPPOSING[self.ri_gan_element]
+        self_yinyang = GAN_DETAILS[self.ri_gan]['yinyang']
+        finance_yinyang = ZHI_DETAILS[self.yue_zhi]['yinyang']
+        if self_yinyang == finance_yinyang:
+            finance_type = "偏财"
+        else:
+            finance_type = "正财"
+
+        if self.yue_zhi_element == finance_element:
+            return f"""
+        命主财气为「{finance_element}」刚好处于月令，称之为“财气通门户”，财运很旺。而且为「{finance_type}」。
+        又由于命主身{'强' if self.self_strong else '弱'}，所以财为「{'喜用' if self.self_strong else '忌凶'}」
+        所以命主大概率{'大富大贵' if self.self_strong else '但不住财'}。
+        """
+        else:
+            return ""
 
 
 if __name__ == "__main__":
