@@ -7,5 +7,5 @@
 out
 gen
 
-test.py
+test/
 node_modules
