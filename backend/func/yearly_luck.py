@@ -57,7 +57,7 @@ class YearlyLuck(TenYearsLuck):
             if record.get('is_finance', False):
                 tmp += "（财）"
             if record.get('gan_support', ()):
-                tmp += f"  *{record['gan_support'][0]}|{record['zhi_support'][0]}"
+                tmp += f"  *{record['gan_support'][0]}|{record['zhi_support'][0]} ({self.self_score}|{record['gan_final_score']}|{record['zhi_final_score']})"
             tmp += "\n"
             yearly_luck_out_list.append(tmp)
         tmp_str = '        '.join(yearly_luck_out_list)
@@ -106,6 +106,9 @@ class YearlyLuck(TenYearsLuck):
             gan_element = GAN_DETAILS[gan]['element']
             zhi_element = ZHI_DETAILS[zhi]['element']
 
+            gan_delta = -1 if self.self_strong and gan_element in self.supporting_elements_sequence else 1
+            zhi_delta = -1 if self.self_strong and zhi_element in self.supporting_elements_sequence else 1
+
             item = {
                 'year_num': year,
                 'gan_zhi': gan_zhi,
@@ -115,7 +118,9 @@ class YearlyLuck(TenYearsLuck):
                 'zhi_god': zhi_god,
                 'demigods': demigods,
                 'gan_element': gan_element,
+                'gan_final_score': self.self_score + gan_delta * 12,
                 'zhi_element': zhi_element,
+                'zhi_final_score': self.self_score + zhi_delta * 12,
                 'is_finance': self.opposing_element == gan_element,
                 'gan_support': self.elements_relationships_mapping[gan_element],
                 'zhi_support': self.elements_relationships_mapping[zhi_element]

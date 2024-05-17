@@ -133,10 +133,27 @@ class TenYearsLuckExplain:
             ty_gan_zhi = explains['ty_gan_zhi']
             ty_details = explains['ty_details']
 
+            gan_final_score = ty_details['gan_final_score']
+            zhi_final_score = ty_details['zhi_final_score']
+            if_nice_luck = []
+            if 40 <= gan_final_score <= 60:
+                if_nice_luck.append(f"前五年")
+            if 40 <= zhi_final_score <= 60:
+                if_nice_luck.append(f"后五年")
+            if_nice = ("和".join(if_nice_luck) + ("都" if len(if_nice_luck) == 2 else "") + "还不错") if if_nice_luck else ""
+
+            body_wonder = self.calc_wondering_list(ty_details['gan_element'], ty_details['zhi_element'], POSITION_ORGAN_NAMES)
+            family_wonder = self.calc_wondering_list(ty_details['gan_element'], ty_details['zhi_element'], POSITION_RELATIONSHIP_NAMES)
+
+            wondering_str = "命主自身要注意" + ",".join(body_wonder) + "\n" if body_wonder else ""
+            wondering_str += "命主家人要注意" + ",".join(family_wonder) + "\n" if body_wonder else ""
+
             result = [f"""
         ### {ty_details['year_num']}（{ty_gan_zhi}/{ty_details['gan_element']}{ty_details['zhi_element']}） {'（财）' if ty_details['is_finance'] else ''}
         大运阶段：{ty_details['sheng_si']}（{SHENG_SI_JUE_WANG_MAPPING[0].index(ty_details['sheng_si']) + 1}/{len(SHENG_SI_JUE_WANG_MAPPING[0])}）
         趋势：前五年「{ty_details['gan_support'][0]}」～后五年「{ty_details['zhi_support'][0]}」
+        {if_nice}({self.ten_years_luck.self_score}|{gan_final_score}|{zhi_final_score})
+        {wondering_str if wondering_str else ""}
             """]
 
             all_lord_gods = defaultdict(float)
@@ -248,3 +265,20 @@ class TenYearsLuckExplain:
                 """)
 
         return [key_msg] + result if result else result
+
+    def calc_wondering_list(self, gan_element, zhi_element, idx_matrix):
+        elements = (gan_element, zhi_element)
+        results = []
+        for row_idx, row in enumerate(self.ten_years_luck.elements_matrix):
+            for col_idx, col in enumerate(row):
+                if not (
+                    # 同我的
+                    col in elements
+                    or
+                # 生我的
+                    SWAPPED_ELEMENTS_SUPPORTING[col] in elements
+                ):
+                    results.append(idx_matrix[row_idx][col_idx])
+
+        return results
+

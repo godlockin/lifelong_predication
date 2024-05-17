@@ -9,7 +9,7 @@ from backend.func.intermarriage import Intermarriage
 from backend.func.life_stages_luck import LifeStagesLuck
 from backend.func.lord_gods import LordGods
 from backend.func.lord_gods_structure import LordGodsStructure
-from backend.web.entity.metainfo import MetaInfo
+from backend.func.metainfo import MetaInfo
 from backend.func.nine_stars import NineStars
 from backend.func.potential_couple import PotentialCouple
 from backend.func.ten_years_luck import TenYearsLuck
@@ -24,7 +24,7 @@ class LifePrediction(MetaInfo):
         kwargs['meta_info_display'] = False
         self.ba_zi_elements = BaZiElements(**kwargs)
 
-        self.enabled_labels = self.calc_enabled_labels(**kwargs)
+        self.enabled_features = self.calc_enabled_features(**kwargs)
 
         self.bone_weight = BoneWeight(**kwargs)
 
@@ -87,21 +87,20 @@ class LifePrediction(MetaInfo):
             'zodiac_explain': self.zodiac_explain.__str__(),
         }
 
-        msg += "".join([conditions[label] for label in self.enabled_labels])
+        msg += "".join([conditions[label] for label in self.enabled_features])
 
         return msg
 
-    def calc_enabled_labels(self, **kwargs):
-        enabled_labels = []
-        enabled_labels_str = kwargs.get('enabled_labels', "")
-        enabled_labels_items = [item.strip().lower() for item in enabled_labels_str.split(',') if item]
-        if not enabled_labels_items or 'all' in enabled_labels_items:
+    def calc_enabled_features(self, **kwargs):
+        enabled_features = kwargs.get('enabled_features', [])
+        enabled_features_items = [item.strip().lower() for item in enabled_features if item]
+        if not enabled_features_items or 'all' in enabled_features_items:
             return constants.LIFE_PREDICTION_LABELS.keys()
-        for item in enabled_labels_items:
+        for item in enabled_features_items:
             if item in constants.LIFE_PREDICTION_WHOLE_LABELS:
-                enabled_labels.append(item)
+                enabled_features.append(item)
 
-        return enabled_labels
+        return enabled_features
 
 
 if __name__ == "__main__":

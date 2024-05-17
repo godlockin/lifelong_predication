@@ -1,7 +1,7 @@
 import argparse
 
 from backend.func.elements_explain import ElementsExplain
-from backend.web.entity.metainfo import MetaInfo
+from backend.func.metainfo import MetaInfo
 from backend.utils.utils import *
 
 
@@ -16,6 +16,8 @@ class BaZiElements(MetaInfo):
         self.support_element = SWAPPED_ELEMENTS_SUPPORTING[self.primary_element]
 
         # 命主自身强弱
+        self.score_matrix = [[0 for _ in range(4)] for _ in range(2)]
+        self.self_score = 0
         self.self_strong = self.calc_element_strength()
         # 命主旺衰
         self.self_positive = self.calc_positive()
@@ -71,16 +73,17 @@ class BaZiElements(MetaInfo):
         :return:
         """
 
-        positive_weight = 0
-        negative_weight = 0
-        for row in range(len(self.elements_matrix)):
-            for col in range(len(self.elements_matrix[row])):
-                if self.elements_matrix[row][col] in [self.primary_element, self.support_element]:
-                    positive_weight += GAN_ZHI_POSITION_WEIGHT[row][col]
+        for row_idx, row in enumerate(self.elements_matrix):
+            for col_idx, col in enumerate(row):
+                if col in [self.primary_element, self.support_element]:
+                    score = GAN_ZHI_POSITION_WEIGHT[row_idx][col_idx]
+                    self.score_matrix[row_idx][col_idx] = score
+                    self.self_score += score
                 else:
-                    negative_weight -= GAN_ZHI_POSITION_WEIGHT[row][col]
+                    score = -1 * GAN_ZHI_POSITION_WEIGHT[row_idx][col_idx]
+                    self.score_matrix[row_idx][col_idx] = score
 
-        if positive_weight > 50:
+        if self.self_score > 60:
             return True
         return False
 
@@ -131,9 +134,13 @@ class BaZiElements(MetaInfo):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='This is a calc project of BaZi.')
-    parser.add_argument('-b', '--birthday', help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"', required=True)
-    parser.add_argument('-g', '--gander', help='The gander of yourself, default as male', action='store_true', default=True)
-    parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes', action='store_true', default=False)
+    parser.add_argument('-b', '--birthday',
+                        help='The birthday of yourself, in the format of "YYYY-MM-DD HH:MM:SS", e.g. "2014-01-03 05:20:00"',
+                        required=True)
+    parser.add_argument('-g', '--gander', help='The gander of yourself, default as male', action='store_true',
+                        default=True)
+    parser.add_argument('-e', '--explain', help='To check whether append explain details on different attributes',
+                        action='store_true', default=False)
 
     args = parser.parse_args()
 

@@ -1,7 +1,7 @@
 import argparse
 
 from backend.constants.constants import *
-from backend.web.entity.metainfo import MetaInfo
+from backend.func.metainfo import MetaInfo
 
 
 class BoneWeight(MetaInfo):
@@ -10,15 +10,18 @@ class BoneWeight(MetaInfo):
         self.meta_info_display = kwargs.get('meta_info_display', False)
         self.explain_append = kwargs.get('explain_append', False)
         self.bone_weight_map = self.calc_bone_weight()
-        tmp_bone_weight = sum(self.bone_weight_map.values())
-        self.bone_weight = int(tmp_bone_weight) if tmp_bone_weight.is_integer() else round(float(tmp_bone_weight), 1)
+        self.bone_weight = sum(self.bone_weight_map.values())
+
+        tmp_bone_weight = self.bone_weight
+        tmp_bone_weight = int(tmp_bone_weight) if tmp_bone_weight.is_integer() else round(float(tmp_bone_weight), 1)
+        self.description = LIFE_WEIGHT_MAPPING[str(tmp_bone_weight)]
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
         ## 称骨
         骨重：{self.bone_weight}
-        箴言：{LIFE_WEIGHT_MAPPING[str(self.bone_weight)]}
+        箴言：{self.description}
         '''
         if self.explain_append:
             msg += f'''

@@ -39,12 +39,14 @@ class YearlyLuckExplain(TenYearsLuckExplain):
             }
 
         yearly_records = []
+        ty_records_use = {}
         for yearly_item in self.ten_years_luck.yearly_luck_list:
             year, record = yearly_item
             ty_records = ty_records_map.get(str(year), {})
 
             # 大运开始，添加大运信息
             if ty_records:
+                ty_records_use = ty_records
                 yearly_records.append(ty_records['ty_records'])
 
             [
@@ -53,16 +55,35 @@ class YearlyLuckExplain(TenYearsLuckExplain):
                 day_details,
                 hour_details
             ] = [self.build_gan_zhi_relation(item, record['gan_zhi']) for item in self.ten_years_luck.ba_zi.split(",")]
+            ty_details = ty_records_use.get('ty_details', {})
             explains = {
                 'year_info': year_details,
                 'month_info': month_details,
                 'day_info': day_details,
                 'time_info': hour_details,
+                'ty_details': ty_details,
             }
+
+            gan_final_score = record['gan_final_score']
+            zhi_final_score = record['zhi_final_score']
+            if_nice_luck = []
+            if 40 <= gan_final_score <= 60:
+                if_nice_luck.append(f"前半年")
+            if 40 <= zhi_final_score <= 60:
+                if_nice_luck.append(f"后半年")
+            if_nice = ("和".join(if_nice_luck) + ("都" if len(if_nice_luck) == 2 else "") + "还不错") if if_nice_luck else ""
+
+            body_wonder = self.calc_wondering_list(ty_details['gan_element'], ty_details['zhi_element'], POSITION_ORGAN_NAMES)
+            family_wonder = self.calc_wondering_list(ty_details['gan_element'], ty_details['zhi_element'], POSITION_RELATIONSHIP_NAMES)
+
+            wondering_str = "命主自身要注意" + ",".join(body_wonder) + "\n" if body_wonder else ""
+            wondering_str += "命主家人要注意" + ",".join(family_wonder) + "\n" if body_wonder else ""
 
             yearly_records.append(f"""
         {year}年({record['gan_zhi']}/{record['gan_element']}{record['zhi_element']})，{'（财）' if record.get('is_finance', False) else ''}
         前半年「{record['gan_support'][0]}」~后半年「{record['zhi_support'][0]}」
+        {if_nice}({self.ten_years_luck.self_score}|{gan_final_score}|{zhi_final_score})
+        {wondering_str if wondering_str else ""}
             """)
             all_lord_gods = defaultdict(float)
             for condition in self.key_mapping:

@@ -53,7 +53,7 @@ class TenYearsLuck(LordGods):
             if self.explain_append:
                 if v.get('is_finance', False):
                     msg += "（财）"
-                msg += f"*{v['gan_support'][0]}|{v['zhi_support'][0]}"
+                msg += f"*{v['gan_support'][0]}|{v['zhi_support'][0]} ({self.self_score}|{v['gan_final_score']}|{v['zhi_final_score']})"
             msg += "\n"
             ten_years_luck_out_list.append(msg)
 
@@ -114,6 +114,10 @@ class TenYearsLuck(LordGods):
         for idx, item in enumerate(self.ten_years_luck_gan_zhi):
             gan_element = GAN_DETAILS[item[0]]['element']
             zhi_element = ZHI_DETAILS[item[1]]['element']
+
+            gan_delta = -1 if self.self_strong and gan_element in self.supporting_elements_sequence else 1
+            zhi_delta = -1 if self.self_strong and zhi_element in self.supporting_elements_sequence else 1
+
             ten_years_luck_details[item] = {
                 'idx': idx,
                 'year_num': self.lunar_year + idx * 10,
@@ -121,7 +125,9 @@ class TenYearsLuck(LordGods):
                 'lord_gods': self.ten_years_luck_lord_gods[idx],
                 'demigods': self.ten_years_luck_demigods[idx],
                 'gan_element': gan_element,
+                'gan_final_score': self.self_score + gan_delta * 12,
                 'zhi_element': zhi_element,
+                'zhi_final_score': self.self_score + zhi_delta * 12,
                 'gan_support': self.elements_relationships_mapping[gan_element],
                 'zhi_support': self.elements_relationships_mapping[zhi_element],
                 'is_finance': opposing_element == gan_element,

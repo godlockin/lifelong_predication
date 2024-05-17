@@ -123,11 +123,11 @@ class MetaInfo:
 
     def __str__(self):
         shi_chen_idx = get_shi_chen_idx(self.input_datetime.hour)
-        shi_chen = ZHI[shi_chen_idx]
+        self.shi_chen = ZHI[shi_chen_idx]
         msg = f'''
         ## 基础信息
         生日：{self.input_datetime_str}
-        农历：{self.lunar_of_input_datetime_str}({self.lunar_of_input_datetime.strftime('%Y-%m-%d')} {shi_chen}时)
+        农历：{self.lunar_of_input_datetime_str}({self.lunar_of_input_datetime.strftime('%Y-%m-%d')} {self.shi_chen}时)
         八字：{self.ba_zi}
         生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
         年干     月干      日干（{"男" if self.is_male else "女"}主）    时干

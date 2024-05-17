@@ -1,7 +1,7 @@
 import argparse
 
 from backend.func.marriage_gods import MarriageGods
-from backend.web.entity.metainfo import MetaInfo
+from backend.func.metainfo import MetaInfo
 from backend.utils.utils import *
 
 

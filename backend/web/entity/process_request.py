@@ -3,11 +3,11 @@ from typing import Optional, List
 from datetime import datetime
 
 
-class Item(BaseModel):
+class QueryDto(BaseModel):
     name: str
-    birthdate: datetime
+    selfBirthday: datetime
     gender: Optional[str] = None
-    partnerBirthdate: Optional[datetime] = None
+    partnerBirthday: Optional[datetime] = None
     marriageDate: Optional[datetime] = None
     isBridegroom: Optional[bool] = False
     addDetails: Optional[bool] = False
