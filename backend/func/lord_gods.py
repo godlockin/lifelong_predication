@@ -65,6 +65,9 @@ class LordGods(BaZiElements):
         self.lord_gods_supporting = self.calc_lord_gods_supporting()
         self.lord_gods_supporting_lines = self.build_lord_gods_supporting_lines()
 
+        self.lord_god_explain = LordGodExplain(self)
+        self.lord_god_explain.init_explanation()
+
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
         msg += f'''
@@ -93,9 +96,6 @@ class LordGods(BaZiElements):
             double_append = self.calc_double_appear()
             if double_append:
                 msg += double_append
-
-            self.lord_god_explain = LordGodExplain(self)
-            self.lord_god_explain.init_explanation()
             msg += self.lord_god_explain.calc_all_lord_gods_explain()
         return msg
 

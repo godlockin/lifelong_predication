@@ -626,11 +626,11 @@ LIFE_PREDICTION_LABELS = {
 LIFE_PREDICTION_WHOLE_LABELS = [
     'bone_weight',
     'lord_gods_structure',
-    'lord_gods',
     'finance_storage',
+    'life_stages_luck',
+    'lord_gods',
     'demigods',
     'family_support',
-    'life_stages_luck',
 
     'potential_couple',
     'intermarriage',
@@ -644,11 +644,11 @@ LIFE_PREDICTION_WHOLE_LABELS = [
 LIFE_PREDICTION_CORE_LABELS = [
     'bone_weight',
     'lord_gods_structure',
-    'lord_gods',
     'finance_storage',
+    'life_stages_luck',
+    'lord_gods',
     'demigods',
     'family_support',
-    'life_stages_luck',
 ]
 
 ZHI_ATTRIBUTES = {

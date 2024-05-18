@@ -120,10 +120,10 @@ class MetaInfo:
         # 农历生日
         self.lunar_of_input_datetime = datetime(self.lunar_year, self.lunar_month, self.lunar_day)
         self.lunar_of_input_datetime_str = f"{get_year_chinese_name(self.lunar_year)}年，{'闰' if self.leap else ''}{CHINESE_MONTH_NAME[self.lunar_month - 1]}月{get_day_chinese_name(self.lunar_day)}日"
-
-    def __str__(self):
         shi_chen_idx = get_shi_chen_idx(self.input_datetime.hour)
         self.shi_chen = ZHI[shi_chen_idx]
+
+    def __str__(self):
         msg = f'''
         ## 基础信息
         生日：{self.input_datetime_str}

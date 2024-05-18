@@ -80,9 +80,12 @@ class TenYearsLuck(LordGods):
         if start == -1:
             return []
 
-        # （年干为阳干且性别为女） 和 （年干为阴干且性别为男） 为逆推
-        # 其他两种为顺推
-        is_shun = (self.nian_gan in ("甲", "丙", "戊", "庚", "壬")) and self.is_male
+        # （年干为阳干且性别为女） 和 （年干为阴干且性别为男） 为逆推其他两种为顺推
+        is_shun = not (
+                (self.nian_gan in ("甲", "丙", "戊", "庚", "壬") and not self.is_male)
+                or
+                (self.nian_gan not in ("甲", "丙", "戊", "庚", "壬") and self.is_male)
+        )
         start = start + 1 if is_shun else start - 1
         return [JIA_ZI_NAME[(start + (i if is_shun else -i)) % len(JIA_ZI_NAME)] for i in range(8)]
 

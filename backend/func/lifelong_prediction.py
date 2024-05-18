@@ -4,6 +4,7 @@ from backend.func.ba_zi_elements import BaZiElements
 from backend.func.bone_weight import BoneWeight
 from backend.func.demigod import Demigod
 from backend.func.family_support import FamilySupport
+from backend.func.female import Female
 from backend.func.finance_storage import FinanceStorage
 from backend.func.intermarriage import Intermarriage
 from backend.func.life_stages_luck import LifeStagesLuck
@@ -67,6 +68,8 @@ class LifePrediction(MetaInfo):
 
         self.zodiac_explain = ZodiacExplain(self.ba_zi_elements)
 
+        self.female = Female(**kwargs)
+
     def __str__(self):
         msg = f"{super().__str__()}"
         msg += self.ba_zi_elements.__str__()
@@ -85,6 +88,7 @@ class LifePrediction(MetaInfo):
             'intermarriage': self.intermarriage.__str__(),
             'potential_couple': self.potential_couple.__str__(),
             'zodiac_explain': self.zodiac_explain.__str__(),
+            'female': self.female.__str__(),
         }
 
         msg += "".join([conditions[label] for label in self.enabled_features])
@@ -94,8 +98,15 @@ class LifePrediction(MetaInfo):
     def calc_enabled_features(self, **kwargs):
         enabled_features = kwargs.get('enabled_features', [])
         enabled_features_items = [item.strip().lower() for item in enabled_features if item]
-        if not enabled_features_items or 'all' in enabled_features_items:
-            return constants.LIFE_PREDICTION_LABELS.keys()
+        if not enabled_features_items:
+            return constants.LIFE_PREDICTION_CORE_LABELS
+        if 'all' in enabled_features_items:
+            if self.is_male:
+                return constants.LIFE_PREDICTION_WHOLE_LABELS
+            else:
+                tmp = constants.LIFE_PREDICTION_WHOLE_LABELS
+                tmp.insert(2, 'female')
+                return tmp
         for item in enabled_features_items:
             if item in constants.LIFE_PREDICTION_WHOLE_LABELS:
                 enabled_features.append(item)
