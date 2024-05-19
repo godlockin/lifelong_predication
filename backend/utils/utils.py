@@ -1,11 +1,9 @@
-from backend.constants import constants
 from backend.constants.constants import *
-import pytz
 
 
-def parse_input_datetime_info(config):
-    time_item = config.get('base_datetime', constants.BASE_DATE)
-    time_item.astimezone(pytz.timezone('Asia/Shanghai'))
+def parse_input_datetime_info(kwargs):
+    time_item = kwargs.get('base_datetime', BASE_DATE)
+    time_item = (time_item if time_item else BASE_DATE).astimezone(pytz.timezone('Asia/Shanghai'))
     return time_item
 
 

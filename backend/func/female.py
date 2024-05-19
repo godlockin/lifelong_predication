@@ -88,12 +88,12 @@ class Female(LordGods):
                 self.lord_god_explain.single_explain_mapping['偏印'].lord_gods_count >= 4
             )
             or
-            Counter(self.elements_matrix)['木'] > 3
+            self.elements_count['木'] > 3
         ):
             return "心地善良单纯喜欢关心助人的热心人，八字中印星太旺或木太多的人心怀慈悲，同情心强，容易可怜别人，会因救助别人而被骗。印旺：八字印旺之人同情心重，喜欢助人。正印为我主动生助，正印旺容易同情相信别人在助人方面容易轻信别人而被骗。偏印为不情愿之生，虽也爱帮助别人，但心中总有预期的回报，倘若发现对方是虚伪不诚之人，内心的失落感就会很强烈。"
 
         # 第六种是那种特讲信用、忠厚、说到做到的人，八字中土太多太旺的人愚钝诚实，容易相信别人而被骗。
-        if Counter(self.elements_matrix)['土'] > 3:
+        if self.elements_count['土'] > 3:
             return "特讲信用、忠厚、说到做到的人，八字中土太多太旺的人愚钝诚实，容易相信别人而被骗。"
 
         return ""

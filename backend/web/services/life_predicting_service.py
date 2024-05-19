@@ -1,8 +1,8 @@
 from backend.func.lifelong_prediction import LifePrediction
-from backend.web.entity.bone import BoneWeightDto
+from backend.web.entity.bone_weight_info import BoneWeightDto
+from backend.web.entity.lord_gods_structure_info import LordGodsStructureDto
 from backend.web.entity.meta_info import MetaInfoDto, BaZiElementsDto
 from backend.web.entity.process_request import QueryDto
-from backend.func import *
 from backend.web.entity.process_response import PredictionDto
 
 
@@ -23,14 +23,13 @@ class LifePredictionOperator:
         self.life_prediction = LifePrediction(**predict_req)
 
     def do_predict(self):
-
-        resp = PredictionDto()
-        resp.queryDto = self.display_query_info()
-        resp.metaInfo = self.build_meta_info()
-        resp.baziElements = self.build_bazi_elements()
-        resp.boneWeight = self.build_bone_weight()
-
-        return resp
+        return PredictionDto(
+            queryDto=self.display_query_info(),
+            metaInfo=self.build_meta_info(),
+            baziElements=self.build_bazi_elements(),
+            boneWeight=self.build_bone_weight(),
+            lordGodsStructure=self.build_lord_gods_structure()
+        )
 
     def display_query_info(self):
         return QueryDto(
@@ -49,7 +48,7 @@ class LifePredictionOperator:
         return MetaInfoDto(
             name=self.query.name,
             birthdate=metainfo.input_datetime_str,
-            lunar_birthdate=metainfo.lunar_of_input_datetime_str,
+            lunar_birthday=metainfo.lunar_of_input_datetime_str,
             lunar_birthday_hour=metainfo.shi_chen,
             bazi=metainfo.ba_zi,
             zodiac=metainfo.zodiac,
@@ -73,11 +72,12 @@ class LifePredictionOperator:
     def build_bazi_elements(self):
         ba_zi_elements = self.life_prediction.ba_zi_elements
         return BaZiElementsDto(
-            isStrong=ba_zi_elements.is_strong,
-            isPositive=ba_zi_elements.is_positive,
+            isStrong=ba_zi_elements.self_strong,
+            isPositive=ba_zi_elements.self_positive,
             supportingElements=ba_zi_elements.supporting_elements_sequence,
             opposingElements=ba_zi_elements.opposing_elements_sequence,
-            elementsInfluenceWeight={key: value[1] for key, value in ba_zi_elements.elements_relationships_mapping.items()},
+            elementsInfluenceWeight={key: value[1] for key, value in
+                                     ba_zi_elements.elements_relationships_mapping.items()},
             elementsInfluence={key: value[0] for key, value in ba_zi_elements.elements_relationships_mapping.items()},
         )
 
@@ -87,4 +87,16 @@ class LifePredictionOperator:
             boneWeight=bone_weight.bone_weight,
             description=bone_weight.description,
             details=bone_weight.bone_weight_map
+        )
+
+    def build_lord_gods_structure(self):
+        lord_gods_structure = self.life_prediction.lord_gods_structure
+        return LordGodsStructureDto(
+            structure=lord_gods_structure.structure,
+            structureAppend=f"身{'强' if lord_gods_structure.self_strong else '弱'}",
+            structureDescription=f"{lord_gods_structure.strength_comment['comment']}",
+            structureImagery=f"{lord_gods_structure.strength_comment['imagery']}",
+            comment=f"{lord_gods_structure.strength_comment['strength_comment']}",
+            isStructurePositive=lord_gods_structure.is_positive_overall[0],
+            structureFix=lord_gods_structure.is_positive_overall[1],
         )

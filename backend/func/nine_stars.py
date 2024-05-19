@@ -6,9 +6,9 @@ from backend.constants.constants import *
 
 class NineStars(BaZiElements):
     def __init__(self, **kwargs):
-        input_date_time = kwargs.get('base_datetime', BASE_DATE)
-        if input_date_time:
-            kwargs['base_datetime'] = datetime.now()
+        input_date_time = kwargs.get('base_datetime', None)
+        if not ('base_datetime' in kwargs or kwargs.get('base_datetime')):
+            kwargs['base_datetime'] = BASE_DATE
         self.self_element = kwargs.get('self_element', '')
 
         super().__init__(**kwargs)

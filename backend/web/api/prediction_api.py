@@ -17,15 +17,5 @@ async def get_features() -> Dict[str, str]:
 @app.post("/process")
 async def predict_life(item: QueryDto):
     life_prediction = LifePredictionOperator(item)
-    # 这里调用现有的Python程序进行处理
-    result = {
-        "name": item.name,
-        "birthdate": item.birthdate,
-        "gender": item.gender,
-        "partnerBirthdate": item.partnerBirthdate,
-        "marriageDate": item.marriageDate,
-        "isBridegroom": item.isBridegroom,
-        "addDetails": item.addDetails,
-        "enabledFeatures": item.enabledFeatures
-    }
-    return result
+
+    return life_prediction.do_predict()

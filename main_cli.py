@@ -1,5 +1,6 @@
 import argparse
 
+from backend.constants import constants
 from backend.func.lifelong_prediction import LifePrediction
 from backend.utils.utils import *
 

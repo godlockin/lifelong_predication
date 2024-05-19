@@ -1,5 +1,4 @@
 import argparse
-from collections import defaultdict
 
 from backend.func.elements_explain import ElementsExplain
 from backend.func.metainfo import MetaInfo

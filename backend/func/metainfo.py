@@ -11,7 +11,8 @@ class MetaInfo:
         # 默认为男性
         self.is_male = kwargs.get('is_male', True)
         self.input_datetime_str = self.input_datetime.strftime(default_date_format)
-        self.offset = (self.input_datetime - BASE_DATE).days
+        offset_timestamp = (self.input_datetime - BASE_DATE)
+        self.offset = offset_timestamp.days
 
         # yearCyl农历年与1864的相差数
         self.year_cyl = 1864

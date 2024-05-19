@@ -10,7 +10,7 @@ class BoneWeight(MetaInfo):
         self.meta_info_display = kwargs.get('meta_info_display', False)
         self.explain_append = kwargs.get('explain_append', False)
         self.bone_weight_map = self.calc_bone_weight()
-        self.bone_weight = sum(self.bone_weight_map.values())
+        self.bone_weight = round(sum(self.bone_weight_map.values()), 1)
 
         tmp_bone_weight = self.bone_weight
         tmp_bone_weight = int(tmp_bone_weight) if tmp_bone_weight.is_integer() else round(float(tmp_bone_weight), 1)

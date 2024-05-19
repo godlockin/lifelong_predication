@@ -427,7 +427,7 @@ class LordGodsStructure(LordGods):
             yin_details = GAN_ELEMENTS_MAPPING[f"{opposing_yin_yang}_{structure_supporting_element}"]
         else:
             yin_details = GAN_ELEMENTS_MAPPING[f"{structure_gan_details['yinyang']}_{structure_supporting_element}"]
-        return "建议多接触「{}」，以增强{}的正能量".format(yin_details['meaning'], self.structure)
+        return "建议多接触「{}」，以增强{}的正能量".format(yin_details['image'], self.structure)
 
 
 if __name__ == "__main__":
