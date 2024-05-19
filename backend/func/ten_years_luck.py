@@ -118,8 +118,8 @@ class TenYearsLuck(LordGods):
             gan_element = GAN_DETAILS[item[0]]['element']
             zhi_element = ZHI_DETAILS[item[1]]['element']
 
-            gan_delta = -1 if self.self_strong and gan_element in self.supporting_elements_sequence else 1
-            zhi_delta = -1 if self.self_strong and zhi_element in self.supporting_elements_sequence else 1
+            gan_delta = -10 if self.self_strong and gan_element in self.supporting_elements_sequence else 10
+            zhi_delta = -10 if self.self_strong and zhi_element in self.supporting_elements_sequence else 10
 
             ten_years_luck_details[item] = {
                 'idx': idx,
@@ -128,9 +128,11 @@ class TenYearsLuck(LordGods):
                 'lord_gods': self.ten_years_luck_lord_gods[idx],
                 'demigods': self.ten_years_luck_demigods[idx],
                 'gan_element': gan_element,
-                'gan_final_score': self.self_score + gan_delta * 12,
+                'gan_element_delta': gan_delta,
+                'gan_final_score': self.self_score + gan_delta,
                 'zhi_element': zhi_element,
-                'zhi_final_score': self.self_score + zhi_delta * 12,
+                'zhi_element_delta': zhi_delta,
+                'zhi_final_score': self.self_score + zhi_delta,
                 'gan_support': self.elements_relationships_mapping[gan_element],
                 'zhi_support': self.elements_relationships_mapping[zhi_element],
                 'is_finance': opposing_element == gan_element,

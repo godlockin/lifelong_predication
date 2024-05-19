@@ -64,8 +64,8 @@ class YearlyLuckExplain(TenYearsLuckExplain):
                 'ty_details': ty_details,
             }
 
-            gan_final_score = record['gan_final_score']
-            zhi_final_score = record['zhi_final_score']
+            gan_final_score = record['gan_final_score'] + ty_details['gan_element_delta']
+            zhi_final_score = record['zhi_final_score'] + ty_details['zhi_element_delta']
             if_nice_luck = []
             if 40 <= gan_final_score <= 60:
                 if_nice_luck.append(f"前半年")

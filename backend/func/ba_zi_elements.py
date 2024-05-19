@@ -1,4 +1,5 @@
 import argparse
+from collections import defaultdict
 
 from backend.func.elements_explain import ElementsExplain
 from backend.func.metainfo import MetaInfo
@@ -17,6 +18,7 @@ class BaZiElements(MetaInfo):
 
         # 命主自身强弱
         self.score_matrix = [[0 for _ in range(4)] for _ in range(2)]
+        self.elements_score = {key: 0 for key, _ in WU_XING_ZHU_YI.items()}
         self.self_score = 0
         self.self_strong = self.calc_element_strength()
         # 命主旺衰
@@ -44,26 +46,19 @@ class BaZiElements(MetaInfo):
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
+        elements_relations = [f"{key}:{value}" for key, value in self.elements_relationships_mapping.items()]
+        elements_relations_line = "\t".join(elements_relations)
         msg += f'''
         ## 五行分析
-        五行强弱：{"强" if self.self_strong else "弱"}+{'旺' if self.self_positive else '衰'}
+        五行强弱：{"强" if self.self_strong else "弱"}({self.self_score}) + {'旺' if self.self_positive else '衰'}
         喜用：{self.supporting_elements_sequence}
         忌凶：{self.opposing_elements_sequence}
-        '''
-
-        elements_relations = [f"{key}:{value}" for key, value in self.elements_relationships_mapping.items()]
-        elements_relations_line = "\n".join(elements_relations)
-        msg += f'''
         五行运气：
         {elements_relations_line}
+        原始得分：
+        {self.elements_score}
+        {self.elements_explain.__str__()}
         '''
-
-        append_explains = self.elements_explain.__str__()
-        if append_explains:
-            msg += f'''
-        {append_explains}
-            '''
-
         return msg
 
     def calc_element_strength(self):
@@ -75,17 +70,23 @@ class BaZiElements(MetaInfo):
 
         for row_idx, row in enumerate(self.elements_matrix):
             for col_idx, col in enumerate(row):
+                score = GAN_ZHI_POSITION_WEIGHT[row_idx][col_idx]
+                self.elements_score[col] += score
                 if col in [self.primary_element, self.support_element]:
-                    score = GAN_ZHI_POSITION_WEIGHT[row_idx][col_idx]
                     self.score_matrix[row_idx][col_idx] = score
                     self.self_score += score
                 else:
-                    score = -1 * GAN_ZHI_POSITION_WEIGHT[row_idx][col_idx]
+                    score = -1 * score
                     self.score_matrix[row_idx][col_idx] = score
 
-        if self.self_score > 60:
+        if self.self_score <=0:
+            self.self_score = 50
             return True
-        return False
+
+        if self.self_score >= 100:
+            self.self_score = 20
+
+        return self.self_score > 50
 
     def calc_elements_strength_sequence(self):
         """

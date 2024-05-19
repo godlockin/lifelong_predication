@@ -15,19 +15,15 @@ class ElementsExplain:
         self.elements_healthy = self.calc_elements_healthy()
         self.elements_healthy_list = sorted(self.elements_healthy.items(), key=lambda x: -x[1]['score'])
         self.self_elements_healthy_analysis = self.elements_healthy_analysis()
+        self.xing_chong_po_hai = self.calc_xing_chong_po_hai()
 
     def __str__(self):
-        msg = "### 解析"
-
-        xing_chong_po_hai = self.calc_xing_chong_po_hai()
-        if xing_chong_po_hai:
-            msg += xing_chong_po_hai
-
-        msg += self.self_elements_healthy_analysis
-
-        msg += self.self_element_analysis
-
-        return msg
+        return f"""
+        ### 解析
+        {self.xing_chong_po_hai}
+        {self.self_elements_healthy_analysis}
+        {self.self_element_analysis}
+        """
 
     def calc_elements_healthy(self):
         conditions = {
@@ -64,7 +60,8 @@ class ElementsExplain:
         }
 
         elements_healthy = {}
-        for element, count in self.ba_zi_elements.elements_count.items():
+        for element, _ in WU_XING_ZHU_YI.items():
+            count = self.ba_zi_elements.elements_count.get(element, 0)
             tmp = conditions[element]
             element_list = [
                 element,
@@ -77,24 +74,19 @@ class ElementsExplain:
             score_list = [self.ba_zi_elements.elements_count[e] * ELEMENTS_POSITION_DELTA[idx] for idx, e in enumerate(element_list)]
             score = round(sum(score_list), 2)
 
-            if score > 3:
-                elements_healthy[element] = {
-                    "score": score,
-                    'count': count,
-                    "status": "旺",
-                    "organ": tmp["organ"],
-                    "emotion": tmp["emotion"],
-                    "hidden_danger": tmp["positive"],
-                }
-            elif score < 0:
-                elements_healthy[element] = {
-                    "score": score,
-                    'count': count,
-                    "status": "衰",
-                    "organ": tmp["organ"],
-                    "emotion": tmp["emotion"],
-                    "hidden_danger": tmp["negative"],
-                }
+            if_positive = '平'
+            if count >= 3:
+                if_positive = '旺'
+            elif count < 1:
+                if_positive = '衰'
+            elements_healthy[element] = {
+                "score": score,
+                'count': count,
+                "status": if_positive,
+                "organ": tmp["organ"],
+                "emotion": tmp["emotion"],
+                "hidden_danger": tmp["positive"] if if_positive == '旺' else tmp["negative"],
+            }
 
         return elements_healthy
 
@@ -258,12 +250,14 @@ class ElementsExplain:
         """
         for item in self.elements_healthy_list:
             details = item[1]
-            msg += f"""
+            count = details.get('count', 0)
+            if count >= 3 or count < 1:
+                msg += f"""
         {item[0]}（{details.get('count', 0)}/{details['score']}）：{details['status']}
         所属器官：{details['organ']}
         情绪：{details['emotion']}
         易感症状：{details['hidden_danger']}
-            """
+                """
 
         return msg
 
@@ -288,10 +282,7 @@ class ElementsExplain:
                         if tmp_pair not in position:
                             position.append(tmp_pair)
                             result.append(f"{POSITION_NAMES[1][base_index]}、{POSITION_NAMES[1][against_index]}（{base_zhi}/{against_zhi}）-> 「{key}」")
-        tmp_str = {"\n".join(result)}
-        return f"""
-    {tmp_str}
-        """ if result else ""
+        return "\n".join(result) if result else ""
 
 
 
