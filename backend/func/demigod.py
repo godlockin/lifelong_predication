@@ -750,6 +750,9 @@ class CommonDemigod:
         if self.hong_yan(self.zhi):
             result.append("红艳")
 
+        if self.xue_ren(self.zhi):
+            result.append("血刃")
+
         return result
 
     def pi_ma(self, zhi, idx_zhi_list):
@@ -1223,6 +1226,36 @@ class CommonDemigod:
         }
 
         return any(item in conditions.get(zhi, '') for item in self.ri_gan_n_nian_gan)
+
+    def xue_ren(self, zhi):
+        """
+        日元是甲，地支见卯
+        日元是乙，地支见辰
+        日元是丙，地支见午
+        日元是丁，地支见未
+        日元是戊，地支见午
+        日元是己，地支见未
+        日元是庚，地支见酉
+        日元是辛，地支见戌
+        日元是壬，地支见子
+        日元是癸，地支见丑
+        :param zhi:
+        :return:
+        """
+        conditions = {
+            "甲": "卯",
+            "乙": "辰",
+            "丙": "午",
+            "丁": "未",
+            "戊": "午",
+            "己": "未",
+            "庚": "酉",
+            "辛": "戌",
+            "壬": "子",
+            "癸": "丑",
+        }
+
+        return zhi == conditions.get(self.ri_gan, '')
 
 
 if __name__ == "__main__":
