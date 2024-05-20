@@ -56,8 +56,11 @@ class BaZiElements(MetaInfo):
         {elements_relations_line}
         原始得分：
         {self.elements_score}
-        {self.elements_explain.__str__()}
         '''
+        if self.explain_append:
+            msg += f"""
+        {self.elements_explain.__str__()}
+        """
         return msg
 
     def calc_element_strength(self):

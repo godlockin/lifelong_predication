@@ -181,10 +181,10 @@ class Demigod(BaZiElements):
         if common_demigod.tai_ji_gui_ren(self.ri_gan_n_nian_gan, zhi):
             result.append("太极贵人")
 
-        if common_demigod.tian_de_gui_ren(self.yue_zhi, gan):
+        if common_demigod.tian_de_gui_ren(self.yue_zhi, gan, zhi):
             result.append("天德贵人")
 
-        if common_demigod.yue_de_gui_ren(self.yue_zhi, gan):
+        if common_demigod.yue_de_gui_ren(self.yue_zhi, gan, zhi):
             result.append("月德贵人")
 
         if common_demigod.tian_chu(self.ri_zhi_n_nian_zhi, zhi):
@@ -684,10 +684,10 @@ class CommonDemigod:
         if self.tai_ji_gui_ren(self.ri_gan_n_nian_gan, self.zhi):
             result.append("太极贵人")
 
-        if self.tian_de_gui_ren(self.yue_zhi, self.gan):
+        if self.tian_de_gui_ren(self.yue_zhi, self.gan, self.zhi):
             result.append("天德贵人")
 
-        if self.yue_de_gui_ren(self.yue_zhi, self.gan):
+        if self.yue_de_gui_ren(self.yue_zhi, self.gan, self.zhi):
             result.append("月德贵人")
 
         if self.wen_chang(self.ri_gan_n_nian_gan, self.zhi):
@@ -1106,9 +1106,11 @@ class CommonDemigod:
 
         return any(item in conditions.get(zhi, '') for item in idx_gan_list)
 
-    def yue_de_gui_ren(self, yue_zhi, gan):
+    def yue_de_gui_ren(self, yue_zhi, gan, zhi):
         """
         月德贵人 寅午戌月生者见丙, 申子辰月生者见壬,亥卯未月生者见甲,巳酉丑月生者见庚. 凡柱中年月日时干上见者为有月德贵人.
+        :param yue_zhi:
+        :param zhi:
         :param gan: 年月日时干
         :return:
         """
@@ -1119,12 +1121,13 @@ class CommonDemigod:
             "庚": ["巳", "酉", "丑"]
         }
 
-        return yue_zhi in conditions.get(gan, '')
+        return yue_zhi in conditions.get(gan, []) or yue_zhi in conditions.get(zhi, [])
 
-    def tian_de_gui_ren(self, yue_zhi, gan):
+    def tian_de_gui_ren(self, yue_zhi, gan, zhi):
         """
         天德贵人 正月生者见丁, 二月生者见申,三月生者见壬, 四月生者见辛,五月生者见亥, 六月生者见甲,七月生者 见癸, 八月生者见寅,九月生者见丙,
         十月生者见乙,十一月生者见巳, 十二月生者见庚. 凡四柱年月日时上见者为有天德贵人.
+        :param zhi:
         :param yue_zhi:
         :param gan:
         :return:
@@ -1144,7 +1147,7 @@ class CommonDemigod:
             "丑": "庚"
         }
 
-        return gan == conditions.get(yue_zhi, '')
+        return gan == conditions.get(yue_zhi, '') or zhi == conditions.get(yue_zhi, '')
 
     def tai_ji_gui_ren(self, idx_gan_list, zhi):
         """
@@ -1180,7 +1183,7 @@ class CommonDemigod:
             "乙": "子申", "己": "子申",
             "丙": "亥酉", "丁": "亥酉",
             "壬": "卯巳", "癸": "卯巳",
-            "庚": "辛寅", "午": "辛寅",
+            "庚": "午寅", "辛": "午寅",
         }
 
         return any(zhi in conditions.get(item, '') for item in idx_gan_list)

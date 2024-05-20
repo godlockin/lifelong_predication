@@ -108,11 +108,8 @@ class LifePrediction(MetaInfo):
                 tmp = constants.LIFE_PREDICTION_WHOLE_LABELS
                 tmp.insert(2, 'female')
                 return tmp
-        for item in enabled_features_items:
-            if item in constants.LIFE_PREDICTION_WHOLE_LABELS:
-                enabled_features.append(item)
 
-        return enabled_features
+        return [item for item in enabled_features_items if item in constants.LIFE_PREDICTION_WHOLE_LABELS]
 
 
 if __name__ == "__main__":

@@ -477,7 +477,7 @@ ZODIAC_ELEMENT_WEIGHT = 0.1
 
 ELEMENTS_ORGAN_STRENGTH = ["强壮", "较强壮", "一般", "较弱", "弱"]
 
-CANG_GAN_WEIGHT = [1, 0.6, 0.2]
+CANG_GAN_WEIGHT = [0.6, 0.3, 0.1]
 
 POSITION_WEIGHT = [
     [2, 2, 0, 2],
