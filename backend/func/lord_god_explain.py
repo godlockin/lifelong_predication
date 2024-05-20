@@ -301,9 +301,9 @@ class LordGodExplain:
         {tmp}
             """
 
-        if main_lord_god_count == single_explain_mapping['七杀'].lord_gods_count:
+        if main_lord_god_count >= single_explain_mapping['七杀'].lord_gods_count:
             result += f"""
-        正印和七杀数量一致，说明所有七杀都被印克制，意味着官印相生，这时命主的学习能力比较强，学什么都很快，也很容易达成成就。
+        正印 >= 七杀数量，说明所有七杀都被印克制，意味着官印相生，这时命主的学习能力比较强，学什么都很快，也很容易达成成就。
             """
         return result
 
@@ -455,6 +455,11 @@ class LordGodExplain:
                     core_matrix[row_idx].append(False)
         return position_mapping, core_matrix
 
+    def whether_supporting_append(self):
+        return f"""
+    命主（{self.lord_gods.self_score}）身{'强' if self.lord_gods.self_strong else '弱'}
+        """
+
 
 class ZhengYin(LordGodExplain):
     def __init__(self, lord_gods):
@@ -473,8 +478,9 @@ class ZhengYin(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         正印是完美的道德标准，是一种超我，是一种权利，是一种责任心。
+        {self.whether_supporting_append()}
         """
 
         position_explain = self.calc_position_explain()
@@ -575,6 +581,19 @@ class ZhengYin(LordGodExplain):
     def calc_not_exists_explain(self):
         return "命中没有正印的人，不爱学习、没有责任心、记性不好、学非所用，与母亲缘分浅，经常生病\n" if self.lord_gods_count == 0 else ""
 
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主会比较聪明，记性好，如果命中带文昌等神煞可能会考取功名。
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主会有小聪明，但是不大喜欢学习。
+            """
+        return result
+
+
 
 class ShiShen(LordGodExplain):
     def __init__(self, lord_gods):
@@ -593,8 +612,9 @@ class ShiShen(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         食神的主要作用是生财，吃喝玩乐还能赚钱。但是食神不宜过多，会身体肥胖，贪图享乐，好逸恶劳，不务正业，不知节俭。
+        {self.whether_supporting_append()}
         """
 
         self_strong_explain = self.calc_self_strong_explain()
@@ -651,6 +671,17 @@ class ShiShen(LordGodExplain):
     def calc_not_exists_explain(self):
         return "命中没有食神的人，不会玩，口才不好，不善言辞\n" if self.lord_gods_count == 0 else ""
 
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主口才比较好，吃喝玩乐中就能赚钱
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能比较贪玩，不务正业，不知节俭
+            """
+        return result
 
 class ZhengGuan(LordGodExplain):
     def __init__(self, lord_gods):
@@ -669,10 +700,11 @@ class ZhengGuan(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         自带正官的人容易当官。朋友也大多是正经人。不正派的人不去结交不去得罪，但也不得罪。朋友不多，很难有死党知己。
         正官太多容易死心眼、固执、强迫症。
         正官多的人一生追求名誉地位，什么都可以不要，就是要当领导
+        {self.whether_supporting_append()}
         """
 
         position_explain = self.calc_position_explain()
@@ -737,6 +769,18 @@ class ZhengGuan(LordGodExplain):
 
         return female_explain + "\n"
 
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主容易当官，道德标准比较高，容易受人认可成为领导
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能有官心，但是不容易当官，如果遇到负面大运流年可能升职受阻
+            """
+        return result
+
 
 class ZhengCai(LordGodExplain):
     def __init__(self, lord_gods):
@@ -755,8 +799,9 @@ class ZhengCai(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         财喜藏不喜漏。天干之财为虚财，地支藏干里的财为真财
+        {self.whether_supporting_append()}
         """
 
         self_strong_explain = self.calc_self_strong_explain()
@@ -816,10 +861,10 @@ class ZhengCai(LordGodExplain):
             return ""
         result = "命中没有正财，一生财来财去一场空，烂桃花多。"
         if self.lord_gods.is_male:
-            result += "男人与妻缘分薄，晚婚，夫妻感情不好。\n"
+            result += "男人与妻缘分薄，晚婚，夫妻感情不好。"
         else:
-            result += "女人与父缘分薄，父亲不重视自己。父多早丧，或病残，父亲无能。\n"
-        return result
+            result += "女人与父缘分薄，父亲不重视自己。父多早丧，或病残，父亲无能。"
+        return result + "\n"
 
     def calc_self_strong_explain(self):
         result = ""
@@ -830,8 +875,8 @@ class ZhengCai(LordGodExplain):
     def calc_male_explain(self):
         result = "正财是男人的妻子。"
         if self.lord_gods_count > 3:
-            result += "男人正财多，多妻之像，或者不重视结发之妻。\n"
-        return result
+            result += "男人正财多，多妻之像，或者不重视结发之妻。"
+        return result + "\n"
 
 
 class QiSha(LordGodExplain):
@@ -851,9 +896,10 @@ class QiSha(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         七杀为日元的天敌，四凶神中的索命鬼，因此八字首先看七杀。安顿了七杀方可论富贵，否则有命无命都两说。
         不过聪明不过伤官，伶俐不过七杀，七杀多的人，聪明伶俐。
+        {self.whether_supporting_append()}
         """
 
         if not self.lord_gods.is_male:
@@ -999,16 +1045,28 @@ class QiSha(LordGodExplain):
             return result
         result += "命里没有七杀，代表心不会太狠，不会报复别人容易被欺负。"
         if self.lord_gods.is_male:
-            result += "男人没有七杀，不易生儿子。\n"
+            result += "男人没有七杀，不易生儿子。"
         else:
-            result += "女人没有七杀，不会有情人。\n"
+            result += "女人没有七杀，不会有情人。"
 
-        return result
+        return result + "\n"
 
     def calc_female_explain(self):
         result = "七杀旺的女人比较瘦，筷子腿。\n同时七杀对女人来说是其他人的老公。"
         if self.lord_gods_count > 3:
             result += "女人七杀多，多夫之像，遇到心动的男人的可能性比较大。\n"
+        return result
+
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主执行力强，做事有魄力，勇于向困难发起挑战，勇于突破困境，坚强意志与干劲
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能霸道、急躁，任性倔强，报复心强，偏激叛逆，鲁莽冲动，听不进谏言，易树敌
+            """
         return result
 
 
@@ -1028,6 +1086,10 @@ class PianYin(LordGodExplain):
 
     def explain(self):
         result = super().explain()
+
+        result += f"""
+        {self.whether_supporting_append()}
+        """
 
         position_explain = self.calc_position_explain()
         if position_explain:
@@ -1110,6 +1172,18 @@ class PianYin(LordGodExplain):
         position_explain += position
         return "\n".join(position_explain) if position_explain else ""
 
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if not self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主聪明伶俐，多才多艺，心思细腻，观察力、分析力具佳，学东西很快
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能孤独敏感，优柔寡断，不善与人交往，宁可独处也不去人多的地方
+            """
+        return result
+
 
 class ShangGuan(LordGodExplain):
     def __init__(self, lord_gods):
@@ -1128,9 +1202,10 @@ class ShangGuan(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         伤官可以旺财，因为伤官上进心强。
         本命有伤官，大运流年遇到伤官，会有官司口舌纷争。
+        {self.whether_supporting_append()}
         """
 
         self_strong_explain = self.calc_self_strong_explain()
@@ -1215,12 +1290,24 @@ class ShangGuan(LordGodExplain):
         if self.name in [self.lord_gods.ri_zhi_core_lord_gods] + self.lord_gods.lord_gods_w_cang_gan_core_matrix[1][2]:
             female_explain += "女坐伤官性格刚强直爽，说话心直口快，有的略显强势，容易对丈夫排斥不满多挑剔，更多的是家里家外好操心，到头来费力不讨好。这等女性，若非为人多才艺，就是长相清逸秀丽，或二者兼而有之。多半属于女强人型，很有气质、才华洋溢，成就往往超越男性，因此伤官旺的女性具有开拓性，宜于从事事业，而不宜于做家庭主妇。"
 
-        return female_explain
+        return female_explain + "\n"
 
     def calc_self_strong_explain(self):
         result = ""
         if self.lord_gods.self_strong:
             result += "身强又逢伤官，无论男女都长相清秀，受人喜欢。\n"
+        return result
+
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主聪明灵巧，个性突出，能言善辩，胆大有魄力，有才华，很有自信
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能自负，语言尖锐刻薄，狂傲不羁，度量狭小，记仇，得理不饶人，任性蛮横，逞强好胜
+            """
         return result
 
 
@@ -1241,8 +1328,9 @@ class JieCai(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         劫财之人见面熟，交际手腕高，见人说人话，见鬼说鬼话。
+        {self.whether_supporting_append()}
         """
 
         result += """
@@ -1251,7 +1339,7 @@ class JieCai(LordGodExplain):
         选择合伙人时，命里劫财过多的人赚不择手段，坑紧拐骗。你一定会吃亏。
         所以劫财过多，很难发财。
         特别是女生选男朋友的时候要注意，劫财多会用卑鄙霸道手段讲女方骗上床，然后开始借钱，最后骗财骗色。
-        """ if self.lord_gods_count > 3 else ""
+        """ if self.lord_gods_count > 3 and self.lord_gods.self_strong else ""
 
         position_explain = self.calc_position_explain()
         if position_explain:
@@ -1304,6 +1392,18 @@ class JieCai(LordGodExplain):
         if self.lord_gods_count > 3:
             result += "劫财多的人，异性缘分多，但是不会长久。"
 
+        return result + "\n"
+
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if not self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主性格开朗，心思敏捷，容易获得别人好感
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能固执己见，好酒好赌，贪小便宜，好吹牛抬杠，不讲信用
+            """
         return result
 
 
@@ -1324,9 +1424,11 @@ class BiJian(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         比肩人内心的想法是一生平安。
+        {self.whether_supporting_append()}
         """
+
         result += """
         比肩多的人特别关心宠爱部下和朋友，但是和领导不会打交道。
         """ if self.lord_gods_count > 2 else ""
@@ -1351,8 +1453,7 @@ class BiJian(LordGodExplain):
             result += "身旺不喜比肩帮，运走比肩反遭殃。比肩为忌神，得不到朋友或兄弟的帮助，反而被争夺财物。"
         else:
             result += "身弱逢比运最通，合作营谋处处丰。比肩为用神，多得朋友或兄弟帮助。"
-        result += "\n"
-        return result
+        return result + "\n"
 
     def calc_position_explain(self):
         position_explain = []
@@ -1376,6 +1477,18 @@ class BiJian(LordGodExplain):
         position_explain = list(dict.fromkeys([item for item in position_explain if item]))
         return "\n".join(position_explain) if position_explain else ""
 
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if not self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主意志坚强，重情重义，同时也会有很多朋友帮扶
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主可能固执己见，独断专行，自我中心，朋友多，知己不多
+            """
+        return result
+
 
 class PianCai(LordGodExplain):
     def __init__(self, lord_gods):
@@ -1394,12 +1507,13 @@ class PianCai(LordGodExplain):
     def explain(self):
         result = super().explain()
 
-        result += """
+        result += f"""
         偏财比正财会赚钱，正财多为工作收入，偏财是敏锐的商业眼光做生意得来的。
         但是它不好的一点就是时有时无，来的时候金山银海，但是会很长时间不来钱。
         偏财喜欢交朋友，三教九流都有，所以有广大的人脉关系，能得到相当多的情报资讯。
         偏财为人大方慷慨，会去帮助朋友，所以对方愿意提供消息，让自己获得回报。
         偏财爱往外面跑，到处结交朋友，与他人谈天说地，交际应酬特别多，加上出手大方，会愿意去分享，因此人缘特别好。对于陌生的人士，很快便可以熟识，并且能打成一片，建立友谊。
+        {self.whether_supporting_append()}
         """
 
         if self.lord_gods.is_male:
@@ -1455,4 +1569,16 @@ class PianCai(LordGodExplain):
         result = "偏财是男人的小妾"
         if self.lord_gods_count > 3:
             result += "，所以偏财多的男人有外遇的可能性比较大。"
+        return result + "\n"
+
+    def whether_supporting_append(self):
+        result = super().whether_supporting_append()
+        if self.lord_gods.self_strong:
+            result += f"""
+        {self.name} 为喜用，命主慷慨大方，重义轻财，很容易获得意料之外的财富
+            """
+        else:
+            result += f"""
+        {self.name} 为忌凶，命主不重视金钱，不善于理财，赌性大，存不住钱
+            """
         return result
