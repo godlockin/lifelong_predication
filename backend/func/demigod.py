@@ -753,6 +753,9 @@ class CommonDemigod:
         if self.xue_ren(self.zhi):
             result.append("血刃")
 
+        if self.wu_gui_yun_cai(self.zhi):
+            result.append("五鬼运财")
+
         return result
 
     def pi_ma(self, zhi, idx_zhi_list):
@@ -1256,6 +1259,29 @@ class CommonDemigod:
         }
 
         return zhi == conditions.get(self.ri_gan, '')
+
+    def wu_gui_yun_cai(self, zhi):
+        """
+        以月令为基础，往后数5位
+        :param zhi:
+        :return:
+        """
+        conditions = {
+            "未": "亥",
+            "申": "子",
+            "酉": "丑",
+            "戌": "寅",
+            "亥": "卯",
+            "子": "辰",
+            "丑": "巳",
+            "寅": "午",
+            "卯": "未",
+            "辰": "申",
+            "巳": "酉",
+            "午": "戌",
+        }
+
+        return zhi == conditions.get(self.yue_zhi, '')
 
 
 if __name__ == "__main__":

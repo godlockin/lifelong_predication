@@ -146,9 +146,9 @@ class FamilySupport(LordGods):
             else:
                 result.append(f"「{self.ri_zhi_element}」生「{self.ri_gan_element}」，自己促进对象。")
 
-        elif ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element or SWAPPED_ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element:
+        elif self.opposing_element == self.ri_zhi_element or SWAPPED_ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element:
             result.append(f"日柱（{self.ri_gan_element}/{self.ri_zhi_element}）五行相克，代表夫妻反目，视如仇敌。")
-            if ELEMENTS_OPPOSING[self.ri_gan_element] == self.ri_zhi_element:
+            if self.opposing_element == self.ri_zhi_element:
                 result.append(f"「{self.ri_gan_element}」克「{self.ri_zhi_element}」，自己压制对象。")
             else:
                 result.append(f"「{self.ri_zhi_element}」克「{self.ri_gan_element}」，对象压制自己。")

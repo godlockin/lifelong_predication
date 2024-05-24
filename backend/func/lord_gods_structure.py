@@ -352,7 +352,7 @@ class LordGodsStructure(LordGods):
                     (
                         not self.self_strong
                         and is_finance_exists
-                        and self.elements_count.get(ELEMENTS_OPPOSING[self.ri_gan_element], 0) > 3
+                        and self.elements_count.get(self.opposing_element, 0) > 3
                     )
                 or
                 # 日干强，伤官轻，而又多印

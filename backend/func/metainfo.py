@@ -109,6 +109,9 @@ class MetaInfo:
             [self.nian_zhi_element, self.yue_zhi_element, self.ri_zhi_element, self.shi_zhi_element]
         ] = self.elements_matrix
 
+        # 命主克制的五行
+        self.opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
+
         self.all_elements = [
             self.nian_gan_element, self.nian_zhi_element,
             self.yue_gan_element, self.yue_zhi_element,

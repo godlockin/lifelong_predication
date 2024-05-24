@@ -369,7 +369,7 @@ class LordGods(BaZiElements):
                     "element": element,
                     "yinyang": YIN_YANG_SWAP[self_yin_yang]
                 })
-            elif element == ELEMENTS_OPPOSING[self.ri_gan_element]:
+            elif element == self.opposing_element:
                 result[key].append({
                     "name": "偏财",
                     "element": element,

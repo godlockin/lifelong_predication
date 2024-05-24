@@ -786,6 +786,20 @@ class GeJiao(DemigodExplain):
         self.explanation = "易有牢狱之灾，六亲缘份较淡薄。"
 
 
+class WuGuiYunCai(DemigodExplain):
+    def __init__(self, demigods, lord_gods):
+        super().__init__(demigods, lord_gods)
+        self.name = "五鬼运财"
+        self.type = ""
+        self.explanation = f"""
+        日柱神煞犯五鬼官符者，一生较易惹上小人、是非、害破等事。
+        大运逢正财或偏财者，大运干支，一字管五年之行运，若此大运正逢偏财运，或正财运，运用五鬼运财法，效果倍增。
+        大运同样偏财运胜过正财运，天干偏财胜于地支偏财大运。
+        优异的时机下进行五鬼运财法，必然如移山倒海，势如破竹般的财源滚滚而来。
+        想使用五鬼运财法之人，八字必须具备财星，且不可日柱出现魁罡者，方能致效、灵验。
+        """
+
+
 class SangMen(DemigodExplain):
     def __init__(self, demigods, lord_gods):
         super().__init__(demigods, lord_gods)

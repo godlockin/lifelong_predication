@@ -30,6 +30,7 @@ class FinanceStorage(LordGods):
             ('无', False): '财无无库，收入不高也容易漏财，不容易存钱。',
         }
         self.finance_hour_append = self.check_if_finance_hour()
+        self.finance_gan_zhi = self.calc_finance_gan_zhi()
 
     def __str__(self):
         msg = f"{super().__str__() if self.meta_info_display else ''}"
@@ -45,16 +46,13 @@ class FinanceStorage(LordGods):
 
         self_strength_key = (self.self_strong, self.finance_strength_statement['finance_strength'])
         finance_storage_key = (
-        self.finance_strength_statement['finance_strength'], self.finance_strength_statement['storage_exists'])
+            self.finance_strength_statement['finance_strength'], self.finance_strength_statement['storage_exists'])
         msg += f'''
         命主日元：{self.ri_gan}，财为：{self.finance_strength_statement['wealth_element']}
         日元：{'强' if self.self_strong else '弱'}，财：{self.finance_strength_statement['finance_strength']}
         {self.self_strong_finance_mapping[self_strength_key]}
         财库为：{self.finance_strength_statement['wealth_storage']}，{'存在' if self.finance_strength_statement['storage_exists'] else '不存在'}于命局中，{'有' if self.finance_strength_statement['storage_exists'] else '无'}财库。
         {self.finance_storage_mapping[finance_storage_key]}
-        '''
-
-        msg += f'''
         {self.finance_supporting_status}
         '''
 
@@ -69,6 +67,10 @@ class FinanceStorage(LordGods):
         {shi_chen_append['description']}
         """
 
+        msg += f"""
+        财运最旺的干支组合：{self.finance_gan_zhi[0]}
+        旺财方位：{self.finance_gan_zhi[1]}
+        """
         return msg
 
     def calc_finance_month(self):
@@ -339,6 +341,80 @@ class FinanceStorage(LordGods):
             },
         }
         return conditions[self.shi_chen]
+
+    def calc_finance_gan_zhi(self):
+        # 身强则用日元所克制的五行，身弱则用印枭比劫的五行
+        if self.self_strong or 40 <= self.self_score <= 60:
+            index_elements = [self.opposing_element]
+        else:
+            index_elements = [SWAPPED_ELEMENTS_SUPPORTING[self.ri_gan_element], self.ri_gan_element]
+
+        finance_gan = []
+        for item in GAN_DETAILS.items():
+            if item[1]['element'] not in index_elements:
+                continue
+
+            positive = True
+            tmp_gan = item[0]
+            for gan in self.all_gan:
+                if TIAN_GAN_CHONG_MAPPING.get(tmp_gan, '') == gan:
+                    positive = False
+                    continue
+
+                for he in TIAN_GAN_HE:
+                    if tmp_gan in he[0] and gan in he[0]:
+                        if he[1] in self.opposing_element:
+                            positive = False
+                            break
+            if positive:
+                finance_gan.append(item)
+
+        finance_zhi = []
+        for item in ZHI_DETAILS.items():
+            if item[1]['element'] not in index_elements:
+                continue
+
+            positive = True
+            tmp_zhi = item[0]
+            for zhi in self.all_zhi:
+                # 刑、冲、害
+                if (
+                    DI_ZHI_CHONG_MAPPING.get(tmp_zhi, '') == zhi
+                    or
+                    DI_ZHI_HAI_MAPPING.get(tmp_zhi, '') == zhi
+                    or
+                    (
+                        len([xing for xing in DI_ZHI_XING if tmp_zhi in xing and zhi in xing]) > 0
+                    )
+                ):
+                    positive = False
+                    continue
+
+                # 拱会
+                for hui in DI_ZHI_GONG_HUI:
+                    if tmp_zhi in hui[0] and zhi in hui[0]:
+                        if hui[1] in self.opposing_element:
+                            positive = False
+                            break
+
+                if not positive:
+                    continue
+
+                # 拱合
+                for he in DI_ZHI_GONG_HE:
+                    if tmp_zhi in he[0] and zhi in he[0]:
+                        if he[1] in self.opposing_element:
+                            positive = False
+                            break
+
+                if not positive:
+                    continue
+
+            if positive:
+                finance_zhi.append(item)
+
+        return [f"{gan[0]}{zhi[0]}" for zhi in finance_zhi for gan in finance_gan if gan[1]['element'] == zhi[1]['element']], \
+            []
 
 
 if __name__ == "__main__":

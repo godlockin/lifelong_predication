@@ -113,7 +113,6 @@ class TenYearsLuck(LordGods):
 
     def build_ten_years_luck_details(self):
         ten_years_luck_details = {}
-        opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
         for idx, item in enumerate(self.ten_years_luck_gan_zhi):
             gan_element = GAN_DETAILS[item[0]]['element']
             zhi_element = ZHI_DETAILS[item[1]]['element']
@@ -135,7 +134,7 @@ class TenYearsLuck(LordGods):
                 'zhi_final_score': self.self_score + zhi_delta,
                 'gan_support': self.elements_relationships_mapping[gan_element],
                 'zhi_support': self.elements_relationships_mapping[zhi_element],
-                'is_finance': opposing_element == gan_element,
+                'is_finance': self.opposing_element == gan_element,
             }
         return ten_years_luck_details
 

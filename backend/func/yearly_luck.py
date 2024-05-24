@@ -22,7 +22,6 @@ class YearlyLuck(TenYearsLuck):
 
         self.lord_god_explain = LordGodExplain(self)
         self.lord_god_explain.init_explanation()
-        self.opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
 
         self.yearly_luck_items = self.build_yearly_luck_items()
         self.yearly_luck_list = sorted(self.yearly_luck_items.items(), key=lambda x: x[0])
