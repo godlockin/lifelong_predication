@@ -121,6 +121,18 @@ class MetaInfo:
 
         self.elements_count = Counter(self.all_elements)
 
+        (
+            self.nian_sound,
+            self.yue_sound,
+            self.ri_sound,
+            self.shi_sound
+         ) = (
+            GAN_ZHI_SOUND_MAPPING[self.nian_zhu],
+            GAN_ZHI_SOUND_MAPPING[self.yue_zhu],
+            GAN_ZHI_SOUND_MAPPING[self.ri_zhu],
+            GAN_ZHI_SOUND_MAPPING[self.shi_zhu]
+        )
+
         # 农历生日
         self.lunar_of_input_datetime = datetime(self.lunar_year, self.lunar_month, self.lunar_day)
         self.lunar_of_input_datetime_str = f"{get_year_chinese_name(self.lunar_year)}年，{'闰' if self.leap else ''}{CHINESE_MONTH_NAME[self.lunar_month - 1]}月{get_day_chinese_name(self.lunar_day)}日"
@@ -138,6 +150,8 @@ class MetaInfo:
         {self.nian_gan}（{self.nian_gan_element}）  {self.yue_gan}（{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_element}）      {self.shi_gan}（{self.shi_gan_element}）
         年支     月令      日支          时支
         {self.nian_zhi}（{self.nian_zhi_element}）  {self.yue_zhi}（{self.yue_zhi_element}）   {self.ri_zhi}（{self.ri_zhi_element}）      {self.shi_zhi}（{self.shi_zhi_element}）
+        纳音：
+        {self.nian_sound}   {self.yue_sound}    {self.ri_sound}     {self.shi_sound}
         '''
 
         return msg
