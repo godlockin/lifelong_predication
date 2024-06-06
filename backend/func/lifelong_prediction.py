@@ -44,6 +44,7 @@ class LifePrediction(MetaInfo):
         self.yearly_luck = YearlyLuck(**kwargs)
 
         self.nine_stars = NineStars(
+            base_datetime=datetime.now().astimezone(pytz.timezone('Asia/Shanghai')),
             self_element=self.ba_zi_elements.primary_element,
         )
 
