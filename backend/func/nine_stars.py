@@ -58,7 +58,7 @@ class NineStars(BaZiElements):
         return tmp_idx
 
     def calc_target_idx_mapping(self):
-        target_year = self.input_datetime.year
+        target_year = self.lunar_of_input_datetime.year
         delta = target_year - self.base_idx_mapping[0]
 
         return {

@@ -109,6 +109,20 @@ class MetaInfo:
             [self.nian_zhi_element, self.yue_zhi_element, self.ri_zhi_element, self.shi_zhi_element]
         ] = self.elements_matrix
 
+        [
+            [self.nian_gan_yinyang, self.yue_gan_yinyang, self.ri_gan_yinyang, self.shi_gan_yinyang],
+            [self.nian_zhi_yinyang, self.yue_zhi_yinyang, self.ri_zhi_yinyang, self.shi_zhi_yinyang]
+        ] = [
+            [GAN_DETAILS[self.nian_gan]['yinyang'], GAN_DETAILS[self.yue_gan]['yinyang'], GAN_DETAILS[self.ri_gan]['yinyang'], GAN_DETAILS[self.shi_gan]['yinyang']],
+            [ZHI_DETAILS[self.nian_zhi]['yinyang'], ZHI_DETAILS[self.yue_zhi]['yinyang'], ZHI_DETAILS[self.ri_zhi]['yinyang'], ZHI_DETAILS[self.shi_zhi]['yinyang']]
+        ]
+
+        self.all_negative = (
+            all('阴' == item for item in [self.nian_gan_yinyang, self.yue_gan_yinyang, self.ri_gan_yinyang, self.shi_gan_yinyang])
+            and
+            all('阴' == item for item in [self.nian_zhi_yinyang, self.yue_zhi_yinyang, self.ri_zhi_yinyang, self.shi_zhi_yinyang])
+        )
+
         # 命主克制的五行
         self.opposing_element = ELEMENTS_OPPOSING[self.ri_gan_element]
 
@@ -147,11 +161,12 @@ class MetaInfo:
         八字：{self.ba_zi}
         生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
         年干     月干      日干（{"男" if self.is_male else "女"}主）    时干
-        {self.nian_gan}（{self.nian_gan_element}）  {self.yue_gan}（{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_element}）      {self.shi_gan}（{self.shi_gan_element}）
+        {self.nian_gan}（{self.nian_gan_element}/{self.nian_gan_yinyang}）  {self.yue_gan}（{self.yue_gan_element}/{self.yue_gan_yinyang}）   {self.ri_gan}（{self.ri_gan_element}/{self.ri_gan_yinyang}）      {self.shi_gan}（{self.shi_gan_element}/{self.shi_gan_yinyang}）
         年支     月令      日支          时支
-        {self.nian_zhi}（{self.nian_zhi_element}）  {self.yue_zhi}（{self.yue_zhi_element}）   {self.ri_zhi}（{self.ri_zhi_element}）      {self.shi_zhi}（{self.shi_zhi_element}）
+        {self.nian_zhi}（{self.nian_zhi_element}/{self.nian_zhi_yinyang}）  {self.yue_zhi}（{self.yue_zhi_element}/{self.yue_zhi_yinyang}）   {self.ri_zhi}（{self.ri_zhi_element}/{self.ri_zhi_yinyang}）      {self.shi_zhi}（{self.shi_zhi_element}/{self.shi_zhi_yinyang}）
         纳音：
         {self.nian_sound}   {self.yue_sound}    {self.ri_sound}     {self.shi_sound}
+        {'*纯阴八字遇见灵异事件的概率较高' if self.all_negative else ''}
         '''
 
         return msg
