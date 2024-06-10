@@ -87,6 +87,8 @@ class MetaInfo:
         self.zodiac_zhi = get_zhi_of_year(self.lunar_year)
         # 生肖五行
         self.zodiac_element = ZHI_DETAILS[self.zodiac_zhi]['element']
+        # 生肖阴阳
+        self.zodiac_yinyang = ZHI_DETAILS[self.zodiac_zhi]['yinyang']
 
         # 八字
         self.ba_zi = get_ba_zi_for_datetime(self.lunar_year, self.lunar_month, self.input_datetime)
@@ -159,11 +161,11 @@ class MetaInfo:
         生日：{self.input_datetime_str}
         农历：{self.lunar_of_input_datetime_str}({self.lunar_of_input_datetime.strftime('%Y-%m-%d')} {self.shi_chen}时)
         八字：{self.ba_zi}
-        生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_element}）
+        生肖：{self.zodiac}（{self.zodiac_zhi}:{self.zodiac_yinyang}{self.zodiac_element}）
         年干     月干      日干（{"男" if self.is_male else "女"}主）    时干
-        {self.nian_gan}（{self.nian_gan_element}/{self.nian_gan_yinyang}）  {self.yue_gan}（{self.yue_gan_element}/{self.yue_gan_yinyang}）   {self.ri_gan}（{self.ri_gan_element}/{self.ri_gan_yinyang}）      {self.shi_gan}（{self.shi_gan_element}/{self.shi_gan_yinyang}）
+        {self.nian_gan}（{self.nian_gan_yinyang}{self.nian_gan_element}）  {self.yue_gan}（{self.yue_gan_yinyang}{self.yue_gan_element}）   {self.ri_gan}（{self.ri_gan_yinyang}{self.ri_gan_element}）      {self.shi_gan}（{self.shi_gan_yinyang}{self.shi_gan_element}）
         年支     月令      日支          时支
-        {self.nian_zhi}（{self.nian_zhi_element}/{self.nian_zhi_yinyang}）  {self.yue_zhi}（{self.yue_zhi_element}/{self.yue_zhi_yinyang}）   {self.ri_zhi}（{self.ri_zhi_element}/{self.ri_zhi_yinyang}）      {self.shi_zhi}（{self.shi_zhi_element}/{self.shi_zhi_yinyang}）
+        {self.nian_zhi}（{self.nian_zhi_yinyang}{self.nian_zhi_element}）  {self.yue_zhi}（{self.yue_zhi_yinyang}{self.yue_zhi_element}）   {self.ri_zhi}（{self.ri_zhi_yinyang}{self.ri_zhi_element}）      {self.shi_zhi}（{self.shi_zhi_yinyang}{self.shi_zhi_element}）
         纳音：
         {self.nian_sound}   {self.yue_sound}    {self.ri_sound}     {self.shi_sound}
         {'*纯阴八字遇见灵异事件的概率较高' if self.all_negative else ''}
