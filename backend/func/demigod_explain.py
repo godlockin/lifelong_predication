@@ -1,4 +1,7 @@
-from backend.constants.constants import *
+from backend.constants.constants import (
+    DI_ZHI_HE,
+    DI_ZHI_SAN_HE,
+)
 
 
 class DemigodExplain:
@@ -85,7 +88,7 @@ class DemigodExplain:
         )
 
     def get_demigod_explain(self, demigod_list):
-        return [self.demigod_explain_mapping[item] for item in demigod_list]
+        return [self.demigod_explain_mapping[item] for item in demigod_list if item in self.demigod_explain_mapping]
 
     def demigod_exist_position_for_age_stages(self, idx_name):
         exists_position_stage_mapping = []
@@ -105,7 +108,7 @@ class TianDeGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天德贵人"
         self.type = "护身神煞"
-        self.explanation = f"""
+        self.explanation = """
         天有神助，遇难呈祥，化险为夷。如果天德月德并存，其人多一生如意，荣华富贵，在社会上能获得很高的名誉地位，少凶灾横祸。
         如果在日柱，意味着嫁贵夫/娶仙妻。
         """
@@ -116,7 +119,7 @@ class TianChu(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天厨"
         self.type = "食神禄"
-        self.explanation = f"""
+        self.explanation = """
         天厨又名「食神禄」，先贤陆位亦说:「天厨，宜食禀」，食禀是藏食粮的仓库。
         天厨乃食神建禄之宫，食神是人命福星，食神既能得禄，其福必厚，故谓之天厨。
         天厨入命的人，如不逢刑冲克破空亡，一生不愁吃穿，食禄不虞匮乏，可以享降天之禄、得天赐之福，古人谓之“衣食无忧，福禄满堂”。
@@ -130,7 +133,7 @@ class YueDeGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "月德贵人"
         self.type = "护身神煞"
-        self.explanation = f"""
+        self.explanation = """
         天有神助，遇难呈祥，化险为夷。
         月德贵人同天乙贵人一样，是一颗很好的吉星，命主在命局中逢上带有月德贵人，一生处世无忧，化险为夷，平生很少生病，不犯官刑。
         但需要注意的是，月德是勤勉敏慧之徳星，虽然命主身带此吉星，也需本身勤勉自助，才能在紧要关头获得帮助。
@@ -145,7 +148,7 @@ class JiuChou(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "九丑"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         此煞名“丑”，不是指容貌不好看，相反的，此日生者大多容貌美丽，或很有吸引人的魅力。
         其所以名“丑”，是指名声方面的风评，因感情的事容易出问题，严重的可能会惹上法律纠纷，名声受损。
         """
@@ -156,7 +159,7 @@ class TianYiGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天乙贵人"
         self.type = "最吉神煞"
-        self.explanation = f"""
+        self.explanation = """
         人命有天乙贵人，遇事有人帮，临难有人解，是化险为夷最有力的贵人之星。
         解难神煞、贵人相助、雪中送炭、做事容易成功。后天际遇中的提携、解厄之神，若人遇之则荣名早达，成事多助，官禄易进。
         天乙贵人：人缘、社交缘、异性缘、长辈缘。
@@ -177,7 +180,7 @@ class WenChangGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "文昌贵人"
         self.type = "学业神煞"
-        self.explanation = f"""
+        self.explanation = """
         气质雅秀，举止斯文，好学新知，有上进心。一生近官利贵，不与粗俗之辈乱交。
         文昌多取食神之临官为贵, 为食神建禄之称。文昌入命,主聪明过人,又主化险为夷。气质雅秀,举止温文,男命逢着内涵,女命逢着仪容得体；具有上进心，不与粗俗之辈乱交朋友。
         文昌逢合为喜：富加且贵。文昌逢合为忌：多见忙碌，劳苦功高。文昌坐旺地：身体健康，幸福如意，利考试，贵气十足。文昌逢刑冲：劳累辛苦。
@@ -218,7 +221,7 @@ class YiMa(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "驿马"
         self.type = "奔波，出门，车辆信息之神"
-        self.explanation = f"""
+        self.explanation = """
         驿马星，主人多出门奔波，有贵人相助，事业有成，财运亨通。
         代表这个人一生走动多、远行、会出远门。一生驿马运重，即使是在一个地方，也经常会忙个不停，这些都是驿马的作用。
         驿马坐旺地：利禄亨通。驿马为喜用：心高气爽，动则有喜。四柱财官有力，真好马也。
@@ -260,16 +263,16 @@ class YiMa(DemigodExplain):
 
         if ('文昌贵人' in self.demigods.all_demigod
                 and self.demigods.all_demigod.index('文昌贵人') == self.demigods.all_demigod.index(self.name) + 1):
-            result += f"""
-        文昌贵人在驿马之后，说明这辆车的档次挺高的。\n
+            result += """
+        文昌贵人在驿马之后，说明这辆车的档次挺高的。
         """
 
         if ('劫煞' in self.demigods.all_demigod
                 and self.demigods.all_demigod.index('劫煞') == self.demigods.all_demigod.index(self.name) + 1):
-            result += f"""
-        劫煞在驿马之后，说明这辆车可能会被偷。\n
+            result += """
+        劫煞在驿马之后，说明这辆车可能会被偷。
         """
-        return result
+        return result + "\n"
 
 
 class TaiJiGuiRen(DemigodExplain):
@@ -277,7 +280,7 @@ class TaiJiGuiRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "太极贵人"
         self.type = "贵人神煞"
-        self.explanation = f"""
+        self.explanation = """
         主人聪明好学，文采飞扬，好奇心重，喜欢神秘事物。
         命中带有太极贵人的八字，可以事职平顺亨通、福禄兼得，事情能够化险为夷，一生多得贵人相助，晚年可以幸福安逸，太极贵人可以说是一颗非常珍贵的吉星。
         """
@@ -297,7 +300,7 @@ class HuaGai(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "华盖"
         self.type = "半吉半凶"
-        self.explanation = f"""
+        self.explanation = """
         孤独内向的 i 人，爱干净整洁，有可能有洁癖，有艺术细胞，与佛道有缘，有皈依的念头。
         运气不佳，比较被动。山、医、命、相、卜有一技之长。
         命带丑与佛有缘，未与道教有缘，戌、辰为散仙。
@@ -323,7 +326,7 @@ class TaoHua(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "桃花"
         self.type = "花心之神"
-        self.explanation = f"""
+        self.explanation = """
         贞操观念差，容易和多个异性发生关系。自己不用很出众，但是会有很多人愿意扑。
         命带桃花，其人聪明，有同情心，爱风骚，多才艺。桃花处于升旺之地时，其主任帅气/俊美。
         男命慷慨好交游，喜美色；女命风情万种，漂亮诱人。
@@ -497,7 +500,7 @@ class JieSha(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "劫煞"
         self.type = "凶神"
-        self.explanation = f"""
+        self.explanation = """
         主是非、破财、主病伤刑法之灾，有时东西会找不到。
         劫煞主人勇敢不怕死，若日元强旺，又带劫煞，可以从事武职、军警等带杀气带职业
         劫煞主意外危难、健康、刑法上面的问题。为喜具有竞争心，肯求上进，做事有魄力，敢担当。
@@ -534,7 +537,7 @@ class ZaiSha(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "灾煞"
         self.type = "最凶的神煞"
-        self.explanation = f"""
+        self.explanation = """
         命中逢灾煞，经常厄运缠身。主疾病、官司、牢狱、破财。
         灾煞也叫“白虎煞”，其性勇猛，冲破将星，谓之灾煞。
         此煞主人身意外，根据所处五行支，在水火，防焚溺，金木，杖刃；土，坠落瘟疫。
@@ -566,7 +569,7 @@ class XueRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "血刃"
         self.type = "身体伤害"
-        self.explanation = f"""
+        self.explanation = """
     主血光之灾。容易遇到意外，开刀、住院。对尖锐物品比常人敏感，轻者皮肉伤折，重者生死意外。
     1、八字日元身强又逢血刃其人较易因意外事故而见血光。
     2、八字日元身弱又逢血刃的人则较易因病灾开刀而见血光。
@@ -610,7 +613,7 @@ class XueRen(DemigodExplain):
         if self.demigods.all_demigod.count(self.name) >= 2:
             result += "血刃过多：血光之灾概率上升。"
             if (
-                    not '正印' in self.lord_gods.all_lord_gods
+                    '正印' not in self.lord_gods.all_lord_gods
                     or
                     not any('贵人' in item for item in self.demigods.all_demigod)
             ):
@@ -635,7 +638,7 @@ class TianDeHe(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天德合"
         self.type = "逢凶化吉之神"
-        self.explanation = f"""
+        self.explanation = """
         最大的特点是化解灾厄。天月德助，处世无殃。能把遇到凶险转化为吉祥、顺利，随处保护。
         命带天德贵人者会遇到很大的福德，其人心地善良，身体健康，人缘好，在生平之中较不会遇到横祸、盗难、灾劫等，纵使逢之也能适时得以化解。
         天月德助，处世无殃。能把遇到凶险转化为吉祥、顺利，随处保护。天地德秀之气，其特点是化解危难。
@@ -651,7 +654,7 @@ class GuoYin(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "国印贵人"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         主人诚实可靠, 严守清规, 照章行事, 办事公道。 为人和悦,礼义仁慈, 气质轩昂。
         如国印逢生旺, 有其它吉星相助, 不逢冲破克害, 不仅可以有掌印之能, 可亦为官掌实权。
         亦主一生工作，生活环境多动，若流年岁运逢之即主工作变动或家庭搬迁。
@@ -671,7 +674,7 @@ class JiangXing(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "将星"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         易掌握权势，较有老板或主管之命。
         将星跟权力地位有关，命带将星的人，给人不可侵犯的感觉，很自然的散发出一种无形、难以言喻的权威感，让人望而生敬。
         很多做官的人或工商高层主管八字里面大都带有将星，所以也称为将权，八字带有将星，称做将权入命。
@@ -694,7 +697,7 @@ class YangRen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "羊刃"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         性情刚强，敢作敢为，为人精明，配合得宜能得大富贵。
         羊刃是一种很强硬的气力，但它不一定是凶恶的，必须看八字中的整体组合。
         假如一个人的八字很弱，羊刃可以起到很大的匡助作用，比如你贫穷困难时，羊刃就是一个强有力的兄弟，能帮助和支持你；假如八字比较旺，再来羊刃的话就危险了，缺乏适当制约的话，他会与你争夺，劫财。
@@ -711,7 +714,7 @@ class HongYan(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "红艳"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         命带红艳，男女长相讨人喜欢，带有性感的魅力。
         红艳煞是桃花的一种。
         命见红艳煞不见得有多漂亮，但风流多情，好美色人命犯之,多数有外遇桃花，男女感情方面他把控的不太好，容易有纠纷。
@@ -732,7 +735,7 @@ class LiuXia(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "流霞"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         男忌酒色，女小心产厄。
         流霞逢冲：易犯人身意外。男命：酒色。女命：分娩方面的意外。
         古人称血煞。轻者可能会有皮肉之伤，健康方面的问题，重者可能会有人身意外。
@@ -747,7 +750,7 @@ class WangShen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "亡神"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         城府较深，比较有心机，喜怒哀乐，不形於色。
         亡神若为命局中所喜用的地支，并与吉神同柱，则会沉稳干练，谋略深算，严谨有威，好胜心强。
         如果恰为命局所忌的地支，又与其它凶煞同柱，则性情中存在着虚伪掩饰的成分，家业容易不顺，影响置业和储蓄；
@@ -767,7 +770,7 @@ class GuaSu(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "寡宿"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         女命犯之夫早别离，独守空闺。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。
         男命怕孤辰落在财星之地，或日主的死绝之方。女命怕寡宿落在夫星之地，或日主的死绝之方。
         这现像造成缘份难偕久之憾，难免刑克，内心容易伤感，尤其是孤寡入命又见空亡的八字，一生比较孤单。八字忌孤辰、寡宿同时入命。
@@ -791,7 +794,7 @@ class WuGuiYunCai(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "五鬼运财"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         日柱神煞犯五鬼官符者，一生较易惹上小人、是非、害破等事。
         大运逢正财或偏财者，大运干支，一字管五年之行运，若此大运正逢偏财运，或正财运，运用五鬼运财法，效果倍增。
         大运同样偏财运胜过正财运，天干偏财胜于地支偏财大运。
@@ -805,7 +808,7 @@ class SangMen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "丧门"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         避免观丧，探病。
         年支前两位为丧门，比如巳年生人，前两位未就是丧门，后两位卯就是吊客，后三位寅就是批麻。
         披麻、吊客、丧门皆为凶星。如大运、流年遇之，多主人身意外，伤病等事出现，也不容易聚财。
@@ -817,7 +820,9 @@ class DiaoKe(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "吊客"
         self.type = ""
-        self.explanation = "表示可能不太利于亲人。 一般代表亲人出现意外，有伤病、最严重的就是去世。 而如果大运流年遇见了，也要多加小心。"
+        self.explanation = """
+        表示可能不太利于亲人。 一般代表亲人出现意外，有伤病、最严重的就是去世。 而如果大运流年遇见了，也要多加小心。
+        """
 
 
 class PiMa(DemigodExplain):
@@ -825,7 +830,7 @@ class PiMa(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "披麻"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         披麻戴孝的意思。如果犯了披麻星，也就意味着会幼年失去双亲，或者亲人会离开。所以结婚莫逢披麻星，盖房莫盖披麻屋。
         年支前两位为丧门，比如巳年生人，前两位未就是丧门，后两位卯就是吊客，后三位寅就是批麻。
         披麻、吊客、丧门皆为凶星。如大运、流年遇之，多主人身意外，伤病等事出现，也不容易聚财。
@@ -837,7 +842,9 @@ class SuiPo(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "岁破"
         self.type = ""
-        self.explanation = "八字逢之，较易有意外破财之事发生。"
+        self.explanation = """
+        八字逢之，较易有意外破财之事发生。
+        """
 
 
 class PoSui(DemigodExplain):
@@ -942,7 +949,7 @@ class JinYu(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "金舆"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         财帛之星和配偶相关联，会受到配偶之财帛、技术之相助。
         日坐金舆：能得异性之助；命带金舆：得祖荫。又称金舆禄神，此星入命能得扶助，一生能得富贵。
         女人逢之，幸福安吉、骨肉安泰。
@@ -956,7 +963,7 @@ class LuShen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "禄神"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         人际社交广阔，财禄丰足，避免借贷担保，可避免诉讼。
         身旺见禄，喜见财官。身弱喜禄而逢死绝遭刑冲，又逢吉祥救应，家运可能不太顺利，容易影响到置产、家人之间的关系；同时在求财方面也较为困难。
         在年月为“建禄”，四柱天干要见财官，“建禄生是月，财官喜透天”也。透财，富。透官，贵。
@@ -997,7 +1004,7 @@ class TianYi(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "天医"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         学习力、理解力、观察力、模仿力、好奇心、研究心、直觉观等能力皆强。适合学医，包括中/西医、心理医生，卜卦算命等。
         天医是掌管疾病之事的星神。四柱逢天医,如不旺,又无贵人吉神相扶,不利于身体健康，容易身弱无力。
         若生旺又有贵人相生助,不仅身体健壮,而且特别适合从事医学、心理学、哲学等。学习力、理解力、观察力、模仿力、好奇心、研究心、直觉观等能力皆强。
@@ -1033,7 +1040,7 @@ class GuChen(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "孤辰"
         self.type = ""
-        self.explanation = f"""
+        self.explanation = """
         性格孤僻沉默不语、清心寡欲、依恋安逸、没有上进心。命犯孤辰寡宿，主形孤肉露，面无与气，不利六亲，婚姻不顺。
         男命怕孤辰落在财星之地，或日主的死绝之方。女命怕寡宿落在夫星之地，或日主的死绝之方。
         这现像造成缘份难偕久之憾，难免刑克，内心容易伤感，尤其是孤寡入命又见空亡的八字，一生比较孤单。八字忌孤辰、寡宿同时入命。
@@ -1078,7 +1085,7 @@ class TongZi(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "童子"
         self.type = "弱凶神（不利婚姻）"
-        self.explanation = f"""
+        self.explanation = """
         童子命的人婚姻不利，晚婚，或无婚恋，痴迷爱情的倒不多，
         因为根本就不会谈恋爱，一谈就吹，或者有人追、自己会谈也不行，一谈就出意外，
         即使硬撮合的也会因故而分手，多次离婚，更有概率一结婚或一破身就生病。
@@ -1092,7 +1099,7 @@ class GuLuan(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "孤鸾煞"
         self.type = "弱凶神（不利婚姻）"
-        self.explanation = f"""
+        self.explanation = """
         又名“呻吟煞”。夫妻多纷争。
         命犯孤鸾煞，主婚姻不顺。孤鸾犯日本无儿，一见官星得子奇，运遇旺乡名姐妹，临风惆怅绿楼时。
         男命：婚姻中不太懂的相处，和妻子不和睦，可能会出现外遇事件。
@@ -1106,7 +1113,7 @@ class ShiEDaBai(DemigodExplain):
         super().__init__(demigods, lord_gods)
         self.name = "十恶大败"
         self.type = "大凶神"
-        self.explanation = f"""
+        self.explanation = """
         十恶，就是大凶；大败，就是临阵怯敌，大败而归。没有”俸禄“，做不了公职人员，容易被裁员/提前退休。花钱如流水，难以聚财。
         十恶大败其实是说六甲旬中有十个忌日。这十日主“仓库的金银化为灰尘”不会持家过日子花钱如流水。
         """
