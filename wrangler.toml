@@ -19,7 +19,8 @@ DEFAULT_LONGITUDE = "120"
 #   wrangler secret put ADMIN_PASSWORD
 
 # D1 数据库配置
-[[d1_databases]]
-binding = "DB"
-database_name = "life-fortune-db"
-database_id = ""  # 运行 wrangler d1 create life-fortune-db 后填写此ID
+# 暂时注释，部署成功后在 Cloudflare Dashboard 的 Worker Settings → Bindings 中手动绑定
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "life-fortune-db"
+# database_id = ""  # 运行 wrangler d1 create life-fortune-db 后填写此ID
