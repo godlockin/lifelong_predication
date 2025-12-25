@@ -54,17 +54,6 @@ function parseLocalDateTime(dateString) {
 // 启用CORS
 app.use('/*', cors());
 
-// 首页 - 欢迎信息
-app.get('/', (c) => {
-    return c.json({
-        message: '欢迎使用命理测算系统 API',
-        description: '八字命理 + 紫微斗数 + AI润色',
-        version: '1.0.0',
-        documentation: '/api',
-        ui: '/public/index.html (部署后可用)'
-    });
-});
-
 // API健康检查
 app.get('/api', (c) => {
     const config = getConfig(c.env);
@@ -584,6 +573,44 @@ app.get('/admin/records/:id', adminAuth, async (c) => {
     } catch (error) {
         return c.json({ error: error.message }, 500);
     }
+});
+
+// ==================== 静态文件处理（放在所有路由最后作为fallback） ====================
+
+// 处理所有未匹配的路由 - 尝试返回静态文件
+app.get('*', async (c) => {
+    const url = new URL(c.req.url);
+    const pathname = url.pathname;
+
+    // 如果是根路径，返回 index.html
+    if (pathname === '/') {
+        try {
+            const indexUrl = new URL('/index.html', url.origin);
+            const asset = await c.env.ASSETS.fetch(indexUrl.toString());
+            if (asset.ok) {
+                return new Response(asset.body, {
+                    headers: asset.headers
+                });
+            }
+        } catch (e) {
+            console.error('Failed to fetch index.html:', e);
+        }
+    }
+
+    // 尝试返回请求的静态文件
+    try {
+        const asset = await c.env.ASSETS.fetch(c.req.url);
+        if (asset.ok) {
+            return new Response(asset.body, {
+                headers: asset.headers
+            });
+        }
+    } catch (e) {
+        console.error('Failed to fetch asset:', e);
+    }
+
+    // 如果静态文件不存在，返回 404
+    return c.json({ error: 'Not found' }, 404);
 });
 
 export default app;
