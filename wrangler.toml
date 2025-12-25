@@ -3,8 +3,9 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# 静态资源目录（使用新的 assets 配置）
-assets = { directory = "./public", binding = "ASSETS" }
+# 静态资源目录
+[assets]
+directory = "./public"
 
 [vars]
 AI_MODEL = "gemini-3.0-flash"
