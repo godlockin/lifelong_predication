@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命理测算系统 - 八字·紫微·AI</title>
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --secondary: #ec4899;
+            --accent: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e1b4b 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input,
+        select {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        /* 城市搜索自动补全 */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            margin-top: 0.25rem;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .autocomplete-results.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background: var(--bg-dark);
+        }
+
+        .autocomplete-item.selected {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .autocomplete-item .city-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .autocomplete-item .city-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .no-results {
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Flatpickr 自定义样式 */
+        .flatpickr-input {
+            cursor: pointer;
+        }
+
+        .flatpickr-calendar {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .flatpickr-months {
+            background: var(--bg-dark) !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            color: var(--text-primary) !important;
+            background: var(--bg-dark) !important;
+        }
+
+        .flatpickr-weekdays {
+            background: var(--bg-dark) !important;
+        }
+
+        .flatpickr-weekday {
+            color: var(--text-secondary) !important;
+        }
+
+        .flatpickr-day {
+            color: var(--text-primary) !important;
+            border-color: var(--border) !important;
+        }
+
+        .flatpickr-day:hover:not(.flatpickr-disabled) {
+            background: rgba(139, 92, 246, 0.2) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .flatpickr-day.selected {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: white !important;
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--secondary) !important;
+        }
+
+        .flatpickr-time input {
+            color: var(--text-primary) !important;
+            background: var(--bg-dark) !important;
+        }
+
+        .flatpickr-time .flatpickr-time-separator,
+        .flatpickr-time .flatpickr-am-pm {
+            color: var(--text-secondary) !important;
+        }
+
+        .numInput:hover,
+        .flatpickr-monthDropdown-months:hover {
+            background: rgba(139, 92, 246, 0.1) !important;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .result-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bazi-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .pillar {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e1b4b 100%);
+            border: 2px solid var(--primary);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .pillar-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pillar-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .info-item {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .badge-info {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .report-text {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            background: var(--bg-dark);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .bazi-display {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ 命理测算系统</h1>
+            <p class="subtitle">八字命理 + 紫微斗数 + AI智能解读</p>
+        </header>
+
+        <div class="card">
+            <h2 class="card-title">📅 输入出生信息</h2>
+            <form id="fortuneForm">
+                <div class="form-group">
+                    <label for="birthDateTime">出生日期时间</label>
+                    <input type="text" id="birthDateTime" placeholder="选择出生日期和时间..." required readonly>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="city">出生城市</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="city" placeholder="输入城市名搜索..." autocomplete="off">
+                            <div class="autocomplete-results" id="cityResults"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">性别</label>
+                        <select id="gender" required>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    开始测算
+                </button>
+            </form>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="card">
+                <h2 class="card-title">🎯 八字命盘</h2>
+                <div class="bazi-display" id="baziDisplay"></div>
+
+                <div class="info-grid" id="basicInfo"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">🔮 命理分析</h2>
+                <div id="analysisContent"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">📜 AI解读报告</h2>
+                <div class="report-text" id="reportText"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>命理测算仅供参考 · 人生掌握在自己手中</p>
+        </footer>
+    </div>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+
+    <script>
+        let citiesData = [];
+        let selectedCityData = null;
+        let selectedResultIndex = -1;
+        let birthDateTimePicker = null;
+
+        // 初始化 Flatpickr 日期时间选择器
+        function initDateTimePicker() {
+            birthDateTimePicker = flatpickr("#birthDateTime", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                locale: "zh",
+                defaultDate: new Date(),
+                maxDate: new Date(),
+                minuteIncrement: 1,
+                defaultHour: 12,
+                defaultMinute: 0,
+                allowInput: false,
+                theme: "dark"
+            });
+        }
+
+        // 加载城市列表
+        async function loadCities() {
+            try {
+                const response = await fetch('/cities');
+                const data = await response.json();
+                citiesData = data.data;
+            } catch (error) {
+                console.error('加载城市列表失败:', error);
+            }
+        }
+
+        // 模糊搜索城市
+        function fuzzySearchCities(query) {
+            if (!query || query.trim() === '') {
+                return [];
+            }
+
+            query = query.toLowerCase().trim();
+
+            // 拼音简写搜索和中文搜索
+            return citiesData.filter(city => {
+                const name = city.name.toLowerCase();
+                // 完全匹配优先
+                if (name.includes(query)) {
+                    return true;
+                }
+                // 支持首字母匹配（简单实现）
+                return name.startsWith(query);
+            }).slice(0, 10); // 限制显示10个结果
+        }
+
+        // 显示搜索结果
+        function showCityResults(results) {
+            const resultsDiv = document.getElementById('cityResults');
+            selectedResultIndex = -1;
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<div class="no-results">未找到相关城市</div>';
+                resultsDiv.classList.add('show');
+                return;
+            }
+
+            resultsDiv.innerHTML = results.map((city, index) => `
+                <div class="autocomplete-item" data-index="${index}" data-city="${city.name}">
+                    <div class="city-name">${city.name}</div>
+                    <div class="city-info">经度: ${city.longitude.toFixed(2)}° | 时区: UTC+${city.timezone}</div>
+                </div>
+            `).join('');
+
+            resultsDiv.classList.add('show');
+
+            // 添加点击事件
+            resultsDiv.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    selectCity(results[parseInt(item.dataset.index)]);
+                });
+            });
+        }
+
+        // 选择城市
+        function selectCity(city) {
+            selectedCityData = city;
+            document.getElementById('city').value = city.name;
+            document.getElementById('cityResults').classList.remove('show');
+        }
+
+        // 城市输入事件
+        const cityInput = document.getElementById('city');
+        let searchTimeout;
+
+        cityInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value;
+
+            if (!query.trim()) {
+                document.getElementById('cityResults').classList.remove('show');
+                selectedCityData = null;
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                const results = fuzzySearchCities(query);
+                showCityResults(results);
+            }, 200);
+        });
+
+        // 键盘导航
+        cityInput.addEventListener('keydown', (e) => {
+            const results = document.getElementById('cityResults');
+            const items = results.querySelectorAll('.autocomplete-item');
+
+            if (!results.classList.contains('show') || items.length === 0) {
+                return;
+            }
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedResultIndex = Math.min(selectedResultIndex + 1, items.length - 1);
+                updateSelectedResult(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedResultIndex = Math.max(selectedResultIndex - 1, 0);
+                updateSelectedResult(items);
+            } else if (e.key === 'Enter' && selectedResultIndex >= 0) {
+                e.preventDefault();
+                items[selectedResultIndex].click();
+            } else if (e.key === 'Escape') {
+                results.classList.remove('show');
+            }
+        });
+
+        function updateSelectedResult(items) {
+            items.forEach((item, index) => {
+                if (index === selectedResultIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // 点击外部关闭搜索结果
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-wrapper')) {
+                document.getElementById('cityResults').classList.remove('show');
+            }
+        });
+
+        // 表单提交
+        document.getElementById('fortuneForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span> 测算中...';
+
+            // 获取日期时间
+            const selectedDate = birthDateTimePicker.selectedDates[0];
+            if (!selectedDate) {
+                alert('请选择出生日期时间');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                return;
+            }
+
+            // 格式化为 ISO 字符串
+            const year = selectedDate.getFullYear();
+            const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+            const day = String(selectedDate.getDate()).padStart(2, '0');
+            const hour = String(selectedDate.getHours()).padStart(2, '0');
+            const minute = String(selectedDate.getMinutes()).padStart(2, '0');
+
+            const birthDateTime = `${year}-${month}-${day}T${hour}:${minute}:00`;
+            const city = selectedCityData ? selectedCityData.name : null;
+            const gender = document.getElementById('gender').value;
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        birthDate: birthDateTime,
+                        city: city || undefined,
+                        gender,
+                        includeZiwei: true,
+                        polish: true
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    displayResults(result.data);
+                    document.getElementById('resultSection').classList.add('show');
+                    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('测算失败: ' + result.error);
+                }
+            } catch (error) {
+                alert('请求失败: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        // 显示结果
+        function displayResults(data) {
+            // 八字四柱
+            const baziDisplay = document.getElementById('baziDisplay');
+            const pillars = [
+                { label: '年柱', value: data.bazi.yearPillar.ganzhi },
+                { label: '月柱', value: data.bazi.monthPillar.ganzhi },
+                { label: '日柱', value: data.bazi.dayPillar.ganzhi },
+                { label: '时柱', value: data.bazi.hourPillar.ganzhi }
+            ];
+
+            baziDisplay.innerHTML = pillars.map(p => `
+                <div class="pillar">
+                    <div class="pillar-label">${p.label}</div>
+                    <div class="pillar-value">${p.value}</div>
+                </div>
+            `).join('');
+
+            // 基本信息
+            const basicInfo = document.getElementById('basicInfo');
+            basicInfo.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">日主</div>
+                    <div class="info-value">${data.bazi.dayMaster}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">五行</div>
+                    <div class="info-value">${data.fiveElements.dayElement}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">强弱</div>
+                    <div class="info-value">${data.fiveElements.strength}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">纳音</div>
+                    <div class="info-value">${data.derivatives.nayin.mainNayin}</div>
+                </div>
+            `;
+
+            // 命理分析 - 完整展示
+            const analysisContent = document.getElementById('analysisContent');
+            let analysisHTML = '';
+
+            // 十神分析
+            if (data.tenGods) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🎭 十神分析</h3>';
+                analysisHTML += '<div style="margin-bottom: 1.5rem;">';
+                if (data.tenGods.stemGods) {
+                    analysisHTML += `<p style="margin-bottom: 0.5rem;">年干：${data.tenGods.stemGods.year}</p>`;
+                    analysisHTML += `<p style="margin-bottom: 0.5rem;">月干：${data.tenGods.stemGods.month}</p>`;
+                    analysisHTML += `<p style="margin-bottom: 0.5rem;">时干：${data.tenGods.stemGods.hour}</p>`;
+                }
+                if (data.tenGods.godCount) {
+                    analysisHTML += '<p style="margin-top: 0.5rem;">十神分布：';
+                    Object.entries(data.tenGods.godCount).filter(([_, count]) => count > 0).forEach(([god, count]) => {
+                        analysisHTML += `<span class="badge badge-info">${god}×${count}</span>`;
+                    });
+                    analysisHTML += '</p>';
+                }
+                analysisHTML += '</div>';
+            }
+
+            // 神煞
+            if (data.derivatives.shensha.summary.list.length > 0) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">✨ 神煞</h3>';
+                analysisHTML += '<div style="margin-bottom: 1.5rem;">';
+                if (data.derivatives.shensha.summary.auspicious.length > 0) {
+                    analysisHTML += '<p style="margin-bottom: 0.5rem;">吉神：</p>';
+                    data.derivatives.shensha.summary.auspicious.forEach(s => {
+                        analysisHTML += `<span class="badge badge-success">${s}</span>`;
+                    });
+                }
+                if (data.derivatives.shensha.summary.mixed.length > 0) {
+                    analysisHTML += '<p style="margin: 0.5rem 0;">中性：</p>';
+                    data.derivatives.shensha.summary.mixed.forEach(s => {
+                        analysisHTML += `<span class="badge badge-info">${s}</span>`;
+                    });
+                }
+                if (data.derivatives.shensha.summary.inauspicious.length > 0) {
+                    analysisHTML += '<p style="margin: 0.5rem 0;">凶煞：</p>';
+                    data.derivatives.shensha.summary.inauspicious.forEach(s => {
+                        analysisHTML += `<span class="badge badge-warning">${s}</span>`;
+                    });
+                }
+                analysisHTML += '</div>';
+            }
+
+            // 五行分布
+            analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🌟 五行分布</h3>';
+            analysisHTML += '<div style="margin-bottom: 1.5rem;">';
+            Object.entries(data.fiveElements.distribution).forEach(([element, percent]) => {
+                analysisHTML += `<span class="badge badge-info">${element}: ${percent}%</span>`;
+            });
+            if (data.fiveElements.preference) {
+                analysisHTML += '<p style="margin-top: 1rem;">喜用神：';
+                data.fiveElements.preference.favorable.forEach(e => {
+                    analysisHTML += `<span class="badge badge-success">${e}</span>`;
+                });
+                analysisHTML += '</p>';
+                analysisHTML += '<p style="margin-top: 0.5rem;">忌神：';
+                data.fiveElements.preference.unfavorable.forEach(e => {
+                    analysisHTML += `<span class="badge badge-warning">${e}</span>`;
+                });
+                analysisHTML += '</p>';
+            }
+            analysisHTML += '</div>';
+
+            // 纳音
+            if (data.derivatives.nayin) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🎵 纳音</h3>';
+                analysisHTML += `<p>${data.derivatives.nayin.summary}</p>`;
+                analysisHTML += '<div style="margin-top: 0.5rem;">';
+                analysisHTML += `<span class="badge badge-info">日柱：${data.derivatives.nayin.mainNayin}</span>`;
+                analysisHTML += `<span class="badge badge-info">五行：${data.derivatives.nayin.mainElement}</span>`;
+                analysisHTML += '</div><br>';
+            }
+
+            // 空亡
+            if (data.derivatives.kongwang) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">⭕ 空亡</h3>';
+                analysisHTML += `<p>${data.derivatives.kongwang.summary}</p><br>`;
+            }
+
+            // 刑冲合害
+            if (data.derivatives.relations && data.derivatives.relations.summary) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🔗 刑冲合害</h3>';
+                analysisHTML += '<div style="margin-bottom: 1.5rem;">';
+                if (data.derivatives.relations.summary.combines.length > 0) {
+                    analysisHTML += '<p style="margin-bottom: 0.5rem;">合：</p>';
+                    data.derivatives.relations.summary.combines.forEach(c => {
+                        analysisHTML += `<span class="badge badge-success">${c.description}</span>`;
+                    });
+                }
+                if (data.derivatives.relations.summary.conflicts.length > 0) {
+                    analysisHTML += '<p style="margin: 0.5rem 0;">冲刑害：</p>';
+                    data.derivatives.relations.summary.conflicts.forEach(c => {
+                        analysisHTML += `<span class="badge badge-warning">${c.description}</span>`;
+                    });
+                }
+                if (data.derivatives.relations.summary.combines.length === 0 && data.derivatives.relations.summary.conflicts.length === 0) {
+                    analysisHTML += '<p>干支平和，无明显刑冲合害</p>';
+                }
+                analysisHTML += '</div>';
+            }
+
+            // 紫微斗数
+            if (data.ziwei) {
+                analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🔮 紫微斗数</h3>';
+                analysisHTML += '<div style="margin-bottom: 1.5rem;">';
+                analysisHTML += `<p><strong>命宫：</strong>${data.ziwei.palace || '未知'}</p>`;
+                analysisHTML += `<p><strong>主星：</strong>${data.ziwei.majorStars?.join('、') || '无'}</p>`;
+                if (data.ziwei.personality) {
+                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>个性特点：</strong>${data.ziwei.personality}</p>`;
+                }
+                if (data.ziwei.fortune) {
+                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>运势：</strong>${data.ziwei.fortune}</p>`;
+                }
+                analysisHTML += '</div>';
+            }
+
+            analysisContent.innerHTML = analysisHTML;
+
+            // AI报告
+            const reportText = document.getElementById('reportText');
+            if (data.polishedReport) {
+                reportText.textContent = data.polishedReport.polished || '暂无AI解读';
+                if (data.polishedReport.isTemplate) {
+                    reportText.innerHTML += '<p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">💡 ' + data.polishedReport.note + '</p>';
+                }
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initDateTimePicker();
+            loadCities();
+        });
+    </script>
+</body>
+
+</html>

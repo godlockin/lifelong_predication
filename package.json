@@ -1,0 +1,25 @@
+{
+  "name": "life-fortune",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "命理测算系统 - 八字命理 + 紫微斗数 + AI润色",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "iztro": "^2.0.0",
+    "@google/genai": "^1.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "wrangler": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

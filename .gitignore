@@ -1,0 +1,9 @@
+# 敏感信息
+.dev.vars
+.env
+
+# Wrangler 构建文件
+.wrangler
+
+# 依赖
+node_modules

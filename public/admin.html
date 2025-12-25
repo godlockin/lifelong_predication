@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 - 命理测算系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 登录界面 */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        /* 主界面 */
+        .admin-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .logout-btn {
+            background: rgba(235, 51, 73, 0.1);
+            color: #eb3349;
+            padding: 10px 25px;
+            border: 2px solid #eb3349;
+        }
+
+        .logout-btn:hover {
+            background: #eb3349;
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .generate-section {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .generate-section .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr {
+            transition: all 0.3s;
+        }
+
+        table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(56, 239, 125, 0.2);
+            color: #11998e;
+        }
+
+        .status-inactive {
+            background: rgba(235, 51, 73, 0.2);
+            color: #eb3349;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .pagination button {
+            padding: 8px 15px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            background: rgba(235, 51, 73, 0.1);
+            color: #eb3349;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #eb3349;
+        }
+
+        .success-message {
+            background: rgba(56, 239, 125, 0.1);
+            color: #11998e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #11998e;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .code-display {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .code-item {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .detail-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #eb3349;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .detail-section pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .generate-section {
+                flex-direction: column;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            table th,
+            table td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 登录界面 -->
+    <div id="loginView" class="login-container">
+        <div class="login-card">
+            <h1>🔮 管理员登录</h1>
+            <div class="input-group">
+                <label for="passwordInput">管理员密码</label>
+                <input type="password" id="passwordInput" placeholder="请输入管理员密码">
+            </div>
+            <div id="loginError" class="error-message hidden"></div>
+            <button class="btn btn-primary" onclick="login()">登录</button>
+        </div>
+    </div>
+
+    <!-- 管理界面 -->
+    <div id="adminView" class="container hidden">
+        <div class="admin-header">
+            <h1>🔮 命理测算系统 - 管理后台</h1>
+            <button class="btn logout-btn" onclick="logout()">退出登录</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('codes')">邀请码管理</button>
+            <button class="tab" onclick="switchTab('records')">用户记录</button>
+        </div>
+
+        <!-- 邀请码管理 -->
+        <div id="codesTab" class="tab-content active">
+            <div class="card">
+                <h2>生成邀请码</h2>
+                <div class="generate-section">
+                    <div class="input-group">
+                        <label for="codeCount">生成数量 (1-100)</label>
+                        <input type="number" id="codeCount" min="1" max="100" value="5">
+                    </div>
+                    <div class="input-group">
+                        <label for="codeNotes">备注（可选）</label>
+                        <input type="text" id="codeNotes" placeholder="备注信息">
+                    </div>
+                    <button class="btn btn-success" onclick="generateCodes()">生成</button>
+                </div>
+                <div id="generateResult"></div>
+            </div>
+
+            <div class="card">
+                <h2>邀请码列表</h2>
+                <div id="codesLoading" class="loading hidden">加载中...</div>
+                <div id="codesError" class="error-message hidden"></div>
+                <div id="codesTable"></div>
+                <div id="codesPagination" class="pagination"></div>
+            </div>
+        </div>
+
+        <!-- 用户记录 -->
+        <div id="recordsTab" class="tab-content">
+            <div class="card">
+                <h2>用户提交记录</h2>
+                <div id="recordsLoading" class="loading hidden">加载中...</div>
+                <div id="recordsError" class="error-message hidden"></div>
+                <div id="recordsTable"></div>
+                <div id="recordsPagination" class="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情模态框 -->
+    <div id="detailModal" class="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>记录详情</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';  // 使用相对路径
+        let adminPassword = localStorage.getItem('adminPassword');
+        let currentCodesPage = 0;
+        let currentRecordsPage = 0;
+        const pageSize = 20;
+
+        // 初始化
+        if (adminPassword) {
+            showAdminView();
+        }
+
+        // 登录
+        async function login() {
+            const password = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (!password) {
+                errorDiv.textContent = '请输入密码';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // 尝试获取邀请码列表来验证密码
+            try {
+                const response = await fetch(`${API_BASE}/admin/invitation-codes?limit=1`, {
+                    headers: {
+                        'X-Admin-Password': password
+                    }
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('adminPassword', password);
+                    adminPassword = password;
+                    errorDiv.classList.add('hidden');
+                    showAdminView();
+                } else {
+                    const data = await response.json();
+                    errorDiv.textContent = data.error || '密码错误';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = '登录失败: ' + error.message;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('adminPassword');
+            adminPassword = null;
+            document.getElementById('loginView').classList.remove('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+        }
+
+        // 显示管理界面
+        function showAdminView() {
+            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('adminView').classList.remove('hidden');
+            loadInvitationCodes();
+        }
+
+        // 切换标签
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            event.target.classList.add('active');
+
+            if (tab === 'codes') {
+                document.getElementById('codesTab').classList.add('active');
+                loadInvitationCodes();
+            } else if (tab === 'records') {
+                document.getElementById('recordsTab').classList.add('active');
+                loadRecords();
+            }
+        }
+
+        // 生成邀请码
+        async function generateCodes() {
+            const count = parseInt(document.getElementById('codeCount').value);
+            const notes = document.getElementById('codeNotes').value;
+            const resultDiv = document.getElementById('generateResult');
+
+            if (count < 1 || count > 100) {
+                resultDiv.innerHTML = '<div class="error-message">生成数量必须在 1-100 之间</div>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<div class="loading">生成中...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/invitation-codes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ count, notes: notes || null })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    let html = '<div class="success-message">';
+                    html += `成功生成 ${data.data.created} 个邀请码`;
+                    if (data.data.failed > 0) {
+                        html += `，失败 ${data.data.failed} 个`;
+                    }
+                    html += '</div>';
+                    html += '<div class="code-display">';
+                    data.data.codes.forEach(code => {
+                        html += `<div class="code-item">${code}</div>`;
+                    });
+                    html += '</div>';
+                    resultDiv.innerHTML = html;
+
+                    // 刷新列表
+                    loadInvitationCodes();
+                } else {
+                    resultDiv.innerHTML = `<div class="error-message">${data.error || '生成失败'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error-message">生成失败: ${error.message}</div>`;
+            }
+        }
+
+        // 加载邀请码列表
+        async function loadInvitationCodes(page = 0) {
+            currentCodesPage = page;
+            const loadingDiv = document.getElementById('codesLoading');
+            const errorDiv = document.getElementById('codesError');
+            const tableDiv = document.getElementById('codesTable');
+            const paginationDiv = document.getElementById('codesPagination');
+
+            loadingDiv.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            tableDiv.innerHTML = '';
+            paginationDiv.innerHTML = '';
+
+            try {
+                const offset = page * pageSize;
+                const response = await fetch(`${API_BASE}/admin/invitation-codes?limit=${pageSize}&offset=${offset}`, {
+                    headers: {
+                        'X-Admin-Password': adminPassword
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    renderCodesTable(data.data, data.total);
+                } else {
+                    errorDiv.textContent = data.error || '加载失败';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = '加载失败: ' + error.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // 渲染邀请码表格
+        function renderCodesTable(codes, total) {
+            const tableDiv = document.getElementById('codesTable');
+            const paginationDiv = document.getElementById('codesPagination');
+
+            let html = '<table><thead><tr>';
+            html += '<th>邀请码</th><th>创建时间</th><th>使用次数</th><th>最后使用</th><th>状态</th><th>备注</th>';
+            html += '</tr></thead><tbody>';
+
+            codes.forEach(code => {
+                html += '<tr>';
+                html += `<td><strong>${code.code}</strong></td>`;
+                html += `<td>${new Date(code.created_at).toLocaleString('zh-CN')}</td>`;
+                html += `<td>${code.used_count}</td>`;
+                html += `<td>${code.last_used_at ? new Date(code.last_used_at).toLocaleString('zh-CN') : '-'}</td>`;
+                html += `<td><span class="status-badge ${code.is_active ? 'status-active' : 'status-inactive'}">${code.is_active ? '激活' : '禁用'}</span></td>`;
+                html += `<td>${code.notes || '-'}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            tableDiv.innerHTML = html;
+
+            // 分页
+            const totalPages = Math.ceil(total / pageSize);
+            paginationDiv.innerHTML = `
+                <button ${currentCodesPage === 0 ? 'disabled' : ''} onclick="loadInvitationCodes(${currentCodesPage - 1})">上一页</button>
+                <div class="page-info">第 ${currentCodesPage + 1} 页 / 共 ${totalPages} 页 (总计 ${total} 条)</div>
+                <button ${currentCodesPage >= totalPages - 1 ? 'disabled' : ''} onclick="loadInvitationCodes(${currentCodesPage + 1})">下一页</button>
+            `;
+        }
+
+        // 加载用户记录
+        async function loadRecords(page = 0) {
+            currentRecordsPage = page;
+            const loadingDiv = document.getElementById('recordsLoading');
+            const errorDiv = document.getElementById('recordsError');
+            const tableDiv = document.getElementById('recordsTable');
+            const paginationDiv = document.getElementById('recordsPagination');
+
+            loadingDiv.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            tableDiv.innerHTML = '';
+            paginationDiv.innerHTML = '';
+
+            try {
+                const offset = page * pageSize;
+                const response = await fetch(`${API_BASE}/admin/records?limit=${pageSize}&offset=${offset}`, {
+                    headers: {
+                        'X-Admin-Password': adminPassword
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    renderRecordsTable(data.data, data.total);
+                } else {
+                    errorDiv.textContent = data.error || '加载失败';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = '加载失败: ' + error.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // 渲染用户记录表格
+        function renderRecordsTable(records, total) {
+            const tableDiv = document.getElementById('recordsTable');
+            const paginationDiv = document.getElementById('recordsPagination');
+
+            let html = '<table><thead><tr>';
+            html += '<th>ID</th><th>邀请码</th><th>出生日期</th><th>性别</th><th>城市</th><th>提交时间</th><th>操作</th>';
+            html += '</tr></thead><tbody>';
+
+            records.forEach(record => {
+                html += '<tr>';
+                html += `<td>${record.id}</td>`;
+                html += `<td><strong>${record.invitation_code}</strong></td>`;
+                html += `<td>${record.birth_date}</td>`;
+                html += `<td>${record.gender || '-'}</td>`;
+                html += `<td>${record.city || '-'}</td>`;
+                html += `<td>${new Date(record.created_at).toLocaleString('zh-CN')}</td>`;
+                html += `<td><button class="btn btn-info" onclick="viewRecordDetail(${record.id})">查看详情</button></td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            tableDiv.innerHTML = html;
+
+            // 分页
+            const totalPages = Math.ceil(total / pageSize);
+            paginationDiv.innerHTML = `
+                <button ${currentRecordsPage === 0 ? 'disabled' : ''} onclick="loadRecords(${currentRecordsPage - 1})">上一页</button>
+                <div class="page-info">第 ${currentRecordsPage + 1} 页 / 共 ${totalPages} 页 (总计 ${total} 条)</div>
+                <button ${currentRecordsPage >= totalPages - 1 ? 'disabled' : ''} onclick="loadRecords(${currentRecordsPage + 1})">下一页</button>
+            `;
+        }
+
+        // 查看记录详情
+        async function viewRecordDetail(id) {
+            const modal = document.getElementById('detailModal');
+            const content = document.getElementById('detailContent');
+
+            content.innerHTML = '<div class="loading">加载中...</div>';
+            modal.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/records/${id}`, {
+                    headers: {
+                        'X-Admin-Password': adminPassword
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    const record = data.data;
+                    let html = '';
+
+                    html += '<div class="detail-section">';
+                    html += '<h3>基本信息</h3>';
+                    html += `<p><strong>记录ID:</strong> ${record.id}</p>`;
+                    html += `<p><strong>邀请码:</strong> ${record.invitation_code}</p>`;
+                    html += `<p><strong>出生日期:</strong> ${record.birth_date}</p>`;
+                    html += `<p><strong>性别:</strong> ${record.gender || '-'}</p>`;
+                    html += `<p><strong>城市:</strong> ${record.city || '-'}</p>`;
+                    html += `<p><strong>经度:</strong> ${record.longitude || '-'}</p>`;
+                    html += `<p><strong>时区:</strong> ${record.timezone || '-'}</p>`;
+                    html += `<p><strong>提交时间:</strong> ${new Date(record.created_at).toLocaleString('zh-CN')}</p>`;
+                    html += '</div>';
+
+                    if (record.bazi_result) {
+                        html += '<div class="detail-section">';
+                        html += '<h3>八字结果</h3>';
+                        html += `<pre>${JSON.stringify(record.bazi_result, null, 2)}</pre>`;
+                        html += '</div>';
+                    }
+
+                    if (record.ziwei_result) {
+                        html += '<div class="detail-section">';
+                        html += '<h3>紫微斗数结果</h3>';
+                        html += `<pre>${JSON.stringify(record.ziwei_result, null, 2)}</pre>`;
+                        html += '</div>';
+                    }
+
+                    if (record.analysis_result) {
+                        html += '<div class="detail-section">';
+                        html += '<h3>分析结果</h3>';
+                        html += `<pre>${JSON.stringify(record.analysis_result, null, 2)}</pre>`;
+                        html += '</div>';
+                    }
+
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = `<div class="error-message">${data.error || '加载失败'}</div>`;
+                }
+            } catch (error) {
+                content.innerHTML = `<div class="error-message">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // 点击模态框外部关闭
+        document.getElementById('detailModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // 回车登录
+        document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+
+</html>
