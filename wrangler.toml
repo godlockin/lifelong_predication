@@ -11,6 +11,8 @@ directory = "./public"
 AI_MODEL = "gemini-3.0-flash"
 DEFAULT_TIMEZONE = "8"
 DEFAULT_LONGITUDE = "120"
+ADMIN_PASSWORD = "admin"
+BACKDOOR_CODE = "vip_888"
 
 # 敏感信息配置说明：
 # - 本地开发：在 .dev.vars 文件中配置 GEMINI_API_KEY 和 ADMIN_PASSWORD

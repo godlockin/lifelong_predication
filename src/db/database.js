@@ -61,12 +61,18 @@ export async function createInvitationCode(db, code = null, notes = null) {
  * 验证邀请码是否有效
  * @param {D1Database} db - D1数据库实例
  * @param {string} code - 邀请码
+ * @param {string} backdoorCode - 后门邀请码（可选）
  * @returns {Promise<{valid: boolean, message?: string}>}
  */
-export async function verifyInvitationCode(db, code) {
+export async function verifyInvitationCode(db, code, backdoorCode = null) {
+    // 后门邀请码
+    if (backdoorCode && code === backdoorCode) {
+        return { valid: true, message: '测试通道' };
+    }
+
     try {
         const result = await db
-            .prepare('SELECT code, is_active FROM invitation_codes WHERE code = ?')
+            .prepare('SELECT code, is_active, used_count FROM invitation_codes WHERE code = ?')
             .bind(code)
             .first();
 
@@ -76,6 +82,10 @@ export async function verifyInvitationCode(db, code) {
 
         if (result.is_active !== 1) {
             return { valid: false, message: '邀请码已被禁用' };
+        }
+
+        if (result.used_count > 0) {
+            return { valid: false, message: '邀请码已失效（已使用）' };
         }
 
         return { valid: true };
@@ -88,9 +98,15 @@ export async function verifyInvitationCode(db, code) {
  * 使用邀请码（增加使用次数）
  * @param {D1Database} db - D1数据库实例
  * @param {string} code - 邀请码
+ * @param {string} backdoorCode - 后门邀请码（可选）
  * @returns {Promise<{success: boolean, message?: string}>}
  */
-export async function useInvitationCode(db, code) {
+export async function useInvitationCode(db, code, backdoorCode = null) {
+    // 后门邀请码不消耗次数
+    if (backdoorCode && code === backdoorCode) {
+        return { success: true };
+    }
+
     try {
         const now = new Date().toISOString();
 
@@ -320,6 +336,32 @@ export async function setInvitationCodeStatus(db, code, active) {
         const result = await db
             .prepare('UPDATE invitation_codes SET is_active = ? WHERE code = ?')
             .bind(active ? 1 : 0, code)
+            .run();
+
+        if (result.meta.changes === 0) {
+            return { success: false, message: '邀请码不存在' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error.message };
+    }
+}
+
+/**
+ * 删除邀请码
+ * @param {D1Database} db - D1数据库实例
+ * @param {string} code - 邀请码
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
+export async function deleteInvitationCode(db, code) {
+    try {
+        // 先删除关联的记录
+        await db.prepare('DELETE FROM fortune_records WHERE invitation_code = ?').bind(code).run();
+
+        const result = await db
+            .prepare('DELETE FROM invitation_codes WHERE code = ?')
+            .bind(code)
             .run();
 
         if (result.meta.changes === 0) {

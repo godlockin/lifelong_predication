@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>命理测算系统 - 八字·紫微·AI</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
 
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -462,6 +463,10 @@
             <h2 class="card-title">📅 输入出生信息</h2>
             <form id="fortuneForm">
                 <div class="form-group">
+                    <label for="invitationCode">邀请码</label>
+                    <input type="text" id="invitationCode" placeholder="请输入邀请码" required>
+                </div>
+                <div class="form-group">
                     <label for="birthDateTime">出生日期时间</label>
                     <input type="text" id="birthDateTime" placeholder="选择出生日期和时间..." required readonly>
                 </div>
@@ -696,14 +701,16 @@
             const birthDateTime = `${year}-${month}-${day}T${hour}:${minute}:00`;
             const city = selectedCityData ? selectedCityData.name : null;
             const gender = document.getElementById('gender').value;
+            const invitationCode = document.getElementById('invitationCode').value;
 
             try {
-                const response = await fetch('/analyze', {
+                const response = await fetch('/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        invitationCode,
                         birthDate: birthDateTime,
                         city: city || undefined,
                         gender,

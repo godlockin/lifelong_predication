@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理员后台 - 命理测算系统</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
     <style>
         * {
             margin: 0;
@@ -714,6 +715,32 @@
                 <div class="page-info">第 ${currentCodesPage + 1} 页 / 共 ${totalPages} 页 (总计 ${total} 条)</div>
                 <button ${currentCodesPage >= totalPages - 1 ? 'disabled' : ''} onclick="loadInvitationCodes(${currentCodesPage + 1})">下一页</button>
             `;
+        }
+
+        // 删除邀请码
+        async function deleteCode(code) {
+            if (!confirm(`确定要删除邀请码 ${code} 吗？\n这将同时删除该邀请码的所有测算记录！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/invitation-codes/${code}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Admin-Password': adminPassword
+                    }
+                });
+
+                if (response.ok) {
+                    // 刷新列表
+                    loadInvitationCodes(currentCodesPage);
+                } else {
+                    const data = await response.json();
+                    alert(data.error || '删除失败');
+                }
+            } catch (error) {
+                alert('删除失败: ' + error.message);
+            }
         }
 
         // 加载用户记录

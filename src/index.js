@@ -21,7 +21,8 @@ import {
     getInvitationCodes,
     getFortuneRecords,
     getFortuneRecordDetail,
-    setInvitationCodeStatus
+    setInvitationCodeStatus,
+    deleteInvitationCode
 } from './db/database.js';
 
 const app = new Hono();
@@ -137,6 +138,7 @@ app.post('/analyze', async (c) => {
     try {
         const body = await c.req.json();
         const {
+            invitationCode,
             birthDate,
             longitude,
             timezone,
@@ -146,8 +148,22 @@ app.post('/analyze', async (c) => {
             polish = false
         } = body;
 
+        if (!invitationCode) {
+            return c.json({ error: '请提供邀请码 (invitationCode)' }, 400);
+        }
+
         if (!birthDate) {
             return c.json({ error: '请提供出生日期时间 (birthDate)' }, 400);
+        }
+
+        if (!c.env.DB) {
+            return c.json({ error: '数据库未配置' }, 500);
+        }
+
+        // 验证邀请码
+        const verification = await verifyInvitationCode(c.env.DB, invitationCode);
+        if (!verification.valid) {
+            return c.json({ error: verification.message }, 403);
         }
 
         const config = getConfig(c.env);
@@ -323,7 +339,7 @@ app.post('/verify-code', async (c) => {
             return c.json({ error: '数据库未配置' }, 500);
         }
 
-        const result = await verifyInvitationCode(c.env.DB, code);
+        const result = await verifyInvitationCode(c.env.DB, code, c.env.BACKDOOR_CODE);
 
         return c.json({
             success: result.valid,
@@ -362,7 +378,7 @@ app.post('/submit', async (c) => {
         }
 
         // 验证邀请码
-        const verification = await verifyInvitationCode(c.env.DB, invitationCode);
+        const verification = await verifyInvitationCode(c.env.DB, invitationCode, c.env.BACKDOOR_CODE);
         if (!verification.valid) {
             return c.json({ error: verification.message }, 403);
         }
@@ -413,7 +429,7 @@ app.post('/submit', async (c) => {
         }
 
         // 标记邀请码为已使用
-        await useInvitationCode(c.env.DB, invitationCode);
+        await useInvitationCode(c.env.DB, invitationCode, c.env.BACKDOOR_CODE);
 
         return c.json({
             success: true,
