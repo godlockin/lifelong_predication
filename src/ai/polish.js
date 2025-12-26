@@ -242,6 +242,32 @@ export function createTemplateReport(analysisData) {
         }
     }
 
+    // 紫微斗数
+    if (analysisData.ziwei && analysisData.ziwei.available) {
+        const z = analysisData.ziwei;
+        report.push(`\n【紫微斗数】`);
+        report.push(`格局：${z.basicInfo.fiveElementsClass} · 命主${z.basicInfo.soul} · 身主${z.basicInfo.body}`);
+        
+        if (z.analysis) {
+            if (z.analysis.ming) {
+                const stars = z.analysis.ming.stars.length > 0 ? z.analysis.ming.stars.join('、') : '无主星';
+                report.push(`命宫：${stars} (${z.analysis.ming.interpretation})`);
+            }
+            if (z.analysis.marriage) {
+                const stars = z.analysis.marriage.stars.length > 0 ? z.analysis.marriage.stars.join('、') : '无主星';
+                report.push(`夫妻宫：${stars}`);
+            }
+            if (z.analysis.career) {
+                const stars = z.analysis.career.stars.length > 0 ? z.analysis.career.stars.join('、') : '无主星';
+                report.push(`事业宫：${stars}`);
+            }
+            if (z.analysis.wealth) {
+                const stars = z.analysis.wealth.stars.length > 0 ? z.analysis.wealth.stars.join('、') : '无主星';
+                report.push(`财帛宫：${stars}`);
+            }
+        }
+    }
+
     return {
         success: true,
         polished: report.join('\n'),
