@@ -80,12 +80,12 @@ export async function verifyInvitationCode(db, code, backdoorCode = null) {
             return { valid: false, message: '邀请码不存在' };
         }
 
-        if (result.is_active !== 1) {
-            return { valid: false, message: '邀请码已被禁用' };
-        }
-
         if (result.used_count > 0) {
             return { valid: false, message: '邀请码已失效（已使用）' };
+        }
+
+        if (result.is_active !== 1) {
+            return { valid: false, message: '邀请码已被禁用' };
         }
 
         return { valid: true };
@@ -113,7 +113,7 @@ export async function useInvitationCode(db, code, backdoorCode = null) {
         const result = await db
             .prepare(`
                 UPDATE invitation_codes 
-                SET used_count = used_count + 1, last_used_at = ?
+                SET used_count = used_count + 1, last_used_at = ?, is_active = 0
                 WHERE code = ? AND is_active = 1
             `)
             .bind(now, code)
@@ -139,6 +139,7 @@ export async function saveFortuneRecord(db, data) {
     try {
         const {
             invitationCode,
+            name,
             birthDate,
             gender,
             city,
@@ -156,24 +157,25 @@ export async function saveFortuneRecord(db, data) {
         const result = await db
             .prepare(`
                 INSERT INTO fortune_records (
-                    invitation_code, birth_date, gender, city, 
+                    invitation_code, name, birth_date, gender, city, 
                     longitude, timezone, bazi_result, ziwei_result, 
                     analysis_result, created_at, ip_address, user_agent
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `)
             .bind(
                 invitationCode,
+                name || null,
                 birthDate,
-                gender,
-                city,
-                longitude,
-                timezone,
-                JSON.stringify(baziResult),
-                JSON.stringify(ziweiResult),
-                JSON.stringify(analysisResult),
+                gender || null,
+                city || null,
+                longitude || null,
+                timezone || null,
+                baziResult ? JSON.stringify(baziResult) : null,
+                ziweiResult ? JSON.stringify(ziweiResult) : null,
+                analysisResult ? JSON.stringify(analysisResult) : null,
                 now,
-                ipAddress,
-                userAgent
+                ipAddress || null,
+                userAgent || null
             )
             .run();
 
@@ -239,7 +241,7 @@ export async function getFortuneRecords(db, limit = 50, offset = 0, invitationCo
     try {
         let countQuery = 'SELECT COUNT(*) as total FROM fortune_records';
         let dataQuery = `
-            SELECT id, invitation_code, birth_date, gender, city, 
+            SELECT id, invitation_code, name, birth_date, gender, city, 
                    longitude, timezone, created_at
             FROM fortune_records
         `;
@@ -288,7 +290,7 @@ export async function getFortuneRecordDetail(db, id) {
     try {
         const result = await db
             .prepare(`
-                SELECT id, invitation_code, birth_date, gender, city,
+                SELECT id, invitation_code, name, birth_date, gender, city,
                        longitude, timezone, bazi_result, ziwei_result,
                        analysis_result, created_at, ip_address, user_agent
                 FROM fortune_records

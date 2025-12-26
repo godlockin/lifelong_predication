@@ -11,18 +11,16 @@ directory = "./public"
 AI_MODEL = "gemini-3.0-flash"
 DEFAULT_TIMEZONE = "8"
 DEFAULT_LONGITUDE = "120"
-ADMIN_PASSWORD = "admin"
-BACKDOOR_CODE = "vip_888"
 
 # 敏感信息配置说明：
-# - 本地开发：在 .dev.vars 文件中配置 GEMINI_API_KEY 和 ADMIN_PASSWORD
-# - 生产环境：使用命令设置
+# - 本地开发：在 .dev.vars 文件中配置 GEMINI_API_KEY, ADMIN_PASSWORD, BACKDOOR_CODE
+# - 生产环境：请在 Cloudflare Dashboard 设置或使用以下命令：
 #   wrangler secret put GEMINI_API_KEY
 #   wrangler secret put ADMIN_PASSWORD
+#   wrangler secret put BACKDOOR_CODE
 
 # D1 数据库配置
-# 暂时注释，部署成功后在 Cloudflare Dashboard 的 Worker Settings → Bindings 中手动绑定
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "life-fortune-db"
-# database_id = ""  # 运行 wrangler d1 create life-fortune-db 后填写此ID
+[[d1_databases]]
+binding = "DB"
+database_name = "life-fortune-db"
+database_id = "13ac43e5-f474-4d2f-95a0-4d74ce1c3e67"

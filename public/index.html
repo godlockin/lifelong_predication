@@ -8,8 +8,8 @@
     <link rel="icon" type="image/png" href="/favicon.ico">
 
     <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <link rel="stylesheet" href="/vendor/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="/vendor/flatpickr/dark.css">
 
     <style>
         * {
@@ -95,7 +95,7 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
@@ -104,6 +104,30 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+        }
+
+        /* 跨列样式 */
+        .col-span-3 {
+            grid-column: span 3;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .col-span-3 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .col-span-3 {
+                grid-column: span 1;
+            }
         }
 
         label {
@@ -462,22 +486,15 @@
         <div class="card">
             <h2 class="card-title">📅 输入出生信息</h2>
             <form id="fortuneForm">
-                <div class="form-group">
-                    <label for="invitationCode">邀请码</label>
-                    <input type="text" id="invitationCode" placeholder="请输入邀请码" required>
-                </div>
-                <div class="form-group">
-                    <label for="birthDateTime">出生日期时间</label>
-                    <input type="text" id="birthDateTime" placeholder="选择出生日期和时间..." required readonly>
-                </div>
-
                 <div class="form-grid">
+                    <!-- 第一行 -->
                     <div class="form-group">
-                        <label for="city">出生城市</label>
-                        <div class="autocomplete-wrapper">
-                            <input type="text" id="city" placeholder="输入城市名搜索..." autocomplete="off">
-                            <div class="autocomplete-results" id="cityResults"></div>
-                        </div>
+                        <label for="name">姓名 (可选)</label>
+                        <input type="text" id="name" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDateTime">出生日期时间</label>
+                        <input type="text" id="birthDateTime" placeholder="选择日期时间..." required readonly>
                     </div>
                     <div class="form-group">
                         <label for="gender">性别</label>
@@ -486,10 +503,32 @@
                             <option value="女">女</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="invitationCode">邀请码</label>
+                        <input type="text" id="invitationCode" placeholder="请输入邀请码" required>
+                    </div>
+
+                    <!-- 第二行 -->
+                    <div class="form-group col-span-3">
+                        <label>出生城市</label>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <select id="provinceSelect" style="flex: 1; min-width: 0;"><option value="">省份</option></select>
+                            <select id="citySelect" style="flex: 1; min-width: 0;" disabled><option value="">城市</option></select>
+                            <select id="districtSelect" style="flex: 1; min-width: 0;" disabled><option value="">区县</option></select>
+                        </div>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="citySearch" placeholder="或者直接输入城市名搜索..." autocomplete="off">
+                            <input type="hidden" id="city">
+                            <div class="autocomplete-results" id="cityResults"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="justify-content: flex-end;">
+                        <button type="submit" class="btn-primary" id="submitBtn" style="height: 48px; width: 100%;">
+                            开始测算
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    开始测算
-                </button>
             </form>
         </div>
 
@@ -518,40 +557,169 @@
     </div>
 
     <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="/vendor/flatpickr/flatpickr.min.js"></script>
+    <script src="/vendor/flatpickr/zh.js"></script>
 
     <script>
-        let citiesData = [];
+        let citiesData = []; // Flat list for search
+        let cityHierarchy = []; // Hierarchy for cascade
         let selectedCityData = null;
         let selectedResultIndex = -1;
         let birthDateTimePicker = null;
 
         // 初始化 Flatpickr 日期时间选择器
         function initDateTimePicker() {
-            birthDateTimePicker = flatpickr("#birthDateTime", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                locale: "zh",
-                defaultDate: new Date(),
-                maxDate: new Date(),
-                minuteIncrement: 1,
-                defaultHour: 12,
-                defaultMinute: 0,
-                allowInput: false,
-                theme: "dark"
-            });
+            try {
+                const inputElement = document.getElementById("birthDateTime");
+                if (!inputElement) {
+                    console.error("未找到出生日期输入框 #birthDateTime");
+                    return;
+                }
+                
+                birthDateTimePicker = flatpickr(inputElement, {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    locale: "zh",
+                    defaultDate: new Date(),
+                    maxDate: new Date(),
+                    minuteIncrement: 1,
+                    defaultHour: 12,
+                    defaultMinute: 0,
+                    allowInput: false,
+                    theme: "dark",
+                    static: true // 防止在某些容器中定位问题
+                });
+                console.log("日期选择器初始化成功");
+            } catch (e) {
+                console.error("日期选择器初始化失败:", e);
+                alert("日期组件加载失败，请刷新页面重试");
+            }
         }
 
-        // 加载城市列表
+        // 加载城市数据
         async function loadCities() {
             try {
-                const response = await fetch('/cities');
+                // 加载静态 JSON 文件
+                const response = await fetch('/cities.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
-                citiesData = data.data;
+                
+                cityHierarchy = data.hierarchy;
+                citiesData = data.flat; // 使用预生成的平铺数据
+                
+                initProvinceSelect();
+                console.log(`加载了 ${citiesData.length} 个城市数据`);
             } catch (error) {
                 console.error('加载城市列表失败:', error);
+                document.getElementById('citySearch').placeholder = "城市数据加载失败，请刷新";
+            }
+        }
+
+        // 初始化省份选择
+        function initProvinceSelect() {
+            const select = document.getElementById('provinceSelect');
+            select.innerHTML = '<option value="">省份</option>';
+            cityHierarchy.forEach((prov, idx) => {
+                select.add(new Option(prov.name, idx));
+            });
+
+            select.addEventListener('change', onProvinceChange);
+        }
+
+        function onProvinceChange(e) {
+            const provIdx = e.target.value;
+            const citySelect = document.getElementById('citySelect');
+            const districtSelect = document.getElementById('districtSelect');
+            
+            citySelect.innerHTML = '<option value="">城市</option>';
+            districtSelect.innerHTML = '<option value="">区县</option>';
+            districtSelect.disabled = true;
+            
+            if (provIdx === "") {
+                citySelect.disabled = true;
+                return;
+            }
+
+            const prov = cityHierarchy[provIdx];
+            prov.cities.forEach((city, idx) => {
+                citySelect.add(new Option(city.name, idx));
+            });
+            citySelect.disabled = false;
+            
+            // 重置选中的城市数据
+            selectedCityData = null;
+            updateHiddenCityValue();
+        }
+
+        document.getElementById('citySelect').addEventListener('change', (e) => {
+            const provIdx = document.getElementById('provinceSelect').value;
+            const cityIdx = e.target.value;
+            const districtSelect = document.getElementById('districtSelect');
+            
+            districtSelect.innerHTML = '<option value="">区县</option>';
+            
+            if (cityIdx === "") {
+                districtSelect.disabled = true;
+                return;
+            }
+
+            const city = cityHierarchy[provIdx].cities[cityIdx];
+            
+            // 某些城市可能没有区县信息，或者直接选城市中心
+            if (city.districts && city.districts.length > 0) {
+                city.districts.forEach((dist, idx) => {
+                    districtSelect.add(new Option(dist.name, idx));
+                });
+                districtSelect.disabled = false;
+            } else {
+                // 如果没有下级，直接选中该城市（假设它本身有坐标）
+                // 但我们的结构保证了有 districts，至少包含自身
+                districtSelect.disabled = true;
+            }
+            
+            selectedCityData = null;
+            updateHiddenCityValue();
+        });
+
+        document.getElementById('districtSelect').addEventListener('change', (e) => {
+            const provIdx = document.getElementById('provinceSelect').value;
+            const cityIdx = document.getElementById('citySelect').value;
+            const distIdx = e.target.value;
+
+            if (distIdx === "") {
+                selectedCityData = null;
+            } else {
+                const dist = cityHierarchy[provIdx].cities[cityIdx].districts[distIdx];
+                const provName = cityHierarchy[provIdx].name;
+                const cityName = cityHierarchy[provIdx].cities[cityIdx].name;
+                
+                selectedCityData = {
+                    name: dist.name,
+                    longitude: dist.lng,
+                    latitude: dist.lat,
+                    timezone: 8, // 默认东八区
+                    fullName: `${provName} ${cityName} ${dist.name}`
+                };
+                
+                // 清空搜索框，避免混淆
+                document.getElementById('citySearch').value = '';
+            }
+            updateHiddenCityValue();
+        });
+
+        function updateHiddenCityValue() {
+            const hiddenInput = document.getElementById('city');
+            if (selectedCityData) {
+                hiddenInput.value = selectedCityData.name;
+                // 更新显示
+                if (selectedCityData.fullName) {
+                     // 可以在界面上显示完整路径，但这里不需要，因为下拉框已经显示了
+                }
+            } else {
+                hiddenInput.value = '';
             }
         }
 
@@ -563,16 +731,15 @@
 
             query = query.toLowerCase().trim();
 
-            // 拼音简写搜索和中文搜索
             return citiesData.filter(city => {
+                // 搜索 全名 或 简称
+                const full = city.full.toLowerCase();
                 const name = city.name.toLowerCase();
-                // 完全匹配优先
-                if (name.includes(query)) {
+                if (full.includes(query) || name.includes(query)) {
                     return true;
                 }
-                // 支持首字母匹配（简单实现）
-                return name.startsWith(query);
-            }).slice(0, 10); // 限制显示10个结果
+                return false;
+            }).slice(0, 10);
         }
 
         // 显示搜索结果
@@ -587,9 +754,9 @@
             }
 
             resultsDiv.innerHTML = results.map((city, index) => `
-                <div class="autocomplete-item" data-index="${index}" data-city="${city.name}">
-                    <div class="city-name">${city.name}</div>
-                    <div class="city-info">经度: ${city.longitude.toFixed(2)}° | 时区: UTC+${city.timezone}</div>
+                <div class="autocomplete-item" data-index="${index}">
+                    <div class="city-name">${city.full}</div>
+                    <div class="city-info">经度: ${city.lng.toFixed(2)}° | 纬度: ${city.lat.toFixed(2)}°</div>
                 </div>
             `).join('');
 
@@ -598,20 +765,34 @@
             // 添加点击事件
             resultsDiv.querySelectorAll('.autocomplete-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    selectCity(results[parseInt(item.dataset.index)]);
+                    selectCityFromSearch(results[parseInt(item.dataset.index)]);
                 });
             });
         }
 
-        // 选择城市
-        function selectCity(city) {
-            selectedCityData = city;
-            document.getElementById('city').value = city.name;
+        // 从搜索结果选择城市
+        function selectCityFromSearch(city) {
+            selectedCityData = {
+                name: city.name,
+                longitude: city.lng,
+                latitude: city.lat,
+                timezone: city.tz || 8,
+                fullName: city.full
+            };
+            document.getElementById('citySearch').value = city.full;
             document.getElementById('cityResults').classList.remove('show');
+            updateHiddenCityValue();
+            
+            // 重置下拉框
+            document.getElementById('provinceSelect').value = "";
+            document.getElementById('citySelect').innerHTML = '<option value="">城市</option>';
+            document.getElementById('citySelect').disabled = true;
+            document.getElementById('districtSelect').innerHTML = '<option value="">区县</option>';
+            document.getElementById('districtSelect').disabled = true;
         }
 
         // 城市输入事件
-        const cityInput = document.getElementById('city');
+        const cityInput = document.getElementById('citySearch');
         let searchTimeout;
 
         cityInput.addEventListener('input', (e) => {
@@ -620,7 +801,6 @@
 
             if (!query.trim()) {
                 document.getElementById('cityResults').classList.remove('show');
-                selectedCityData = null;
                 return;
             }
 
@@ -690,6 +870,13 @@
                 submitBtn.textContent = originalText;
                 return;
             }
+            
+            if (!selectedCityData) {
+                 alert('请选择出生地点（通过下拉框选择或搜索）');
+                 submitBtn.disabled = false;
+                 submitBtn.textContent = originalText;
+                 return;
+            }
 
             // 格式化为 ISO 字符串
             const year = selectedDate.getFullYear();
@@ -699,9 +886,9 @@
             const minute = String(selectedDate.getMinutes()).padStart(2, '0');
 
             const birthDateTime = `${year}-${month}-${day}T${hour}:${minute}:00`;
-            const city = selectedCityData ? selectedCityData.name : null;
-            const gender = document.getElementById('gender').value;
             const invitationCode = document.getElementById('invitationCode').value;
+            const gender = document.getElementById('gender').value;
+            const name = document.getElementById('name').value;
 
             try {
                 const response = await fetch('/submit', {
@@ -711,8 +898,11 @@
                     },
                     body: JSON.stringify({
                         invitationCode,
+                        name,
                         birthDate: birthDateTime,
-                        city: city || undefined,
+                        city: selectedCityData.name,
+                        longitude: selectedCityData.longitude,
+                        timezone: selectedCityData.timezone || 8,
                         gender,
                         includeZiwei: true,
                         polish: true

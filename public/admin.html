@@ -691,7 +691,7 @@
             const paginationDiv = document.getElementById('codesPagination');
 
             let html = '<table><thead><tr>';
-            html += '<th>邀请码</th><th>创建时间</th><th>使用次数</th><th>最后使用</th><th>状态</th><th>备注</th>';
+            html += '<th>邀请码</th><th>创建时间</th><th>使用次数</th><th>最后使用</th><th>状态</th><th>备注</th><th>操作</th>';
             html += '</tr></thead><tbody>';
 
             codes.forEach(code => {
@@ -702,6 +702,10 @@
                 html += `<td>${code.last_used_at ? new Date(code.last_used_at).toLocaleString('zh-CN') : '-'}</td>`;
                 html += `<td><span class="status-badge ${code.is_active ? 'status-active' : 'status-inactive'}">${code.is_active ? '激活' : '禁用'}</span></td>`;
                 html += `<td>${code.notes || '-'}</td>`;
+                html += `<td>
+                    <button class="btn btn-info" style="margin-right:5px; background:${code.is_active ? '#f45c43' : '#38ef7d'}" onclick="toggleCodeStatus('${code.code}', ${!code.is_active})">${code.is_active ? '禁用' : '启用'}</button>
+                    <button class="btn btn-danger" onclick="deleteCode('${code.code}')">删除</button>
+                </td>`;
                 html += '</tr>';
             });
 
@@ -715,6 +719,29 @@
                 <div class="page-info">第 ${currentCodesPage + 1} 页 / 共 ${totalPages} 页 (总计 ${total} 条)</div>
                 <button ${currentCodesPage >= totalPages - 1 ? 'disabled' : ''} onclick="loadInvitationCodes(${currentCodesPage + 1})">下一页</button>
             `;
+        }
+
+        // 切换邀请码状态
+        async function toggleCodeStatus(code, active) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/invitation-codes/${code}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Password': adminPassword
+                    },
+                    body: JSON.stringify({ active })
+                });
+
+                if (response.ok) {
+                    loadInvitationCodes(currentCodesPage);
+                } else {
+                    const data = await response.json();
+                    alert(data.error || '操作失败');
+                }
+            } catch (error) {
+                alert('操作失败: ' + error.message);
+            }
         }
 
         // 删除邀请码

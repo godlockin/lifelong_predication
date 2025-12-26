@@ -6,7 +6,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { calculateBazi } from './core/bazi.js';
 import { getSolarTimeDetails } from './core/solar-time.js';
-import { getCityLocation, searchCities, getAllCities } from './data/cities.js';
+import { getCityLocation, searchCities, getAllCities, CITY_HIERARCHY } from './data/cities.js';
 import { performFullAnalysis, performQuickAnalysis } from './schools/comprehensive.js';
 import { generateZiweiChart } from './ziwei/chart.js';
 import { generateZiweiReport } from './ziwei/analysis.js';
@@ -139,6 +139,7 @@ app.post('/analyze', async (c) => {
         const body = await c.req.json();
         const {
             invitationCode,
+            name,
             birthDate,
             longitude,
             timezone,
@@ -262,27 +263,20 @@ app.post('/ziwei', async (c) => {
     }
 });
 
-// 城市列表
+// 城市列表 (已废弃，前端直接加载 static/cities.json)
 app.get('/cities', (c) => {
+    // 兼容性保留，但返回空或提示
     return c.json({
         success: true,
-        data: getAllCities()
+        data: []
     });
 });
 
-// 搜索城市
+// 搜索城市 (已废弃)
 app.get('/cities/search', (c) => {
-    const keyword = c.req.query('q') || '';
-
-    if (!keyword) {
-        return c.json({ error: '请提供搜索关键词 (q)' }, 400);
-    }
-
-    const results = searchCities(keyword);
-
     return c.json({
         success: true,
-        data: results
+        data: []
     });
 });
 
@@ -356,6 +350,7 @@ app.post('/submit', async (c) => {
         const body = await c.req.json();
         const {
             invitationCode,
+            name,
             birthDate,
             longitude,
             timezone,
@@ -381,6 +376,11 @@ app.post('/submit', async (c) => {
         const verification = await verifyInvitationCode(c.env.DB, invitationCode, c.env.BACKDOOR_CODE);
         if (!verification.valid) {
             return c.json({ error: verification.message }, 403);
+        }
+
+        // 如果是后门邀请码，确保它存在于数据库中（满足外键约束）
+        if (c.env.BACKDOOR_CODE && invitationCode === c.env.BACKDOOR_CODE) {
+            await createInvitationCode(c.env.DB, invitationCode, 'System Backdoor');
         }
 
         // 执行命理分析
@@ -412,6 +412,7 @@ app.post('/submit', async (c) => {
         // 保存记录到数据库
         const saveResult = await saveFortuneRecord(c.env.DB, {
             invitationCode,
+            name,
             birthDate,
             gender,
             city,
@@ -419,17 +420,27 @@ app.post('/submit', async (c) => {
             timezone: tz,
             baziResult: result.bazi,
             ziweiResult: result.ziwei,
-            analysisResult: result.analysis,
+            analysisResult: {
+                tenGods: result.tenGods,
+                fiveElements: result.fiveElements,
+                derivatives: result.derivatives,
+                polishedReport: result.polishedReport
+            },
             ipAddress: c.req.header('CF-Connecting-IP'),
             userAgent: c.req.header('User-Agent')
         });
 
         if (!saveResult.success) {
             console.error('保存记录失败:', saveResult.message);
+            return c.json({ error: '保存记录失败: ' + saveResult.message }, 500);
         }
 
         // 标记邀请码为已使用
-        await useInvitationCode(c.env.DB, invitationCode, c.env.BACKDOOR_CODE);
+        const useResult = await useInvitationCode(c.env.DB, invitationCode, c.env.BACKDOOR_CODE);
+        if (!useResult.success) {
+            console.error('更新邀请码状态失败:', useResult.message);
+            // 这里不中断，因为记录已经保存成功
+        }
 
         return c.json({
             success: true,
@@ -532,6 +543,30 @@ app.patch('/admin/invitation-codes/:code', adminAuth, async (c) => {
         return c.json({
             success: true,
             message: active ? '邀请码已启用' : '邀请码已禁用'
+        });
+    } catch (error) {
+        return c.json({ error: error.message }, 500);
+    }
+});
+
+// 删除邀请码（需要管理员认证）
+app.delete('/admin/invitation-codes/:code', adminAuth, async (c) => {
+    try {
+        const code = c.req.param('code');
+
+        if (!c.env.DB) {
+            return c.json({ error: '数据库未配置' }, 500);
+        }
+
+        const result = await deleteInvitationCode(c.env.DB, code);
+
+        if (!result.success) {
+            return c.json({ error: result.message }, 404);
+        }
+
+        return c.json({
+            success: true,
+            message: '邀请码已删除'
         });
     } catch (error) {
         return c.json({ error: error.message }, 500);

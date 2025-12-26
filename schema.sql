@@ -22,6 +22,7 @@ ON invitation_codes(is_active);
 CREATE TABLE IF NOT EXISTS fortune_records (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     invitation_code TEXT NOT NULL,      -- 使用的邀请码
+    name TEXT,                          -- 姓名（可选）
     birth_date TEXT NOT NULL,           -- 出生日期时间
     gender TEXT,                        -- 性别
     city TEXT,                          -- 出生城市
