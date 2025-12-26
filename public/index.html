@@ -445,11 +445,40 @@
 
         .report-text {
             line-height: 1.8;
-            white-space: pre-wrap;
             background: var(--bg-dark);
             padding: 1.5rem;
             border-radius: 0.5rem;
             border-left: 4px solid var(--primary);
+        }
+
+        .report-text h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .report-text h3:first-child {
+            margin-top: 0;
+        }
+
+        .report-text p {
+            margin-bottom: 1rem;
+        }
+
+        .report-text ul, .report-text ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .report-text li {
+            margin-bottom: 0.5rem;
+        }
+
+        .report-text strong {
+            color: var(--accent);
         }
 
         footer {
@@ -559,6 +588,9 @@
     <!-- Flatpickr JS -->
     <script src="/vendor/flatpickr/flatpickr.min.js"></script>
     <script src="/vendor/flatpickr/zh.js"></script>
+
+    <!-- Marked JS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         let citiesData = []; // Flat list for search
@@ -1114,7 +1146,9 @@
             // AI报告
             const reportText = document.getElementById('reportText');
             if (data.polishedReport) {
-                reportText.textContent = data.polishedReport.polished || '暂无AI解读';
+                // 使用 marked 渲染 Markdown
+                reportText.innerHTML = marked.parse(data.polishedReport.polished || '暂无AI解读');
+                
                 if (data.polishedReport.isTemplate) {
                     reportText.innerHTML += '<p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">💡 ' + data.polishedReport.note + '</p>';
                 }
