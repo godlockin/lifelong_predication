@@ -1072,18 +1072,41 @@
             }
 
             // 紫微斗数
-            if (data.ziwei) {
+            if (data.ziwei && data.ziwei.available) {
+                const z = data.ziwei;
                 analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🔮 紫微斗数</h3>';
                 analysisHTML += '<div style="margin-bottom: 1.5rem;">';
-                analysisHTML += `<p><strong>命宫：</strong>${data.ziwei.palace || '未知'}</p>`;
-                analysisHTML += `<p><strong>主星：</strong>${data.ziwei.majorStars?.join('、') || '无'}</p>`;
-                if (data.ziwei.personality) {
-                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>个性特点：</strong>${data.ziwei.personality}</p>`;
+                
+                // 基本局
+                analysisHTML += `<p><strong>格局：</strong>${z.basicInfo.fiveElementsClass} · 命主${z.basicInfo.soul} · 身主${z.basicInfo.body}</p>`;
+                
+                // 命宫
+                if (z.analysis && z.analysis.ming) {
+                    const stars = z.analysis.ming.stars.length > 0 ? z.analysis.ming.stars.join('、') : '无主星';
+                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>命宫主星：</strong>${stars}</p>`;
+                    analysisHTML += `<p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">${z.analysis.ming.interpretation}</p>`;
                 }
-                if (data.ziwei.fortune) {
-                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>运势：</strong>${data.ziwei.fortune}</p>`;
+
+                // 夫妻宫 (如果有)
+                if (z.analysis && z.analysis.marriage) {
+                    const stars = z.analysis.marriage.stars.length > 0 ? z.analysis.marriage.stars.join('、') : '无主星';
+                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>夫妻宫：</strong>${stars}</p>`;
                 }
+                
+                // 事业宫 (如果有)
+                if (z.analysis && z.analysis.career) {
+                     const stars = z.analysis.career.stars.length > 0 ? z.analysis.career.stars.join('、') : '无主星';
+                    analysisHTML += `<p style="margin-top: 0.5rem;"><strong>事业宫：</strong>${stars}</p>`;
+                }
+
                 analysisHTML += '</div>';
+            } else if (data.ziwei && !data.ziwei.available) {
+                 analysisHTML += '<h3 style="margin-bottom: 1rem; color: var(--text-secondary);">🔮 紫微斗数</h3>';
+                 analysisHTML += `<p style="color: var(--error);">${data.ziwei.message || '排盘失败'}</p>`;
+                 if (data.ziwei.recommendation) {
+                     analysisHTML += `<p style="font-size: 0.8rem; color: var(--text-secondary);">${data.ziwei.recommendation}</p>`;
+                 }
+                 analysisHTML += '<br>';
             }
 
             analysisContent.innerHTML = analysisHTML;
