@@ -331,6 +331,55 @@
         .result-section {
             display: none;
             animation: fadeIn 0.5s;
+            position: relative; /* For watermark positioning */
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .watermark-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            opacity: 0.08;
+        }
+
+        .watermark-item {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-45deg);
+            color: #8b5cf6; /* Primary color */
+            text-align: center;
+            line-height: 1.2;
+            pointer-events: none;
+        }
+
+        .watermark-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.2rem;
+        }
+
+        .watermark-subtitle {
+            font-size: 0.9rem;
+            font-weight: normal;
+            opacity: 0.6;
+            margin-top: 0.5rem;
         }
 
         .result-section.show {
@@ -562,6 +611,12 @@
         </div>
 
         <div class="result-section" id="resultSection">
+            <div class="result-actions">
+                <button onclick="exportToPDF()" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                    📥 保存为 PDF
+                </button>
+            </div>
+
             <div class="card">
                 <h2 class="card-title">🎯 八字命盘</h2>
                 <div class="bazi-display" id="baziDisplay"></div>
@@ -591,6 +646,9 @@
 
     <!-- Marked JS -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- html2pdf JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
         let citiesData = []; // Flat list for search
@@ -1152,6 +1210,77 @@
                 if (data.polishedReport.isTemplate) {
                     reportText.innerHTML += '<p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">💡 ' + data.polishedReport.note + '</p>';
                 }
+            }
+        }
+
+        // 导出PDF
+        async function exportToPDF() {
+            const element = document.getElementById('resultSection');
+            const btnContainer = document.querySelector('.result-actions');
+            const btn = btnContainer.querySelector('button');
+            const originalText = btn.textContent;
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = '📄 生成中...';
+                
+                // 暂时隐藏按钮
+                btnContainer.style.display = 'none';
+
+                // 添加水印
+                const watermarkContainer = document.createElement('div');
+                watermarkContainer.className = 'watermark-container';
+                
+                // 计算需要多少个水印
+                // 假设每个水印占据 300x300 空间
+                const width = element.offsetWidth;
+                const height = element.offsetHeight; // 使用完整高度
+                const cols = Math.ceil(width / 300);
+                const rows = Math.ceil(height / 300);
+                const total = cols * rows;
+                
+                for (let i = 0; i < total; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'watermark-item';
+                    item.innerHTML = `
+                        <div class="watermark-title">斯蒂文监制</div>
+                        <div class="watermark-subtitle">结果仅供娱乐参考<br>请勿迷信</div>
+                    `;
+                    watermarkContainer.appendChild(item);
+                }
+                
+                element.appendChild(watermarkContainer);
+
+                // 配置 PDF
+                const opt = {
+                    margin: [10, 10], // 上下左右边距
+                    filename: `命理报告_${new Date().toISOString().slice(0,10)}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true, 
+                        backgroundColor: '#0f172a', // 保持背景色
+                        logging: false
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                // 生成
+                await html2pdf().set(opt).from(element).save();
+
+            } catch (error) {
+                console.error('PDF Export Error:', error);
+                alert('PDF生成失败: ' + error.message);
+            } finally {
+                // 恢复状态
+                btn.disabled = false;
+                btn.textContent = originalText;
+                btnContainer.style.display = 'flex';
+                
+                // 移除水印
+                const wm = element.querySelector('.watermark-container');
+                if (wm) wm.remove();
             }
         }
 

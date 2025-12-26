@@ -241,6 +241,7 @@ wrangler d1 execute life-fortune-db --remote --command="SELECT COUNT(*) as total
 2. **自定义界面**
    - 修改 `public/admin.html` 调整管理员后台样式
    - 添加更多统计功能
+   - 自定义 PDF 导出水印（在 `public/index.html` 中修改 `exportToPDF` 函数）
 
 3. **增强功能**
    - 添加邀请码过期时间
