@@ -20,7 +20,7 @@ DEFAULT_LONGITUDE = "120"
 #   wrangler secret put BACKDOOR_CODE
 
 # D1 数据库配置
-[[d1_databases]]
-binding = "DB"
-database_name = "life-fortune-db"
-database_id = "13ac43e5-f474-4d2f-95a0-4d74ce1c3e67"
+#[[d1_databases]]
+#binding = "DB"
+#database_name = "life-fortune-db"
+#database_id = "13ac43e5-f474-4d2f-95a0-4d74ce1c3e67"
